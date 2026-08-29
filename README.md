@@ -1,175 +1,256 @@
-# 🚴‍♂️ FoodFlow — Master Food Delivery Web Application
+# FoodFlow — Food Delivery Web Application
 
-**FoodFlow** is a large, feature-rich, polished food-delivery platform built with **Python 3.10**, **Flask**, **HTML5**, **CSS3**, and **Vanilla JavaScript**. It provides complete end-to-end functionality for Customers, Restaurant Owners, Delivery Partners, and System Administrators without requiring external database engines, JWT, or cloud APIs.
+FoodFlow is a full-stack food delivery web application built with **Python, Flask, HTML, CSS, and Vanilla JavaScript**.
 
----
+The project provides separate interfaces for customers, restaurant owners, delivery partners, and administrators. It is designed to run locally without an external database, cloud API, or payment gateway. Application data is stored using local Python data structures and files.
 
-## 🌟 Key Features & Role Portals
+## Features
 
-### 👤 1. Customer Experience
-- **Home Landing Page**: Hero banner with quick search, popular category grid, active promo coupons carousel, featured restaurants, trending dishes, and platform advantage cards.
-- **Restaurant Directory & Multi-Filter**: Search by name/cuisine, filter by cuisine type, pure veg indicator (`veg=1`), rating threshold (`★ 4.0+`, `★ 4.5+`), and sort by rating, fastest delivery time, or popularity.
-- **Restaurant Menu Page**: Hero cover banner, rating stats, address, opening hours, sticky menu category nav tabs, dish listings, and customer reviews.
-- **Food Customization Modal**: Select portion sizes/variants (e.g. Single Portion, Family Pack) and add-on toppings with real-time price calculation.
-- **Interactive Shopping Cart**: Quantity adjustments (+/-), single-restaurant order validation, coupon engine (`WELCOME50`, `FOOD20`, `SAVE100`), subtotal, discount, delivery fee, 5% GST tax calculation.
-- **Multi-Step Checkout & Simulated Payment**: Pre-filled delivery address, phone, special cooking notes, and 3 payment simulation options:
-  - 💵 **Cash on Delivery (COD)**
-  - 💳 **Demo Credit / Debit Card Payment**
-  - 📱 **Demo Instant UPI Payment (GooglePay / PhonePe / Paytm)**
-- **Order System & Live Tracking**:
-  - Customer order history page with status pills (`Order Placed`, `Preparing`, `Out for Delivery`, `Delivered`, `Cancelled`).
-  - Detailed order view with status history audit log.
-  - Simulated live order tracking view with animated progress stepper (`✓ Placed` → `✓ Confirmed` → `✓ Preparing` → `○ Ready` → `○ Out for Delivery` → `○ Delivered`).
-  - Delivery agent profile spotlight card (Ramesh Kumar, Honda Activa) with one-click call simulation.
-  - Interactive map grid simulator displaying restaurant, courier en-route, and destination pins.
-  - Reorder, saved addresses (`/addresses`), wishlist favorites (`/favorites`), and cancellation features.
+### Customer
 
-### 🍳 2. Restaurant Owner Portal (`/restaurant/dashboard`)
-- **Overview Metrics**: Total Revenue, Total Orders, Today's Orders, Pending Orders counter, Average Rating.
-- **Kitchen Order Fulfillment Center**: Real-time status update dropdowns (`Order Placed`, `Confirmed`, `Preparing`, `Ready for Pickup`, `Out for Delivery`, `Delivered`).
-- **Menu Management Catalog**: Add new dishes, edit pricing, toggle availability (In Stock / Out of Stock), change discounts.
-- **Inventory Tracker**: Kitchen raw materials, ingredients stock monitoring (`/restaurant/inventory`).
-- **Customer Reviews & Ratings**: View reviews submitted by customers.
-- **Analytics Reports**: Revenue summary, average order value (AOV), and pure CSS weekly sales performance bar chart.
+Customers can:
 
-### 🛵 3. Delivery Partner Portal (`/delivery/dashboard`)
-- **Overview Dashboard**: Today's Earnings, Total Lifetime Earnings, Completed Deliveries counter, Driver Rating, active order spotlight card.
-- **Active Delivery Stepper**: Step-by-step progress update controls:
-  - `Confirmed` → `Preparing` → `Ready for Pickup` → `Out for Delivery` → `Delivered` (+₹50.00 Payout reward).
-- **Earnings Breakdown & Payout Log**: View completed delivery payouts and lifetime earnings.
+* Browse and search restaurants
+* Filter restaurants by cuisine, rating, and vegetarian options
+* View restaurant menus and food details
+* Customize food items with variants and add-ons
+* Add and manage items in the shopping cart
+* Apply promotional coupons
+* Enter delivery details during checkout
+* Simulate COD, card, and UPI payments
+* View previous orders
+* Track orders through different delivery stages
+* Reorder previous purchases
+* Save delivery addresses
+* Manage favourite restaurants and dishes
+* Cancel eligible orders
+* View delivery partner information
 
-### ⚡ 4. Administrator Control Panel (`/admin/dashboard`)
-- **System Overview**: Gross Platform Revenue, Total Orders, Registered Users, Restaurant Partners counter.
-- **User Accounts Audit**: Manage Customer, Restaurant Partner, Delivery Agent, and Admin accounts.
-- **Restaurant Listings Audit**: Toggle Open/Closed status and Featured status.
-- **Global Orders Control Center**: Master order monitoring and manual status overrides.
-- **Promo Coupon Control**: Create new promo codes (set discount types, minimum spend, expiration).
-- **Multi-City Delivery Hubs**: Manage operational delivery cities and postal hubs (`/admin/cities`).
-- **System Health Diagnostics**: Server performance monitoring and cache health (`/admin/diagnostics`).
-- **Analytics Reports**: Pure JS/CSS order status distribution progress bars and platform metrics.
+### Restaurant Owner
 
----
+The restaurant dashboard includes:
 
-## 🛠️ Technology Stack & Dependency Documentation
+* Revenue and order statistics
+* Pending order management
+* Order status updates
+* Menu management
+* Food availability controls
+* Pricing and discount management
+* Inventory tracking
+* Customer reviews
+* Sales and revenue analytics
 
-- **Backend**: Python 3.10+, Flask 3.0+, Werkzeug, Flask Sessions
-- **Frontend**: HTML5, CSS3 (CSS Variables, Flexbox, Grid), Vanilla JavaScript (Zero jQuery / React / Node)
-- **Testing**: Pytest 8.0+
-- **Dependency Manifest**: `requirements.txt`
-- **Lockfile**: `requirements.lock` (Deterministic hash-pinned dependency lockfile)
+### Delivery Partner
 
----
+Delivery partners can:
 
-## 🔑 Pre-Configured Demo Accounts
+* View active deliveries
+* Update delivery status
+* Track completed deliveries
+* View daily earnings
+* View lifetime earnings
+* View delivery payout history
+* Monitor driver rating
 
-You can test any role instantly using the **One-Click Demo Login** buttons on the `/login` page or use the credentials below:
+### Administrator
 
-| Role | Email | Password | Dashboard Link |
-| :--- | :--- | :--- | :--- |
-| **Customer** | `customer@foodflow.local` | `customer123` | `/` |
-| **Restaurant Partner** | `restaurant@foodflow.local` | `restaurant123` | `/restaurant/dashboard` |
-| **Delivery Agent** | `delivery@foodflow.local` | `delivery123` | `/delivery/dashboard` |
-| **Administrator** | `admin@foodflow.local` | `admin123` | `/admin/dashboard` |
+The admin dashboard provides:
 
----
+* Platform-wide revenue and order statistics
+* User account management
+* Restaurant management
+* Order monitoring and status controls
+* Promotional coupon management
+* City and delivery hub management
+* System diagnostics
+* Platform analytics
 
-## 📂 Directory Structure
+## Technology Stack
+
+| Component      | Technology                      |
+| -------------- | ------------------------------- |
+| Backend        | Python 3.10+, Flask             |
+| Frontend       | HTML5, CSS3, Vanilla JavaScript |
+| Templates      | Jinja2                          |
+| Testing        | Pytest                          |
+| Data Storage   | Local Python data / files       |
+| Authentication | Flask Sessions                  |
+| Deployment     | Docker                          |
+
+No React, Node.js, external database, cloud API, or real payment gateway is required.
+
+## Demo Accounts
+
+The application includes demo accounts for testing the different user roles.
+
+| Role       | Email                       | Password        |
+| ---------- | --------------------------- | --------------- |
+| Customer   | `customer@foodflow.local`   | `customer123`   |
+| Restaurant | `restaurant@foodflow.local` | `restaurant123` |
+| Delivery   | `delivery@foodflow.local`   | `delivery123`   |
+| Admin      | `admin@foodflow.local`      | `admin123`      |
+
+You can also use the demo-login options available on the login page.
+
+## Project Structure
 
 ```text
-food delivery onr/
-├── app.py                      # Flask Application entrypoint & blueprint registration
-├── config.py                   # App configuration & session parameters
-├── requirements.txt            # Python dependencies manifest
-├── requirements.lock           # Hash-pinned dependency lockfile
-├── pytest.ini                  # Pytest configuration
-├── README.md                   # Project documentation
+foodflow/
+├── app.py
+├── config.py
+├── requirements.txt
+├── requirements.lock
+├── pytest.ini
+├── README.md
 │
-├── repositories/               # Repository Data Access Layer
-│   ├── restaurant_repository.py# Restaurant listings & query repository
-│   ├── food_repository.py      # Food menu catalog & variant repository
-│   ├── user_repository.py      # User account repository
-│   └── order_repository.py     # Order history repository
+├── repositories/
+│   ├── restaurant_repository.py
+│   ├── food_repository.py
+│   ├── user_repository.py
+│   └── order_repository.py
 │
-├── services/                   # Business Logic & Service Layer
-│   ├── catalog_service.py      # Restaurant & menu catalog service
-│   ├── cart_service.py         # Cart management & coupon service
-│   └── order_service.py        # Order fulfillment & tracking service
+├── services/
+│   ├── catalog_service.py
+│   ├── cart_service.py
+│   └── order_service.py
 │
-├── data/                       # Domain Datasets
-│   ├── categories.py           # Food categories
-│   ├── restaurants.py          # 104 Detailed restaurants
-│   ├── foods.py                # 1,040 Food items with macros & allergens
-│   ├── cities.py               # 8 Major Indian cities & delivery zones
-│   ├── users.py                # User accounts dataset
-│   ├── orders.py               # Order records
-│   ├── reviews.py              # Customer reviews dataset
-│   ├── offers.py               # Active promo coupons
-│   └── delivery.py             # Delivery partner fleet dataset
+├── data/
+│   ├── categories.py
+│   ├── restaurants.py
+│   ├── foods.py
+│   ├── cities.py
+│   ├── users.py
+│   ├── orders.py
+│   ├── reviews.py
+│   ├── offers.py
+│   └── delivery.py
 │
-├── routes/                     # Modular Blueprints
-│   ├── main.py                 # Landing page, search, static pages
-│   ├── auth.py                 # Login, register, logout, profile
-│   ├── customer.py             # Browsing, menu, cart, checkout, tracking, favorites
-│   ├── restaurant.py          # Restaurant dashboard, menu CRUD, order fulfillment, inventory
-│   ├── delivery.py             # Delivery dashboard, active stepper, earnings
-│   ├── admin.py                # Admin panel, user audit, multi-city, diagnostics
-│   └── api.py                  # Local REST API endpoints
+├── routes/
+│   ├── main.py
+│   ├── auth.py
+│   ├── customer.py
+│   ├── restaurant.py
+│   ├── delivery.py
+│   ├── admin.py
+│   └── api.py
 │
-├── utils/                      # Helper & Business Logic Modules
-│   ├── analytics_engine.py     # Revenue velocity & driver efficiency scores
-│   ├── recommendation_engine.py# Content-based recommendation algorithm
-│   ├── geo_helpers.py          # Haversine distance & ETA calculator
-│   ├── pdf_generator.py        # Printable tax invoice generator
-│   ├── export_helpers.py       # CSV order report exporter
-│   ├── notification_engine.py  # Notification queue
-│   ├── calculations.py         # Subtotal, tax, & delivery fee calculations
-│   └── decorators.py           # @login_required & @role_required protection
+├── utils/
+│   ├── analytics_engine.py
+│   ├── recommendation_engine.py
+│   ├── geo_helpers.py
+│   ├── pdf_generator.py
+│   ├── export_helpers.py
+│   ├── notification_engine.py
+│   ├── calculations.py
+│   └── decorators.py
 │
-├── templates/                  # Jinja2 HTML Templates
-├── static/                     # CSS stylesheets & Vanilla JS modules
-└── tests/                      # Automated Pytest Test Suite
+├── templates/
+├── static/
+└── tests/
 ```
 
----
+## Installation
 
-## ⚡ Installation & Build Instructions
+### 1. Install dependencies
 
-### 1. Standard Installation (from Manifest)
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Lockfile Deterministic Installation (from Lockfile)
+For a hash-verified installation:
+
 ```bash
 pip install --require-hashes -r requirements.lock
 ```
 
-### 3. Run Flask Web Server
+### 2. Start the application
+
 ```bash
 python app.py
 ```
 
-### 4. Open in Browser
-Open `http://127.0.0.1:5000` in your web browser.
+### 3. Open the website
 
----
+Open the following address in your browser:
 
-## 🧪 Running Automated Tests
+```text
+http://127.0.0.1:5000
+```
 
-Run the Pytest suite to execute unit and integration tests:
+## Testing
+
+Run the complete test suite with:
+
 ```bash
 pytest
 ```
-Expected output:
-```text
-tests/test_analytics.py ....                                             [ 17%]
-tests/test_api.py ....                                                   [ 34%]
-tests/test_app.py ........                                               [ 69%]
-tests/test_export.py ..                                                  [ 78%]
-tests/test_geo.py ..                                                     [ 86%]
-tests/test_notifications.py .                                            [ 91%]
-tests/test_recommendations.py ..                                         [100%]
-============================= 23 passed in 0.82s ==============================
+
+The project includes tests covering application routes, analytics, APIs, recommendations, notifications, exports, and geographic calculations.
+
+## Docker
+
+Build the Docker image:
+
+```bash
+docker build -t foodflow:latest .
 ```
-#   f o o d _ d e v i l e r y _ f u l l s t a c k  
- 
+
+Run the application:
+
+```bash
+docker run -p 5000:5000 foodflow:latest
+```
+
+Then visit:
+
+```text
+http://127.0.0.1:5000
+```
+
+## Application Flow
+
+The main customer workflow is:
+
+```text
+Browse Restaurants
+       ↓
+View Menu
+       ↓
+Customize Food
+       ↓
+Add to Cart
+       ↓
+Apply Coupon
+       ↓
+Checkout
+       ↓
+Payment Simulation
+       ↓
+Order Placed
+       ↓
+Restaurant Preparation
+       ↓
+Delivery
+       ↓
+Order Delivered
+```
+
+Restaurant, delivery, and administrator portals provide the corresponding management workflows around the same order lifecycle.
+
+## Local-First Design
+
+FoodFlow is intended primarily as a local demonstration and development project.
+
+* No external database is required.
+* No cloud services are required.
+* Payment processing is simulated.
+* Restaurant and user data are local.
+* Order processing runs inside the Flask application.
+* Models such as recommendations and delivery calculations run locally.
+* Uploaded or generated application data remains within the project environment.
+
+## Project Purpose
+
+The goal of FoodFlow is to demonstrate how a complete food-delivery platform can be structured using a lightweight Python/Flask backend and a traditional HTML, CSS, and JavaScript frontend.
+
+It focuses on application architecture, role-based workflows, business logic, order management, and a realistic user experience while keeping the setup simple enough to run on a local machine.
