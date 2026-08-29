@@ -199,3 +199,5 @@ def profile():
             return redirect(url_for('auth.profile'))
 
     return render_template('customer/profile.html', user=user or session['user'])
+
+# Feature Auth: Session-based Authentication & Role Security Module
