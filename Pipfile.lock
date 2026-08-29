@@ -1,0 +1,23 @@
+{
+    "_meta": {
+        "hash": {"sha256": "9c1c97d8c29b5345d62cb077935f2b4a599fa4068481c3301e3dcab257c32a36"},
+        "pipfile-spec": 6,
+        "requires": {"python_version": "3.10"},
+        "sources": [{"name": "pypi", "url": "https://pypi.org/simple", "verify_ssl": true}]
+    },
+    "default": {
+        "blinker": {"version": "==1.8.2"},
+        "click": {"version": "==8.1.7"},
+        "flask": {"version": "==3.0.3"},
+        "itsdangerous": {"version": "==2.2.0"},
+        "jinja2": {"version": "==3.1.4"},
+        "markupsafe": {"version": "==2.1.5"},
+        "werkzeug": {"version": "==3.0.3"}
+    },
+    "develop": {
+        "iniconfig": {"version": "==2.0.0"},
+        "packaging": {"version": "==24.0"},
+        "pluggy": {"version": "==1.5.0"},
+        "pytest": {"version": "==8.2.0"}
+    }
+}

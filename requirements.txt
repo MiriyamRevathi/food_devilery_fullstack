@@ -1,3 +1,6 @@
-Flask>=3.0.0
-pytest>=8.0.0
-Werkzeug>=3.0.0
+# Runtime dependencies. Exact versions are mirrored in requirements.lock.
+Flask==3.0.3
+Werkzeug==3.0.3
+
+# Test dependencies.
+pytest==8.2.0

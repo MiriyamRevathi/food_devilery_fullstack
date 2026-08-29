@@ -1,0 +1,17 @@
+[project]
+name = "foodflow"
+version = "1.0.0"
+description = "A multi-role Flask food-delivery application."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "Flask==3.0.3",
+    "Werkzeug==3.0.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.2.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
