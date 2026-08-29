@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}System Health & Diagnostics — Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="font-weight-bold">System Health & Diagnostics ⚙️</h1>
+            <p class="text-muted">Monitor server response times, active sessions, and database performance</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="metrics-grid mb-5">
+        <div class="card p-4">
+            <small class="text-muted d-block">Server Uptime</small>
+            <strong class="display-6 text-success">99.98%</strong>
+        </div>
+        <div class="card p-4">
+            <small class="text-muted d-block">Average Response Time</small>
+            <strong class="display-6 text-primary">24 ms</strong>
+        </div>
+        <div class="card p-4">
+            <small class="text-muted d-block">Active User Sessions</small>
+            <strong class="display-6">142</strong>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h3 class="font-weight-bold mb-3 border-bottom pb-2">System Diagnostics Log</h3>
+        <ul class="list-group">
+            <li class="py-2 border-bottom flex-between">
+                <span>🟢 Flask Application Server WSGI Worker #1</span>
+                <span class="text-success">Healthy (Memory: 42 MB)</span>
+            </li>
+            <li class="py-2 border-bottom flex-between">
+                <span>🟢 In-Memory Data Engine Cache</span>
+                <span class="text-success">Active (104 Restaurants, 1040 Items Loaded)</span>
+            </li>
+            <li class="py-2 border-bottom flex-between">
+                <span>🟢 Static CSS & JS Assets Pipeline</span>
+                <span class="text-success">Optimized</span>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

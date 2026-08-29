@@ -1,0 +1,78 @@
+/* Dashboards & Pure CSS Analytics Chart Stylesheet */
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.metric-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.metric-icon {
+    font-size: 2.5rem;
+}
+
+.display-6 {
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.table-thumb {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+    padding: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.data-table th {
+    background-color: var(--bg-primary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* Pure CSS Bar Chart */
+.chart-container-pure-css {
+    height: 240px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding-top: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.chart-bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+    width: 40px;
+}
+
+.chart-bar-col .bar {
+    width: 100%;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    transition: var(--transition-normal);
+}
+
+.chart-bar-col .bar:hover {
+    background-color: var(--primary-hover);
+    transform: scaleY(1.05);
+}

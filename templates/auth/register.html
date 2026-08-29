@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account — {{ app_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper section-padding">
+    <div class="container flex-center">
+        <div class="auth-card">
+            <div class="auth-header text-center">
+                <span class="auth-icon">📝</span>
+                <h2 class="auth-title">Create Your FoodFlow Account</h2>
+                <p class="auth-subtitle">Join thousands of foodies enjoying lightning-fast delivery.</p>
+            </div>
+
+            <form action="{{ url_for('auth.register') }}" method="POST" class="auth-form" id="register-form">
+                <div class="form-group mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Aarav Sharma" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="aarav@example.com" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="+91 98765 43210" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="address" class="form-label">Default Delivery Address</label>
+                    <input type="text" id="address" name="address" class="form-control" placeholder="Flat, Street, City, Pincode" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">Register As</label>
+                    <div class="role-selector-grid">
+                        <label class="role-option">
+                            <input type="radio" name="role" value="customer" checked>
+                            <span class="role-box">👤 Customer</span>
+                        </label>
+                        <label class="role-option">
+                            <input type="radio" name="role" value="restaurant">
+                            <span class="role-box">🍳 Restaurant Partner</span>
+                        </label>
+                        <label class="role-option">
+                            <input type="radio" name="role" value="delivery">
+                            <span class="role-box">🛵 Delivery Partner</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row flex-gap mb-3">
+                    <div class="form-group flex-1">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Min 6 characters" required>
+                    </div>
+
+                    <div class="form-group flex-1">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Re-enter password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
+            </form>
+
+            <div class="auth-footer text-center mt-3">
+                <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

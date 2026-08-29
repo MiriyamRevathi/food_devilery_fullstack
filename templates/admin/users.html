@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}User Management — Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">User Accounts Management 👥</h1>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Email Address</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td>#{{ u.id }}</td>
+                            <td><strong>{{ u.name }}</strong></td>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.phone or 'N/A' }}</td>
+                            <td><span class="role-badge role-{{ u.role }}">{{ u.role|capitalize }}</span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

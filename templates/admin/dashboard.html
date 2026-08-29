@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Control Panel — {{ app_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="dashboard-header flex-between mb-4">
+        <div>
+            <span class="role-badge role-admin mb-1 d-inline-block">Master Admin</span>
+            <h1 class="font-weight-bold">System Control Center ⚡</h1>
+            <p class="text-muted">Platform-wide statistics and operations management</p>
+        </div>
+
+        <div class="dashboard-nav-btns flex-center gap-2">
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary btn-sm">Overview</a>
+            <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary btn-sm">Users</a>
+            <a href="{{ url_for('admin.restaurants') }}" class="btn btn-outline-primary btn-sm">Restaurants</a>
+            <a href="{{ url_for('admin.orders') }}" class="btn btn-outline-primary btn-sm">Orders</a>
+            <a href="{{ url_for('admin.offers') }}" class="btn btn-outline-primary btn-sm">Offers</a>
+            <a href="{{ url_for('admin.reports') }}" class="btn btn-outline-primary btn-sm">Reports</a>
+        </div>
+    </div>
+
+    <!-- Metrics Cards Grid -->
+    <div class="metrics-grid mb-5">
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-success">💰</span>
+            <div>
+                <small class="text-muted d-block">Gross Platform Revenue</small>
+                <strong class="display-6 text-success">{{ metrics.total_revenue|currency }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-primary">📦</span>
+            <div>
+                <small class="text-muted d-block">Total Orders</small>
+                <strong class="display-6 text-primary">{{ metrics.total_orders }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-info">👥</span>
+            <div>
+                <small class="text-muted d-block">Registered Users</small>
+                <strong class="display-6">{{ metrics.total_users }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-warning">🏪</span>
+            <div>
+                <small class="text-muted d-block">Restaurant Partners</small>
+                <strong class="display-6">{{ metrics.total_restaurants }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats & Recent Tables Grid -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card p-4">
+                <h3 class="font-weight-bold mb-3 border-bottom pb-2">User Accounts Audit</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in recent_users %}
+                            <tr>
+                                <td><strong>{{ u.name }}</strong></td>
+                                <td>{{ u.email }}</td>
+                                <td><span class="role-badge role-{{ u.role }}">{{ u.role|capitalize }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card p-4">
+                <h3 class="font-weight-bold mb-3 border-bottom pb-2">Recent Orders Audit</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in recent_orders %}
+                            <tr>
+                                <td><strong>{{ o.order_number }}</strong></td>
+                                <td>{{ o.total|currency }}</td>
+                                <td><span class="order-status-badge status-{{ o.status|lower|replace(' ', '-') }}">{{ o.status }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

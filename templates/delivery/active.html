@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Active Delivery Stepper — {{ driver.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/delivery.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">Active Delivery Progress 🛵</h1>
+        <a href="{{ url_for('delivery.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    {% if order %}
+        <div class="active-delivery-card card p-4 max-w-700 mx-auto">
+            <div class="flex-between border-bottom pb-3 mb-4">
+                <div>
+                    <span class="badge badge-primary">ACTIVE ORDER</span>
+                    <h2 class="display-6 font-weight-bold mb-0">{{ order.order_number }}</h2>
+                </div>
+                <span class="order-status-badge status-{{ order.status|lower|replace(' ', '-') }} font-size-lg">{{ order.status }}</span>
+            </div>
+
+            <!-- Addresses Section -->
+            <div class="address-step-box bg-light p-3 rounded mb-4">
+                <div class="mb-3">
+                    <small class="text-muted d-block uppercase font-weight-bold">Pickup Location</small>
+                    <strong class="font-size-md">🏬 {{ order.restaurant_name }}</strong>
+                    <span class="d-block text-muted">{{ restaurant.address if restaurant else 'Road No 36, Jubilee Hills, Hyderabad' }}</span>
+                </div>
+
+                <div class="border-top pt-2">
+                    <small class="text-muted d-block uppercase font-weight-bold">Dropoff Location</small>
+                    <strong class="font-size-md">🏠 {{ order.customer_name }} ({{ order.customer_phone }})</strong>
+                    <span class="d-block text-muted">📍 {{ order.delivery_address }}</span>
+                </div>
+            </div>
+
+            <!-- Milestone Progress Form Buttons -->
+            <h3 class="font-weight-bold mb-3">Update Order Status Step</h3>
+            
+            <div class="milestones-update-list mb-4">
+                <form action="{{ url_for('delivery.update_delivery_status', order_id=order.id) }}" method="POST" class="d-flex flex-column gap-2">
+                    <button type="submit" name="status" value="Confirmed" class="btn btn-block btn-outline-primary text-left">
+                        1. 📝 Confirm Order Receipt
+                    </button>
+                    <button type="submit" name="status" value="Preparing" class="btn btn-block btn-outline-primary text-left">
+                        2. 🍳 Kitchen Preparation Started
+                    </button>
+                    <button type="submit" name="status" value="Ready for Pickup" class="btn btn-block btn-outline-warning text-left">
+                        3. 🏬 Arrived at Restaurant & Ready for Pickup
+                    </button>
+                    <button type="submit" name="status" value="Out for Delivery" class="btn btn-block btn-outline-info text-left">
+                        4. 🛵 Picked Up & Out for Delivery
+                    </button>
+                    <button type="submit" name="status" value="Delivered" class="btn btn-block btn-success btn-lg text-left mt-2">
+                        5. ✅ Mark Order as Delivered (+₹50.00 Payout)
+                    </button>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-state card p-5 text-center">
+            <h3>No active delivery in progress</h3>
+            <a href="{{ url_for('delivery.dashboard') }}" class="btn btn-primary mt-3">Go to Dashboard</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

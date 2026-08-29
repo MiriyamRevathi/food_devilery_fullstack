@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout — {{ app_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/checkout.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <h1 class="section-title mb-4">Complete Your Order 💳</h1>
+
+    <form action="{{ url_for('customer.checkout') }}" method="POST" id="checkout-form">
+        <div class="checkout-layout">
+            <!-- Left Side: Address & Payment Methods -->
+            <div class="checkout-main">
+                <!-- Step 1: Delivery Details -->
+                <div class="card p-4 mb-4">
+                    <h3 class="step-title mb-3">📍 1. Delivery Address & Contact</h3>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" value="{{ current_user.name }}" readonly disabled>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Contact Phone Number</label>
+                        <input type="tel" name="phone" class="form-control" value="{{ current_user.phone or '+91 98765 43210' }}" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Complete Street Address</label>
+                        <textarea name="address" class="form-control" rows="3" required>{{ current_user.address or 'Flat 402, Green Glen Layout, Bellandur, Bengaluru' }}</textarea>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label">Special Cooking or Delivery Instructions (Optional)</label>
+                        <input type="text" name="special_instructions" class="form-control" placeholder="e.g. Ring bell twice, make food extra spicy...">
+                    </div>
+                </div>
+
+                <!-- Step 2: Payment Simulation Options -->
+                <div class="card p-4">
+                    <h3 class="step-title mb-3">💳 2. Select Payment Method</h3>
+                    <p class="text-muted small mb-4">Simulated offline checkout. No real money will be charged.</p>
+
+                    <div class="payment-methods-grid">
+                        <label class="payment-card-option">
+                            <input type="radio" name="payment_method" value="Cash on Delivery" checked onchange="togglePaymentFields('cod')">
+                            <div class="payment-box">
+                                <span class="payment-icon">💵</span>
+                                <strong>Cash on Delivery (COD)</strong>
+                                <small>Pay cash or UPI upon delivery</small>
+                            </div>
+                        </label>
+
+                        <label class="payment-card-option">
+                            <input type="radio" name="payment_method" value="Demo Card Payment" onchange="togglePaymentFields('card')">
+                            <div class="payment-box">
+                                <span class="payment-icon">💳</span>
+                                <strong>Demo Card Payment</strong>
+                                <small>Simulated Credit/Debit Card</small>
+                            </div>
+                        </label>
+
+                        <label class="payment-card-option">
+                            <input type="radio" name="payment_method" value="Demo UPI Payment" onchange="togglePaymentFields('upi')">
+                            <div class="payment-box">
+                                <span class="payment-icon">📱</span>
+                                <strong>Demo UPI Payment</strong>
+                                <small>Simulated GooglePay / PhonePe / Paytm</small>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Card Form Simulation Fields -->
+                    <div id="card-fields" class="payment-extra-fields mt-4 p-3 bg-light rounded" style="display: none;">
+                        <h5 class="font-weight-bold mb-3">Demo Card Information</h5>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" class="form-control" placeholder="4532 •••• •••• 8892" value="4532 1102 9940 8892">
+                        </div>
+                        <div class="form-row flex-gap">
+                            <div class="form-group flex-1">
+                                <label class="form-label">Expiry (MM/YY)</label>
+                                <input type="text" class="form-control" placeholder="12/28" value="12/28">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label">CVV</label>
+                                <input type="password" class="form-control" placeholder="•••" value="882" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UPI Form Simulation Fields -->
+                    <div id="upi-fields" class="payment-extra-fields mt-4 p-3 bg-light rounded" style="display: none;">
+                        <h5 class="font-weight-bold mb-3">Demo Instant UPI ID</h5>
+                        <div class="form-group mb-0">
+                            <label class="form-label">Virtual Payment Address (VPA)</label>
+                            <input type="text" class="form-control" placeholder="username@upi" value="customer@okaxis">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Order Summary & Submit -->
+            <div class="checkout-sidebar">
+                <div class="card p-4 sticky-sidebar">
+                    <h3 class="font-weight-bold mb-3 border-bottom pb-2">Order Summary</h3>
+
+                    {% if restaurant %}
+                        <div class="mb-3">
+                            <strong class="d-block">{{ restaurant.name }}</strong>
+                            <small class="text-muted">Estimated Delivery: {{ restaurant.delivery_time }}</small>
+                        </div>
+                    {% endif %}
+
+                    <div class="checkout-items-list mb-3">
+                        {% for item in cart %}
+                            <div class="checkout-item-line flex-between py-1">
+                                <span>{{ item.quantity }}x {{ item.name }}</span>
+                                <strong>{{ (item.price * item.quantity)|currency }}</strong>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr>
+
+                    <div class="bill-row flex-between mb-2">
+                        <span class="text-muted">Subtotal</span>
+                        <span>{{ totals.subtotal|currency }}</span>
+                    </div>
+
+                    {% if totals.discount > 0 %}
+                        <div class="bill-row flex-between mb-2 text-success">
+                            <span>Discount ({{ totals.coupon_code }})</span>
+                            <span>-{{ totals.discount|currency }}</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="bill-row flex-between mb-2">
+                        <span class="text-muted">Delivery Fee</span>
+                        <span>{{ totals.delivery_fee|currency }}</span>
+                    </div>
+
+                    <div class="bill-row flex-between mb-3">
+                        <span class="text-muted">GST Tax (5%)</span>
+                        <span>{{ totals.tax|currency }}</span>
+                    </div>
+
+                    <div class="bill-total-row flex-between border-top pt-3 mb-4">
+                        <strong class="font-weight-bold">Total Amount</strong>
+                        <strong class="font-weight-bold text-primary display-6">{{ totals.final_total|currency }}</strong>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Place Order Now 🚀</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePaymentFields(type) {
+        document.getElementById('card-fields').style.display = type === 'card' ? 'block' : 'none';
+        document.getElementById('upi-fields').style.display = type === 'upi' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Multi-City Management — Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="font-weight-bold">Multi-City Delivery Zones 🏙️</h1>
+            <p class="text-muted">Manage active operational cities and delivery hubs</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>City ID</th>
+                        <th>City Name</th>
+                        <th>State</th>
+                        <th>Active Delivery Hubs</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in cities %}
+                        <tr>
+                            <td>#{{ c.id }}</td>
+                            <td><strong>{{ c.name }}</strong></td>
+                            <td>{{ c.state }}</td>
+                            <td>{{ c.delivery_zones|length }} Hubs</td>
+                            <td><span class="badge badge-success">Operational</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Manage Hubs</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

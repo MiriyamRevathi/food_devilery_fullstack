@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}My Favorites — FoodFlow{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="font-weight-bold">My Saved Favorites ❤️</h1>
+            <p class="text-muted">Quick access to your favorite dishes and top restaurants</p>
+        </div>
+        <a href="{{ url_for('customer.restaurants') }}" class="btn btn-outline-primary btn-sm">Explore More Restaurants</a>
+    </div>
+
+    <div class="card p-4 mb-5">
+        <h3 class="font-weight-bold mb-3 border-bottom pb-2">Favorite Restaurants</h3>
+        <div class="grid grid-3">
+            <div class="restaurant-card card border">
+                <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=500&auto=format&fit=crop&q=80" alt="Paradise Biryani" class="card-img-top">
+                <div class="card-body p-3">
+                    <div class="flex-between mb-1">
+                        <strong class="card-title font-weight-bold mb-0">Paradise Biryani House</strong>
+                        <span class="badge badge-success">★ 4.8</span>
+                    </div>
+                    <small class="text-muted d-block">Biryani, North Indian • Jubilee Hills</small>
+                    <div class="flex-between mt-3">
+                        <small class="text-muted">⏱️ 30-40 min</small>
+                        <a href="{{ url_for('customer.restaurant_detail', slug='paradise-biryani-house-1') }}" class="btn btn-primary btn-sm">View Menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h3 class="font-weight-bold mb-3 border-bottom pb-2">Favorite Dishes</h3>
+        <div class="grid grid-2">
+            <div class="food-card card border p-3 flex-between">
+                <div>
+                    <span class="diet-tag veg-tag">🟢 Veg</span>
+                    <h4 class="font-weight-bold mt-1 mb-1">Paneer Tikka Biryani</h4>
+                    <p class="text-muted small mb-2">Paradise Biryani House</p>
+                    <strong class="text-primary font-size-lg">₹240.00</strong>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" onclick="addToCart(103)">+ Add to Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

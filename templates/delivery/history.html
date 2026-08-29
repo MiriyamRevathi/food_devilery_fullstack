@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Delivery History — {{ driver.name }}{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">Delivery History 📜</h1>
+        <a href="{{ url_for('delivery.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="card p-4">
+        {% if orders %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Restaurant</th>
+                            <th>Customer Address</th>
+                            <th>Order Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in orders %}
+                            <tr>
+                                <td><strong>{{ o.order_number }}</strong></td>
+                                <td>{{ o.restaurant_name }}</td>
+                                <td>{{ o.delivery_address }}</td>
+                                <td>{{ o.total|currency }}</td>
+                                <td><span class="badge badge-success">{{ o.status }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted">No completed delivery history records found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+<header class="navbar-header" id="navbar">
+    <div class="navbar-container container">
+        <!-- Brand Logo -->
+        <a href="{{ url_for('main.home') }}" class="navbar-brand">
+            <span class="brand-icon">🚴‍♂️</span>
+            <span class="brand-name">Food<span class="brand-accent">Flow</span></span>
+        </a>
+
+        <!-- Location Selector Pill -->
+        <div class="location-pill" title="Current Delivery Location">
+            <span class="location-icon">📍</span>
+            <div class="location-text">
+                <span class="location-label">Deliver to</span>
+                <span class="location-value">Jubilee Hills, Hyderabad</span>
+            </div>
+            <span class="location-arrow">▼</span>
+        </div>
+
+        <!-- Global Search Bar -->
+        <form action="{{ url_for('main.search') }}" method="GET" class="navbar-search-form">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" name="q" class="navbar-search-input" placeholder="Search biryani, pizza, restaurants..." value="{{ request.args.get('q', '') }}" autocomplete="off">
+            </div>
+        </form>
+
+        <!-- Right Side Nav Actions -->
+        <nav class="navbar-nav">
+            <a href="{{ url_for('main.home') }}" class="nav-link {% if request.endpoint == 'main.home' %}active{% endif %}">
+                <span class="nav-icon">🏠</span> Home
+            </a>
+            
+            <a href="{{ url_for('customer.restaurants') }}" class="nav-link {% if request.endpoint == 'customer.restaurants' %}active{% endif %}">
+                <span class="nav-icon">🍽️</span> Restaurants
+            </a>
+
+            <!-- Cart Trigger Button -->
+            <a href="{{ url_for('customer.view_cart') }}" class="nav-link cart-link {% if request.endpoint == 'customer.view_cart' %}active{% endif %}">
+                <span class="cart-icon-wrapper">
+                    🛒
+                    <span class="cart-badge" id="cart-badge-count">{{ cart_count }}</span>
+                </span>
+                <span class="cart-label">Cart</span>
+            </a>
+
+            <!-- Dark Mode Toggle Switch -->
+            <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+                <span class="theme-icon light-icon">☀️</span>
+                <span class="theme-icon dark-icon">🌙</span>
+            </button>
+
+            <!-- User Auth Links / Role Menus -->
+            {% if current_user %}
+                <div class="user-dropdown-wrapper">
+                    <button type="button" class="user-dropdown-btn" id="user-menu-btn">
+                        <img src="{{ current_user.avatar }}" alt="{{ current_user.name }}" class="user-avatar-sm">
+                        <span class="user-name">{{ current_user.name.split()[0] }}</span>
+                        <span class="dropdown-caret">▼</span>
+                    </button>
+                    <div class="user-dropdown-menu" id="user-dropdown-menu">
+                        <div class="dropdown-header">
+                            <strong>{{ current_user.name }}</strong>
+                            <small class="role-badge role-{{ current_user.role }}">{{ current_user.role|capitalize }}</small>
+                        </div>
+                        <hr class="dropdown-divider">
+
+                        {% if current_user.role == 'customer' %}
+                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Profile & Address</a>
+                            <a href="{{ url_for('customer.order_history') }}" class="dropdown-item">📦 My Orders</a>
+                            <a href="#" class="dropdown-item">❤️ Favorites</a>
+                        {% elif current_user.role == 'restaurant' %}
+                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Profile</a>
+                            <a href="{{ url_for('restaurant.dashboard') }}" class="dropdown-item">📊 Restaurant Dashboard</a>
+                            <a href="{{ url_for('restaurant.menu') }}" class="dropdown-item">📋 Menu Management</a>
+                            <a href="{{ url_for('restaurant.manage_orders') }}" class="dropdown-item">🛒 Orders Management</a>
+                        {% elif current_user.role == 'delivery' %}
+                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Profile</a>
+                            <a href="{{ url_for('delivery.dashboard') }}" class="dropdown-item">🛵 Delivery Dashboard</a>
+                            <a href="{{ url_for('delivery.active_delivery') }}" class="dropdown-item">📍 Active Stepper</a>
+                            <a href="{{ url_for('delivery.earnings') }}" class="dropdown-item">💰 Earnings</a>
+                        {% elif current_user.role == 'admin' %}
+                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Profile</a>
+                            <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item">⚡ Admin Dashboard</a>
+                            <a href="{{ url_for('admin.users') }}" class="dropdown-item">👥 Manage Users</a>
+                            <a href="{{ url_for('admin.reports') }}" class="dropdown-item">📈 System Reports</a>
+                        {% endif %}
+
+                        <hr class="dropdown-divider">
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">🚪 Sign Out</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="auth-buttons">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-sm">Sign In</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
+                </div>
+            {% endif %}
+        </nav>
+
+        <!-- Mobile Drawer Hamburger Toggle -->
+        <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+    </div>
+</header>

@@ -1,0 +1,44 @@
+/* Invoice and Printable Bill Stylesheet */
+.invoice-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.invoice-header {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.invoice-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+}
+
+.invoice-table th {
+    background-color: var(--bg-primary);
+    padding: 0.85rem;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.invoice-table td {
+    padding: 1rem 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.invoice-totals {
+    width: 320px;
+    margin-left: auto;
+}
+
+.invoice-totals .row-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+}

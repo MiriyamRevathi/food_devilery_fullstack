@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Restaurant Analytics — {{ restaurant.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">Analytics & Revenue Reports 📈</h1>
+        <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Overview</a>
+    </div>
+
+    <div class="metrics-grid mb-5">
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-success">💰</span>
+            <div class="metric-info">
+                <small class="text-muted d-block">Gross Sales Revenue</small>
+                <strong class="display-6 text-primary">{{ total_sales|currency }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-info">📊</span>
+            <div class="metric-info">
+                <small class="text-muted d-block">Average Order Value (AOV)</small>
+                <strong class="display-6">{{ avg_order_val|currency }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-primary">📦</span>
+            <div class="metric-info">
+                <small class="text-muted d-block">Total Fulfilled Orders</small>
+                <strong class="display-6">{{ orders|length }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pure CSS/HTML Revenue Performance Bar Chart -->
+    <div class="card p-4 mb-4">
+        <h3 class="font-weight-bold mb-4">Weekly Sales Performance Chart</h3>
+
+        <div class="chart-container-pure-css">
+            <div class="chart-bar-col">
+                <div class="bar" style="height: 65%;"></div>
+                <small>Mon</small>
+            </div>
+            <div class="chart-bar-col">
+                <div class="bar" style="height: 80%;"></div>
+                <small>Tue</small>
+            </div>
+            <div class="chart-bar-col">
+                <div class="bar" style="height: 45%;"></div>
+                <small>Wed</small>
+            </div>
+            <div class="chart-bar-col">
+                <div class="bar" style="height: 90%;"></div>
+                <small>Thu</small>
+            </div>
+            <div class="chart-bar-col">
+                <div class="bar" style="height: 100%;"></div>
+                <small>Fri</small>
+            </div>
+            <div class="chart-bar-col">
+                <div class="bar" style="height: 85%;"></div>
+                <small>Sat</small>
+            </div>
+            <div class="chart-bar-col">
+                <div class="bar" style="height: 95%;"></div>
+                <small>Sun</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

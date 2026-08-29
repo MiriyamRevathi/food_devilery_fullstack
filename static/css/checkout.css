@@ -1,0 +1,63 @@
+/* Checkout Stylesheet */
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+}
+
+.step-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.payment-methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.payment-card-option input {
+    display: none;
+}
+
+.payment-box {
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--bg-surface);
+    transition: var(--transition-fast);
+
+}
+
+.payment-card-option input:checked + .payment-box {
+    border-color: var(--primary-color);
+    background-color: rgba(252, 128, 25, 0.05);
+}
+
+.payment-icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.payment-box strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.payment-box small {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.sticky-sidebar {
+    position: sticky;
+    top: 90px;
+}
+
+.max-w-700 { max-width: 700px; }
+.mx-auto { margin-left: auto; margin-right: auto; }

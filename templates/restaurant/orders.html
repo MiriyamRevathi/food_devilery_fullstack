@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Orders — {{ restaurant.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">Kitchen Order Management Portal 👨‍🍳</h1>
+        <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Overview</a>
+    </div>
+
+    {% if orders %}
+        <div class="orders-management-grid">
+            {% for o in orders %}
+                <div class="card p-4 mb-4">
+                    <div class="flex-between border-bottom pb-2 mb-3">
+                        <div>
+                            <strong class="display-6">{{ o.order_number }}</strong>
+                            <small class="text-muted d-block">Placed at {{ o.created_at }}</small>
+                        </div>
+                        <span class="order-status-badge status-{{ o.status|lower|replace(' ', '-') }}">{{ o.status }}</span>
+                    </div>
+
+                    <div class="order-items-summary mb-3">
+                        <strong>Customer:</strong> {{ o.customer_name }} ({{ o.customer_phone }})<br>
+                        <strong>Address:</strong> {{ o.delivery_address }}<br>
+                        <strong>Items:</strong>
+                        <ul class="mt-1">
+                            {% for item in o['items'] %}
+                                <li>{{ item.quantity }}x {{ item.name }} ({{ item.price|currency }})</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Update Status Form -->
+                    <form action="{{ url_for('restaurant.manage_orders') }}" method="POST" class="flex-between border-top pt-3">
+                        <input type="hidden" name="order_id" value="{{ o.id }}">
+                        <div class="flex-center gap-2">
+                            <label class="form-label mb-0">Update Status:</label>
+                            <select name="status" class="form-control form-control-sm">
+                                <option value="Order Placed" {% if o.status == 'Order Placed' %}selected{% endif %}>Order Placed</option>
+                                <option value="Confirmed" {% if o.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                <option value="Preparing" {% if o.status == 'Preparing' %}selected{% endif %}>Preparing Food</option>
+                                <option value="Ready for Pickup" {% if o.status == 'Ready for Pickup' %}selected{% endif %}>Ready for Pickup</option>
+                                <option value="Out for Delivery" {% if o.status == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
+                                <option value="Delivered" {% if o.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                <option value="Cancelled" {% if o.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Update Status</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state card p-5 text-center">
+            <h3>No orders to manage yet.</h3>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

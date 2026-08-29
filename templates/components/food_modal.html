@@ -1,0 +1,82 @@
+<!-- Food Item Customization Modal -->
+<div class="modal-overlay" id="food-modal" onclick="closeFoodModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <button type="button" class="modal-close-btn" onclick="closeFoodModal()">&times;</button>
+
+        <div class="modal-header">
+            <img src="{{ food.image }}" alt="{{ food.name }}" class="modal-food-img">
+            <div class="modal-food-title-box mt-3">
+                <div class="flex-between">
+                    <h2 class="modal-food-title">{{ food.name }}</h2>
+                    {% if food.is_veg %}
+                        <span class="diet-tag veg-tag">🟢 Veg</span>
+                    {% else %}
+                        <span class="diet-tag non-veg-tag">🔴 Non-Veg</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted small mt-1">{{ food.description }}</p>
+                <strong class="display-6 text-primary">{{ food.discount_price|currency }}</strong>
+            </div>
+        </div>
+
+        <form id="food-customization-form" onsubmit="submitFoodCustomization(event)">
+            <input type="hidden" name="food_id" value="{{ food.id }}">
+            <input type="hidden" id="modal-base-price" value="{{ food.discount_price }}">
+
+            <!-- Portion Variants Selection -->
+            {% if food.variants %}
+                <div class="modal-section mt-3 border-top pt-3">
+                    <h4 class="font-weight-bold mb-2">Select Portion Size</h4>
+                    <div class="variant-options-list">
+                        {% for v in food.variants %}
+                            <label class="variant-option-row flex-between py-2 border-bottom cursor-pointer">
+                                <div>
+                                    <input type="radio" name="variant" value="{{ v.name }}" data-price="{{ v.price }}" {% if loop.first %}checked{% endif %} onchange="recalculateModalTotal()">
+                                    <span class="ml-2 font-weight-bold">{{ v.name }}</span>
+                                </div>
+                                <span class="text-muted">
+                                    {% if v.price > 0 %}
+                                        +{{ v.price|currency }}
+                                    {% else %}
+                                        Included
+                                    {% endif %}
+                                </span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Add-ons Selection -->
+            {% if food.add_ons %}
+                <div class="modal-section mt-3 border-top pt-3">
+                    <h4 class="font-weight-bold mb-2">Extra Add-ons</h4>
+                    <div class="addons-options-list">
+                        {% for addon in food.add_ons %}
+                            <label class="addon-option-row flex-between py-2 border-bottom cursor-pointer">
+                                <div>
+                                    <input type="checkbox" name="addons" value="{{ addon.name }}" data-price="{{ addon.price }}" onchange="recalculateModalTotal()">
+                                    <span class="ml-2">{{ addon.name }}</span>
+                                </div>
+                                <span>+{{ addon.price|currency }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Quantity Controls & Add Button -->
+            <div class="modal-footer flex-between mt-4 pt-3 border-top">
+                <div class="cart-quantity-controls">
+                    <button type="button" class="qty-btn" onclick="adjustModalQty(-1)">-</button>
+                    <span class="qty-number" id="modal-qty-val">1</span>
+                    <button type="button" class="qty-btn" onclick="adjustModalQty(1)">+</button>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    Add to Cart • <span id="modal-total-display">{{ food.discount_price|currency }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

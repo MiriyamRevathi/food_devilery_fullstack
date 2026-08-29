@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}404 Page Not Found — {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="error-page-container container text-center section-padding">
+    <div class="error-visual">
+        <span class="error-emoji">🍕</span>
+        <h1 class="error-code">404</h1>
+    </div>
+    <h2 class="error-title">Oops! Looks like this page got eaten!</h2>
+    <p class="error-desc text-muted">The page you were looking for doesn't exist or has been moved to another URL.</p>
+
+    <div class="error-actions mt-4">
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary btn-lg">Back to Home</a>
+        <a href="{{ url_for('main.search') }}" class="btn btn-outline-primary btn-lg">Browse Restaurants</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %}FoodFlow — Order Food Online from Top Local Restaurants{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-container container">
+        <div class="hero-content">
+            <span class="hero-badge">⚡ Ultra Fast 25-Min Delivery</span>
+            <h1 class="hero-title">Delicious Food Delivered Warm to Your Doorstep</h1>
+            <p class="hero-subtitle">Discover over 100+ gourmet dishes from top-rated local restaurants. Fast, fresh, and hassle-free.</p>
+
+            <!-- Search Form -->
+            <form action="{{ url_for('main.search') }}" method="GET" class="hero-search-box">
+                <div class="hero-search-input-group">
+                    <span class="search-pin">📍</span>
+                    <input type="text" name="q" class="hero-input" placeholder="Enter dish name, cuisine, or restaurant..." autocomplete="off">
+                    <button type="submit" class="btn btn-primary btn-hero-search">
+                        <span>Find Food</span> 🚀
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Cuisine Chips -->
+            <div class="quick-cuisines">
+                <span class="quick-label">Popular Searches:</span>
+                <a href="{{ url_for('main.search', q='Biryani') }}" class="chip">🍚 Biryani</a>
+                <a href="{{ url_for('main.search', q='Pizza') }}" class="chip">🍕 Pizza</a>
+                <a href="{{ url_for('main.search', q='Burger') }}" class="chip">🍔 Burgers</a>
+                <a href="{{ url_for('main.search', q='Dosa') }}" class="chip">🥞 South Indian</a>
+                <a href="{{ url_for('main.search', q='Momos') }}" class="chip">🥟 Chinese</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-image-card">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&auto=format&fit=crop&q=80" alt="Delicious Food Bowl" class="hero-img">
+                <div class="hero-floating-card card-1">
+                    <span class="float-icon">🔥</span>
+                    <div class="float-text">
+                        <strong>50% OFF</strong>
+                        <small>On First Order</small>
+                    </div>
+                </div>
+                <div class="hero-floating-card card-2">
+                    <span class="float-icon">⭐</span>
+                    <div class="float-text">
+                        <strong>4.9 Rating</strong>
+                        <small>Over 10k Reviews</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Promo Offers Carousel Section -->
+<section class="offers-section section-padding">
+    <div class="container">
+        <div class="section-header flex-between">
+            <div>
+                <h2 class="section-title">Special Offers & Discount Coupons 🎁</h2>
+                <p class="section-subtitle">Use these promo codes at checkout to save big on your meals.</p>
+            </div>
+        </div>
+
+        <div class="offers-grid">
+            {% for offer in active_offers %}
+                <div class="offer-card">
+                    <div class="offer-badge">{{ offer.badge }}</div>
+                    <div class="offer-code-wrapper">
+                        <strong class="offer-code">{{ offer.code }}</strong>
+                    </div>
+                    <p class="offer-desc">{{ offer.description }}</p>
+                    <div class="offer-footer">
+                        <small>Min spend: {{ offer.min_order_amount|currency }}</small>
+                        <button type="button" class="btn-copy-code" onclick="copyOfferCode('{{ offer.code }}')">Copy Code</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section section-padding bg-light">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">What's on Your Mind? 😋</h2>
+            <p class="section-subtitle">Explore curated categories and cravings.</p>
+        </div>
+
+        <div class="categories-grid">
+            {% for cat in categories %}
+                <a href="{{ url_for('main.search', q=cat.name) }}" class="category-card">
+                    <div class="category-img-wrapper">
+                        <img src="{{ cat.image }}" alt="{{ cat.name }}" class="category-img" loading="lazy">
+                        <span class="category-icon">{{ cat.icon }}</span>
+                    </div>
+                    <h3 class="category-name">{{ cat.name }}</h3>
+                    <small class="category-tag">{{ cat.popular_tag }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Restaurants Section -->
+<section class="restaurants-section section-padding">
+    <div class="container">
+        <div class="section-header flex-between">
+            <div>
+                <h2 class="section-title">Top Rated Restaurants 🏆</h2>
+                <p class="section-subtitle">Handpicked restaurants serving authentic flavors in your neighborhood.</p>
+            </div>
+            <a href="{{ url_for('main.search') }}" class="btn btn-outline-primary">View All Restaurants &rarr;</a>
+        </div>
+
+        <div class="restaurants-grid">
+            {% for restaurant in featured_restaurants %}
+                <div class="restaurant-card">
+                    <div class="card-media">
+                        <img src="{{ restaurant.image }}" alt="{{ restaurant.name }}" class="card-img" loading="lazy">
+                        {% if restaurant.discount %}
+                            <span class="discount-tag">{{ restaurant.discount }}</span>
+                        {% endif %}
+                        <span class="delivery-badge">{{ restaurant.delivery_time }}</span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="card-header flex-between">
+                            <h3 class="restaurant-title">{{ restaurant.name }}</h3>
+                            <span class="rating-badge">★ {{ restaurant.rating }}</span>
+                        </div>
+
+                        <p class="cuisines-list">{{ restaurant.cuisines|join(', ') }}</p>
+                        <p class="address-text">📍 {{ restaurant.address }}</p>
+
+                        <div class="card-footer flex-between">
+                            <span class="price-range">{{ restaurant.price_range }} • Min {{ restaurant.min_order|currency }}</span>
+                            {% if restaurant.is_veg_only %}
+                                <span class="veg-only-pill">🟢 Pure Veg</span>
+                            {% else %}
+                                <span class="non-veg-pill">🔴 Non-Veg Available</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Popular Dishes Section -->
+<section class="dishes-section section-padding bg-light">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Trending Dishes Near You 🔥</h2>
+            <p class="section-subtitle">Most ordered and highest rated meals loved by customers.</p>
+        </div>
+
+        <div class="foods-grid">
+            {% for food in popular_foods %}
+                <div class="food-card">
+                    <div class="food-media">
+                        <img src="{{ food.image }}" alt="{{ food.name }}" class="food-img" loading="lazy">
+                        {% if food.is_veg %}
+                            <span class="diet-tag veg-tag" title="Vegetarian">🟢 Veg</span>
+                        {% else %}
+                            <span class="diet-tag non-veg-tag" title="Non-Vegetarian">🔴 Non-Veg</span>
+                        {% endif %}
+                        {% if food.is_best_seller %}
+                            <span class="bestseller-tag">⭐ Bestseller</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="food-info">
+                        <div class="food-header flex-between">
+                            <h4 class="food-name">{{ food.name }}</h4>
+                            <span class="food-rating">★ {{ food.rating }}</span>
+                        </div>
+                        <p class="food-desc">{{ food.description }}</p>
+
+                        <div class="food-action flex-between">
+                            <div class="price-box">
+                                <strong class="current-price">{{ food.discount_price|currency }}</strong>
+                                {% if food.price > food.discount_price %}
+                                    <span class="old-price">{{ food.price|currency }}</span>
+                                {% endif %}
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary add-to-cart-btn" onclick="quickAddToCart({{ food.id }}, '{{ food.name }}', {{ food.discount_price }})">
+                                + Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Platform Advantages Section -->
+<section class="advantages-section section-padding">
+    <div class="container">
+        <div class="advantages-grid">
+            <div class="advantage-card">
+                <span class="adv-icon">🚀</span>
+                <h3>Lightning Fast Delivery</h3>
+                <p>Hot, fresh meals delivered to your location within 25-30 minutes guaranteed.</p>
+            </div>
+            <div class="advantage-card">
+                <span class="adv-icon">🛡️</span>
+                <h3>100% Hygiene Assured</h3>
+                <p>All restaurant partners strictly follow WHO safety standards and tamper-proof sealing.</p>
+            </div>
+            <div class="advantage-card">
+                <span class="adv-icon">💳</span>
+                <h3>Multiple Payment Options</h3>
+                <p>Simulated Cash on Delivery, Credit/Debit Cards, and instant UPI payments supported.</p>
+            </div>
+            <div class="advantage-card">
+                <span class="adv-icon">📍</span>
+                <h3>Live Status Stepper</h3>
+                <p>Track your order status step-by-step from kitchen preparation to final doorstep arrival.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function copyOfferCode(code) {
+        navigator.clipboard.writeText(code);
+        showToast('Promo code ' + code + ' copied to clipboard! 📋', 'success');
+    }
+
+    function quickAddToCart(id, name, price) {
+        showToast(name + ' added to your cart! 🛒', 'success');
+        // Update badge count
+        const badge = document.getElementById('cart-badge-count');
+        if (badge) {
+            let count = parseInt(badge.textContent || '0') + 1;
+            badge.textContent = count;
+        }
+    }
+</script>
+{% endblock %}

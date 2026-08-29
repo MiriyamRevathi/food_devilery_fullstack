@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock & Ingredients Inventory — Restaurant Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="font-weight-bold">Kitchen Ingredients Inventory 📦</h1>
+            <p class="text-muted">Monitor raw materials, stock levels, and automated reorder alerts</p>
+        </div>
+        <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Overview</a>
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Category</th>
+                        <th>Current Stock</th>
+                        <th>Reorder Level</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Basmati Rice (Extra Long)</strong></td>
+                        <td>Grains & Rice</td>
+                        <td>120 kg</td>
+                        <td>30 kg</td>
+                        <td><span class="badge badge-success">In Stock</span></td>
+                        <td><button class="btn btn-sm btn-outline-primary">+ Restock</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fresh Chicken (Skinless)</strong></td>
+                        <td>Poultry</td>
+                        <td>15 kg</td>
+                        <td>25 kg</td>
+                        <td><span class="badge badge-danger">Low Stock Alert</span></td>
+                        <td><button class="btn btn-sm btn-warning">+ Restock Now</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Amul Cooking Butter</strong></td>
+                        <td>Dairy</td>
+                        <td>45 kg</td>
+                        <td>10 kg</td>
+                        <td><span class="badge badge-success">In Stock</span></td>
+                        <td><button class="btn btn-sm btn-outline-primary">+ Restock</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

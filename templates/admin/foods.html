@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Global Foods Audit — Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">Global Food Catalog Audit 🍲</h1>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="card p-4">
+        <p class="text-muted">Total Food Items Registered Across Platform: <strong>{{ foods|length }}</strong></p>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Food ID</th>
+                        <th>Dish Name</th>
+                        <th>Restaurant ID</th>
+                        <th>Price</th>
+                        <th>Veg Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in foods[:25] %}
+                        <tr>
+                            <td>#{{ f.id }}</td>
+                            <td><strong>{{ f.name }}</strong></td>
+                            <td>Restaurant #{{ f.restaurant_id }}</td>
+                            <td>{{ f.discount_price|currency }}</td>
+                            <td>
+                                {% if f.is_veg %}
+                                    <span class="text-success">🟢 Veg</span>
+                                {% else %}
+                                    <span class="text-danger">🔴 Non-Veg</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

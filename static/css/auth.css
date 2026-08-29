@@ -1,0 +1,182 @@
+/* Auth & Profile Stylesheet */
+
+.auth-wrapper {
+    min-height: calc(100vh - 150px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.auth-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.auth-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.auth-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.forgot-link {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+}
+
+.auth-divider {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 1.75rem 0;
+}
+
+/* Demo Login Section */
+.demo-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.demo-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.demo-buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.demo-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.85rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    transition: var(--transition-fast);
+}
+
+.demo-btn:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.demo-role-icon {
+    font-size: 1.2rem;
+}
+
+.demo-btn-text strong {
+    display: block;
+    font-size: 0.8rem;
+}
+
+.demo-btn-text small {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+/* Role Selector Radio Grid */
+.role-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+
+.role-option input {
+    display: none;
+}
+
+.role-box {
+    display: block;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.role-option input:checked + .role-box {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+/* Profile Layout */
+.profile-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.p-4 { padding: 1.5rem; }
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+}
+
+.profile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.profile-nav-item {
+    padding: 0.6rem 0.85rem;
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.profile-nav-item:hover, .profile-nav-item.active {
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+}
+
+.flex-gap { display: flex; gap: 1rem; }
+.flex-1 { flex: 1; }

@@ -1,0 +1,34 @@
+# FoodFlow Lockfile - Generated for deterministic dependency installation
+# Manifest: requirements.txt
+
+click==8.1.7 \
+    --hash=sha256:ae74a370d98425d7426b3e4dd117c7fa918b9560f4ebcc9f365922ebaa803ecb \
+    --hash=sha256:ca18c4c692a5b573d58a9e66542f55d8d8e71a010d912818955b926c3c72635c
+
+Flask==3.0.3 \
+    --hash=sha256:3901b0f55cf5eb0a97c6d6786c2e36780775d79c09c9d4b008d132b35a745778 \
+    --hash=sha256:3d3f9e4f5ed58e0a811d0a51c4a01c40a5a5bb1bc9946487e4bc3922c222718e
+
+iniconfig==2.0.0 \
+    --hash=sha256:b6aade5e00a1b54d38dfc6d7950c4f9265f2016a38d117340b8ea3a312eacb19
+
+itsdangerous==2.2.0 \
+    --hash=sha256:a670b808945a0ce094a9bfdd4340a6b7d27e0255a5bfae1ad8797f7422f18320
+
+Jinja2==3.1.4 \
+    --hash=sha256:4a3a3194a287a97753e167c13fb5d62594a11f26e2a22d7d8e6fa39f50684f50
+
+MarkupSafe==2.1.5 \
+    --hash=sha256:6545b74f0236f16b7490e96b02cca1a05b5305fb79d038fe35099307d8857fa2
+
+packaging==24.0 \
+    --hash=sha256:2dd077e69f8ed04d49a3765103ecb99616016c68ca11be1745cc9d5e3ec40fa6
+
+pluggy==1.5.0 \
+    --hash=sha256:44e12318cf9e60d915f20ed8037ecc26b3e1ce977f88327a3c360a0b27b8782d
+
+pytest==8.2.0 \
+    --hash=sha256:12e7edc460d62a9c3d420f12c19f074d28e7bb7f9ecaa8251e60055bf17332d9
+
+Werkzeug==3.0.3 \
+    --hash=sha256:923ed10ba9e289bf67838562304d70b79f85c1ec8efaa7f1d4f40fdf9a39f600

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Restaurant Dashboard — {{ restaurant.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="dashboard-header flex-between mb-4">
+        <div>
+            <span class="role-badge role-restaurant mb-1 d-inline-block">Restaurant Partner</span>
+            <h1 class="font-weight-bold">{{ restaurant.name }} Dashboard</h1>
+            <p class="text-muted">📍 {{ restaurant.address }}</p>
+        </div>
+
+        <div class="dashboard-nav-btns flex-center gap-2">
+            <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-primary btn-sm">Overview</a>
+            <a href="{{ url_for('restaurant.manage_orders') }}" class="btn btn-outline-primary btn-sm">Manage Orders</a>
+            <a href="{{ url_for('restaurant.menu') }}" class="btn btn-outline-primary btn-sm">Menu Catalog</a>
+            <a href="{{ url_for('restaurant.analytics') }}" class="btn btn-outline-primary btn-sm">Analytics</a>
+        </div>
+    </div>
+
+    <!-- Summary Metrics Cards Grid -->
+    <div class="metrics-grid mb-5">
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-success">💰</span>
+            <div class="metric-info">
+                <small class="text-muted d-block">Total Sales Revenue</small>
+                <strong class="display-6 text-primary">{{ metrics.total_revenue|currency }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-primary">🛒</span>
+            <div class="metric-info">
+                <small class="text-muted d-block">Total Orders</small>
+                <strong class="display-6">{{ metrics.total_orders }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-warning">⏳</span>
+            <div class="metric-info">
+                <small class="text-muted d-block">Active / Pending Orders</small>
+                <strong class="display-6 text-warning">{{ metrics.pending_orders }}</strong>
+            </div>
+        </div>
+
+        <div class="metric-card card p-4">
+            <span class="metric-icon text-info">⭐</span>
+            <div class="metric-info">
+                <small class="text-muted d-block">Average Customer Rating</small>
+                <strong class="display-6">★ {{ metrics.average_rating }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Incoming Orders Table -->
+    <div class="card p-4 mb-5">
+        <div class="flex-between mb-3 border-bottom pb-2">
+            <h3 class="font-weight-bold mb-0">Recent Incoming Orders</h3>
+            <a href="{{ url_for('restaurant.manage_orders') }}" class="btn btn-link btn-sm">View All Orders &rarr;</a>
+        </div>
+
+        {% if recent_orders %}
+            <div class="table-responsive">
+                <table class="table data-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in recent_orders %}
+                            <tr>
+                                <td><strong>{{ o.order_number }}</strong></td>
+                                <td>{{ o.customer_name }}</td>
+                                <td>{{ o['items']|length }} item(s)</td>
+                                <td><strong>{{ o.total|currency }}</strong></td>
+                                <td>
+                                    <span class="order-status-badge status-{{ o.status|lower|replace(' ', '-') }}">{{ o.status }}</span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('restaurant.manage_orders') }}" class="btn btn-sm btn-outline-primary">Update Status</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted py-3">No orders placed for this restaurant yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

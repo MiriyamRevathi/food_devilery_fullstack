@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results for "{{ query }}" — {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="search-page-header bg-light py-4">
+    <div class="container">
+        <h2 class="mb-3">Search Results</h2>
+        <form action="{{ url_for('main.search') }}" method="GET" class="search-page-form">
+            <div class="search-input-group">
+                <input type="text" name="q" class="form-control form-control-lg" placeholder="Search biryani, pizza, burgers, or restaurants..." value="{{ query }}">
+                <button type="submit" class="btn btn-primary btn-lg">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container section-padding">
+    {% if query %}
+        <p class="results-summary text-muted mb-4">Showing matches for "<strong>{{ query }}</strong>"</p>
+        
+        <!-- Restaurants Search Results -->
+        <div class="search-section mb-5">
+            <h3 class="section-title">Matching Restaurants ({{ restaurants|length }})</h3>
+            {% if restaurants %}
+                <div class="restaurants-grid">
+                    {% for r in restaurants %}
+                        <div class="restaurant-card">
+                            <div class="card-media">
+                                <img src="{{ r.image }}" alt="{{ r.name }}" class="card-img">
+                                <span class="delivery-badge">{{ r.delivery_time }}</span>
+                            </div>
+                            <div class="card-body">
+                                <h3>{{ r.name }}</h3>
+                                <p class="cuisines-list">{{ r.cuisines|join(', ') }}</p>
+                                <p>📍 {{ r.address }}</p>
+                                <div class="flex-between mt-2">
+                                    <span>★ {{ r.rating }}</span>
+                                    <span>{{ r.price_range }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No restaurants matching "{{ query }}".</p>
+            {% endif %}
+        </div>
+
+        <!-- Food Items Search Results -->
+        <div class="search-section">
+            <h3 class="section-title">Matching Dishes ({{ foods|length }})</h3>
+            {% if foods %}
+                <div class="foods-grid">
+                    {% for food in foods %}
+                        <div class="food-card">
+                            <div class="food-media">
+                                <img src="{{ food.image }}" alt="{{ food.name }}" class="food-img">
+                            </div>
+                            <div class="food-info">
+                                <div class="flex-between">
+                                    <h4>{{ food.name }}</h4>
+                                    <span>★ {{ food.rating }}</span>
+                                </div>
+                                <p class="food-desc">{{ food.description }}</p>
+                                <div class="flex-between mt-3">
+                                    <strong class="current-price">{{ food.discount_price|currency }}</strong>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="quickAddToCart({{ food.id }}, '{{ food.name }}', {{ food.discount_price }})">+ Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No dishes matching "{{ query }}".</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <span class="display-1">🔍</span>
+            <h3>Type something above to search delicious food or restaurants!</h3>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

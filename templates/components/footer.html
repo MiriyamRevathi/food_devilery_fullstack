@@ -1,0 +1,80 @@
+<footer class="site-footer">
+    <div class="footer-top container">
+        <div class="footer-grid">
+            <!-- Column 1: Brand Info -->
+            <div class="footer-col brand-col">
+                <a href="{{ url_for('main.home') }}" class="footer-brand">
+                    <span class="brand-icon">🚴‍♂️</span>
+                    <span class="brand-name">Food<span class="brand-accent">Flow</span></span>
+                </a>
+                <p class="footer-tagline">
+                    FoodFlow connects hungry foodies with top-rated local restaurants. Experience blistering fast delivery, unbeatable discounts, and seamless tracking.
+                </p>
+                <div class="footer-socials">
+                    <a href="#" class="social-icon" title="Twitter/X">🐦</a>
+                    <a href="#" class="social-icon" title="Instagram">📸</a>
+                    <a href="#" class="social-icon" title="Facebook">📘</a>
+                    <a href="#" class="social-icon" title="YouTube">📺</a>
+                </div>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Company</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('main.about') }}">About Us</a></li>
+                    <li><a href="#">Team & Careers</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact & Help</a></li>
+                    <li><a href="#">Blog & Stories</a></li>
+                    <li><a href="#">Bug Bounty</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Partner Portals -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Partner Portals</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Restaurant Partner Join</a></li>
+                    <li><a href="#">Delivery Fleet Sign Up</a></li>
+                    <li><a href="#">Merchant Dashboard</a></li>
+                    <li><a href="#">Courier Portal</a></li>
+                    <li><a href="#">Admin Control Panel</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Mobile App & Newsletter -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Get the App</h4>
+                <p class="footer-subtext">Download FoodFlow app for exclusive mobile-only promo coupons.</p>
+                <div class="app-badges">
+                    <div class="app-badge google-play">
+                        <span class="app-badge-icon">🤖</span>
+                        <div class="app-badge-text">
+                            <small>GET IT ON</small>
+                            <strong>Google Play</strong>
+                        </div>
+                    </div>
+                    <div class="app-badge app-store">
+                        <span class="app-badge-icon">🍎</span>
+                        <div class="app-badge-text">
+                            <small>Download on the</small>
+                            <strong>App Store</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container footer-bottom-content">
+            <p>&copy; {{ current_year }} {{ app_name }} Technologies Pvt. Ltd. All rights reserved. Completely offline local Python/Flask project.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Preferences</a>
+                <a href="#">Security</a>
+            </div>
+        </div>
+    </div>
+</footer>

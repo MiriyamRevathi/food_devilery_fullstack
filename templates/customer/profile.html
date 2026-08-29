@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile — {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="profile-layout">
+        <!-- Sidebar Navigation -->
+        <div class="profile-sidebar card p-4">
+            <div class="user-header text-center mb-4">
+                <img src="{{ current_user.avatar or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' }}" alt="{{ current_user.name }}" class="profile-avatar mb-2">
+                <h3 class="font-weight-bold mb-0">{{ current_user.name }}</h3>
+                <span class="role-badge role-{{ current_user.role }}">{{ current_user.role|capitalize }}</span>
+                <p class="text-muted small mt-1">{{ current_user.email }}</p>
+            </div>
+
+            <div class="profile-nav-links">
+                <a href="#details" class="profile-nav-item active">👤 Account Details</a>
+                <a href="#" class="profile-nav-item">📦 Order History</a>
+                <a href="#" class="profile-nav-item">❤️ Favorite Dishes</a>
+                <a href="#" class="profile-nav-item">💳 Saved Payment Methods</a>
+                <a href="{{ url_for('auth.logout') }}" class="profile-nav-item text-danger mt-3">🚪 Sign Out</a>
+            </div>
+        </div>
+
+        <!-- Main Profile Content -->
+        <div class="profile-content card p-4">
+            <h3 class="section-title mb-4">Edit Profile & Delivery Address</h3>
+
+            <form action="{{ url_for('auth.profile') }}" method="POST" class="profile-form">
+                <div class="form-group mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ current_user.name }}" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label">Email Address (Read only)</label>
+                    <input type="email" id="email" class="form-control" value="{{ current_user.email }}" readonly disabled>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" value="{{ current_user.phone or '' }}" placeholder="+91 98765 43210">
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="address" class="form-label">Default Delivery Address</label>
+                    <textarea id="address" name="address" class="form-control" rows="3" placeholder="Enter your full street address, flat number, city...">{{ current_user.address or '' }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+/* Shopping Cart Stylesheet */
+
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2rem;
+}
+
+.cart-item-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cart-item-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.cart-quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-pill);
+    padding: 2px 8px;
+}
+
+.qty-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+
+.qty-number {
+    font-size: 0.95rem;
+    font-weight: 700;
+    min-width: 20px;
+    text-align: center;
+}
+
+.coupon-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.coupon-chip {
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 4px 8px;
+    border-radius: var(--border-radius-pill);
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin-right: 0.35rem;
+}
+
+.applied-coupon-banner {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--border-radius-sm);
+}

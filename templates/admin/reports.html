@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}System Reports — Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">System Analytics Reports 📊</h1>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <!-- Revenue Summary Metric -->
+    <div class="card p-4 mb-5">
+        <div class="flex-between">
+            <div>
+                <small class="text-muted d-block">Platform Gross Volume</small>
+                <strong class="display-4 text-primary">{{ total_sales|currency }}</strong>
+            </div>
+            <div>
+                <small class="text-muted d-block">Total Orders Processed</small>
+                <strong class="display-4">{{ total_orders }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Status Distribution Breakdown Chart -->
+    <div class="card p-4 mb-5">
+        <h3 class="font-weight-bold mb-4 border-bottom pb-2">Order Status Distribution Breakdown</h3>
+
+        <div class="distribution-bars flex-column gap-3">
+            {% for status_name, count in status_counts.items() %}
+                {% set pct = (count / total_orders * 100)|round(1) if total_orders > 0 else 0 %}
+                <div class="dist-row">
+                    <div class="flex-between mb-1">
+                        <strong>{{ status_name }}</strong>
+                        <span>{{ count }} orders ({{ pct }}%)</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill fill-{{ status_name|lower|replace(' ', '-') }}" style="width: {{ pct }}%;"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

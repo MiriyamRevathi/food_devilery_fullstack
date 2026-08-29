@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Details — {{ order.order_number }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/orders.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="section-title">Order #{{ order.order_number }}</h1>
+            <p class="text-muted">Placed on {{ order.created_at }}</p>
+        </div>
+
+        <div class="flex-center gap-2">
+            <a href="{{ url_for('customer.order_tracking', order_id=order.id) }}" class="btn btn-primary">🛵 Track Order Live</a>
+
+            {% if order.status in ['Order Placed', 'Confirmed'] %}
+                <form action="{{ url_for('customer.cancel_order', order_id=order.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this order?')">
+                    <button type="submit" class="btn btn-outline-danger">Cancel Order</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="order-details-grid">
+        <div class="card p-4">
+            <h3 class="font-weight-bold mb-3 border-bottom pb-2">Items Ordered</h3>
+            
+            <div class="items-list">
+                {% for item in order['items'] %}
+                    <div class="flex-between py-2 border-bottom">
+                        <div class="flex-center gap-3">
+                            <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item-img">
+                            <div>
+                                <strong>{{ item.quantity }}x {{ item.name }}</strong>
+                                {% if item.variant %}
+                                    <small class="text-muted d-block">Variant: {{ item.variant }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <strong>{{ (item.price * item.quantity)|currency }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="bill-summary mt-4 pt-3 border-top">
+                <div class="flex-between mb-2"><span class="text-muted">Subtotal</span><span>{{ order.subtotal|currency }}</span></div>
+                {% if order.discount > 0 %}
+                    <div class="flex-between mb-2 text-success"><span>Discount</span><span>-{{ order.discount|currency }}</span></div>
+                {% endif %}
+                <div class="flex-between mb-2"><span class="text-muted">Delivery Fee</span><span>{{ order.delivery_fee|currency }}</span></div>
+                <div class="flex-between mb-2"><span class="text-muted">GST Tax</span><span>{{ order.tax|currency }}</span></div>
+                <div class="flex-between border-top pt-2 mt-2"><strong class="font-weight-bold">Total Paid</strong><strong class="font-weight-bold text-primary display-6">{{ order.total|currency }}</strong></div>
+            </div>
+        </div>
+
+        <div class="card p-4">
+            <h3 class="font-weight-bold mb-3 border-bottom pb-2">Delivery & Payment</h3>
+
+            <div class="mb-3">
+                <strong class="text-muted d-block small">Status</strong>
+                <span class="order-status-badge status-{{ order.status|lower|replace(' ', '-') }}">{{ order.status }}</span>
+            </div>
+
+            <div class="mb-3">
+                <strong class="text-muted d-block small">Restaurant</strong>
+                <strong>{{ order.restaurant_name }}</strong>
+            </div>
+
+            <div class="mb-3">
+                <strong class="text-muted d-block small">Delivery Address</strong>
+                <span>{{ order.delivery_address }}</span>
+            </div>
+
+            <div class="mb-3">
+                <strong class="text-muted d-block small">Payment Method</strong>
+                <span>{{ order.payment_method }} ({{ order.payment_status }})</span>
+            </div>
+
+            {% if order.special_instructions %}
+                <div class="mb-3">
+                    <strong class="text-muted d-block small">Special Instructions</strong>
+                    <p class="font-italic mb-0">"{{ order.special_instructions }}"</p>
+                </div>
+            {% endif %}
+
+            <h4 class="font-weight-bold mt-4 mb-2">Status Log History</h4>
+            <ul class="timeline-log">
+                {% for log in order.status_history %}
+                    <li>
+                        <strong>{{ log.status }}</strong>
+                        <small class="text-muted float-right">{{ log.time }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

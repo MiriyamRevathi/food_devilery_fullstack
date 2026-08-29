@@ -1,0 +1,142 @@
+/* Footer Stylesheet */
+.site-footer {
+    background-color: #02060c;
+    color: #93959f;
+    margin-top: 4rem;
+}
+
+.footer-top {
+    padding: 4rem 0 3rem 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 2.5rem;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.footer-tagline {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-icon {
+    width: 36px;
+    height: 36px;
+    background-color: #1b1e24;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #ffffff;
+    transition: var(--transition-fast);
+}
+
+.social-icon:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.footer-heading {
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer-links a {
+    color: #93959f;
+    font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+    color: #ffffff;
+    padding-left: 4px;
+}
+
+.app-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.app-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background-color: #1b1e24;
+    border: 1px solid #2b2e36;
+    border-radius: var(--border-radius-sm);
+    color: #ffffff;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.app-badge:hover {
+    background-color: #2b2e36;
+    border-color: var(--primary-color);
+}
+
+.app-badge-icon {
+    font-size: 1.5rem;
+}
+
+.app-badge-text small {
+    display: block;
+    font-size: 0.65rem;
+    color: #93959f;
+}
+
+.app-badge-text strong {
+    font-size: 0.9rem;
+}
+
+.footer-bottom {
+    border-top: 1px solid #1b1e24;
+    padding: 1.5rem 0;
+    font-size: 0.85rem;
+}
+
+.footer-bottom-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer-bottom-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-bottom-links a {
+    color: #93959f;
+}
+
+.footer-bottom-links a:hover {
+    color: #ffffff;
+}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Restaurant Management — Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">Restaurant Listings Audit 🏪</h1>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Restaurant</th>
+                        <th>Cuisines</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Featured</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in restaurants %}
+                        <tr>
+                            <td><strong>{{ r.name }}</strong><br><small class="text-muted">{{ r.address }}</small></td>
+                            <td>{{ r.cuisines|join(', ') }}</td>
+                            <td>★ {{ r.rating }}</td>
+                            <td>
+                                {% if r.is_open %}
+                                    <span class="badge badge-success">Open</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Closed</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if r.is_featured %}
+                                    <span class="badge badge-warning">Featured</span>
+                                {% else %}
+                                    <span class="text-muted">Standard</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form action="{{ url_for('admin.restaurants') }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="restaurant_id" value="{{ r.id }}">
+                                    <button type="submit" name="action" value="toggle_open" class="btn btn-sm btn-outline-warning">Toggle Open</button>
+                                    <button type="submit" name="action" value="toggle_featured" class="btn btn-sm btn-outline-primary">Toggle Featured</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

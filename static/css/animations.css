@@ -1,0 +1,20 @@
+/* Animations & Micro-Interactions Stylesheet */
+@keyframes pulseGlow {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(252, 128, 25, 0.4); }
+    70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(252, 128, 25, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(252, 128, 25, 0); }
+}
+
+@keyframes bounceCart {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+    60% { transform: translateY(-4px); }
+}
+
+.pulse-glow {
+    animation: pulseGlow 2s infinite;
+}
+
+.cart-bounce-anim {
+    animation: bounceCart 0.8s ease-in-out;
+}

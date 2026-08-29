@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Dish — {{ restaurant.name }}{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="card p-4 max-w-700 mx-auto">
+        <h2 class="font-weight-bold mb-3 border-bottom pb-2">Add New Dish to Menu 🍲</h2>
+
+        <form action="{{ url_for('restaurant.add_food') }}" method="POST">
+            <div class="form-group mb-3">
+                <label class="form-label">Dish Name</label>
+                <input type="text" name="name" class="form-control" placeholder="e.g. Butter Chicken Special" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Food Category</label>
+                <select name="category_id" class="form-control">
+                    {% for c in categories %}
+                        <option value="{{ c.id }}">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" rows="3" placeholder="Describe the ingredients, taste, and preparation method..." required></textarea>
+            </div>
+
+            <div class="form-row flex-gap mb-3">
+                <div class="form-group flex-1">
+                    <label class="form-label">Regular Price (₹)</label>
+                    <input type="number" step="0.01" name="price" class="form-control" placeholder="299.00" required>
+                </div>
+                <div class="form-group flex-1">
+                    <label class="form-label">Discount Price (₹)</label>
+                    <input type="number" step="0.01" name="discount_price" class="form-control" placeholder="249.00">
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Dietary Preference</label>
+                <div class="flex-center gap-4">
+                    <label><input type="radio" name="is_veg" value="1" checked> 🟢 Veg</label>
+                    <label><input type="radio" name="is_veg" value="0"> 🔴 Non-Veg</label>
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="form-label">Image URL (Optional)</label>
+                <input type="url" name="image" class="form-control" placeholder="https://images.unsplash.com/...">
+            </div>
+
+            <div class="flex-between">
+                <a href="{{ url_for('restaurant.menu') }}" class="btn btn-outline-primary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Dish</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

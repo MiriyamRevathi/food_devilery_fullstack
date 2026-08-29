@@ -1,0 +1,31 @@
+/* Advanced Analytics & Metrics Stylesheet */
+.analytics-metric-box {
+    background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-primary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+}
+
+.analytics-metric-box:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.growth-pill {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--border-radius-pill);
+}
+
+.growth-positive {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+}
+
+.growth-negative {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #dc3545;
+}

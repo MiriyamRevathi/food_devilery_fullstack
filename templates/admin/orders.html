@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Master Order Control — Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <h1 class="font-weight-bold">Master Order Control Center 🛒</h1>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Restaurant</th>
+                        <th>Total</th>
+                        <th>Current Status</th>
+                        <th>Override Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in orders %}
+                        <tr>
+                            <td><strong>{{ o.order_number }}</strong></td>
+                            <td>{{ o.customer_name }}</td>
+                            <td>{{ o.restaurant_name }}</td>
+                            <td><strong>{{ o.total|currency }}</strong></td>
+                            <td><span class="order-status-badge status-{{ o.status|lower|replace(' ', '-') }}">{{ o.status }}</span></td>
+                            <td>
+                                <form action="{{ url_for('admin.orders') }}" method="POST" class="flex-center gap-1">
+                                    <input type="hidden" name="order_id" value="{{ o.id }}">
+                                    <select name="status" class="form-control form-control-sm">
+                                        <option value="Order Placed">Order Placed</option>
+                                        <option value="Confirmed">Confirmed</option>
+                                        <option value="Preparing">Preparing</option>
+                                        <option value="Ready for Pickup">Ready for Pickup</option>
+                                        <option value="Out for Delivery">Out for Delivery</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
