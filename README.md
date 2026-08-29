@@ -171,3 +171,5 @@ tests/test_notifications.py .                                            [ 91%]
 tests/test_recommendations.py ..                                         [100%]
 ============================= 23 passed in 0.82s ==============================
 ```
+#   f o o d _ d e v i l e r y _ f u l l s t a c k  
+ 
