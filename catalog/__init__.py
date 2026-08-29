@@ -1,0 +1,1 @@
+"""FoodFlow domain catalog modules."""

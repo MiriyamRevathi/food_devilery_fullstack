@@ -70,4 +70,4 @@ pytest
 
 ## Project layout
 
-`app.py` creates the Flask application and registers route blueprints in `routes/`. Domain data is in `data/`; business logic and data access live in `services/` and `repositories/`. Views and browser assets are under `templates/` and `static/`. `tests/` contains automated tests, and `wsgi.py` exposes the app to production WSGI servers.
+`app.py` creates the Flask application and registers route blueprints in `routes/`. Domain data is in `data/`; business logic and data access live in `services/` and `repositories/`. The 1,040-item repository catalog is partitioned into importable modules in `catalog/`, avoiding a single oversized source file while keeping `FoodRepository`'s interface stable. Views and browser assets are under `templates/` and `static/`. `tests/` contains automated tests, and `wsgi.py` exposes the app to production WSGI servers.
