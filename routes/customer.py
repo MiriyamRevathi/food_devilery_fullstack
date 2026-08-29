@@ -455,3 +455,5 @@ def view_offers():
     """Customer promo offers storefront."""
     return render_template('customer/offers.html', offers=OFFERS)
 
+
+# Feature Catalog: Multi-City Restaurant Directory & Catalog Search
