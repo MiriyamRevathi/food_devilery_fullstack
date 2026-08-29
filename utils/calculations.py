@@ -66,3 +66,5 @@ def calculate_cart_totals(cart_items, coupon_code=None):
         "final_total": final_total,
         "item_count": sum(int(item.get("quantity", 1)) for item in cart_items)
     }
+
+# Feature Checkout: Financial Calculations & Cart Engine
