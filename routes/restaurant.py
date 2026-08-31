@@ -9,6 +9,15 @@ from utils.decorators import role_required
 
 restaurant_bp = Blueprint('restaurant', __name__, url_prefix='/restaurant')
 
+# Seed inventory items
+DEFAULT_INVENTORY = [
+    {"id": 1, "name": "Basmati Rice (Extra Long)", "category": "Grains & Rice", "stock": 120.0, "unit": "kg", "reorder_level": 30.0},
+    {"id": 2, "name": "Fresh Chicken (Skinless)", "category": "Poultry", "stock": 15.0, "unit": "kg", "reorder_level": 25.0},
+    {"id": 3, "name": "Amul Cooking Butter", "category": "Dairy", "stock": 45.0, "unit": "kg", "reorder_level": 10.0},
+    {"id": 4, "name": "Paneer (Cottage Cheese)", "category": "Dairy", "stock": 8.0, "unit": "kg", "reorder_level": 15.0},
+    {"id": 5, "name": "Biryani Masala Spices", "category": "Spices", "stock": 22.0, "unit": "kg", "reorder_level": 5.0}
+]
+
 def get_current_restaurant():
     """Helper to get restaurant associated with logged in restaurant owner."""
     user = session.get('user', {})
@@ -59,8 +68,11 @@ def manage_orders():
         order_id = request.form.get('order_id')
         new_status = request.form.get('status')
         if order_id and new_status:
-            update_order_status(order_id, new_status)
-            flash(f"Order status updated to '{new_status}'.", "success")
+            success, msg = update_order_status(order_id, new_status)
+            if success:
+                flash(msg, "success")
+            else:
+                flash(msg, "danger")
             return redirect(url_for('restaurant.manage_orders'))
 
     r_orders = [o for o in get_all_orders() if o['restaurant_id'] == r_id]
@@ -150,6 +162,74 @@ def edit_food(food_id):
 
     return render_template('restaurant/edit_food.html', restaurant=current_r, food=food, categories=CATEGORIES)
 
+@restaurant_bp.route('/food/delete/<int:food_id>', methods=['POST'])
+@role_required('restaurant', 'admin')
+def delete_food(food_id):
+    """Delete a food dish from restaurant menu."""
+    global FOODS
+    target = next((f for f in FOODS if f['id'] == food_id), None)
+    if target:
+        FOODS.remove(target)
+        flash(f"Dish '{target['name']}' removed from menu.", "info")
+    else:
+        flash("Dish not found.", "warning")
+    return redirect(url_for('restaurant.menu'))
+
+@restaurant_bp.route('/inventory', methods=['GET', 'POST'])
+@role_required('restaurant', 'admin')
+def inventory():
+    """Kitchen raw materials and inventory stock manager."""
+    current_r = get_current_restaurant()
+    inventory_items = session.get('kitchen_inventory', DEFAULT_INVENTORY)
+
+    return render_template('restaurant/inventory.html', restaurant=current_r, items=inventory_items)
+
+@restaurant_bp.route('/inventory/restock/<int:item_id>', methods=['POST'])
+@role_required('restaurant', 'admin')
+def restock_inventory(item_id):
+    """Restock an inventory ingredient item."""
+    qty = float(request.form.get('quantity', 25.0))
+    inventory_items = session.get('kitchen_inventory', DEFAULT_INVENTORY)
+    
+    target = next((i for i in inventory_items if i['id'] == item_id), None)
+    if target:
+        target['stock'] += max(0.0, qty)
+        session['kitchen_inventory'] = inventory_items
+        session.modified = True
+        flash(f"Restocked {qty} {target['unit']} of '{target['name']}'. New stock: {target['stock']} {target['unit']}.", "success")
+    
+    return redirect(url_for('restaurant.inventory'))
+
+@restaurant_bp.route('/inventory/add', methods=['POST'])
+@role_required('restaurant', 'admin')
+def add_inventory_item():
+    """Add new ingredient item to inventory."""
+    name = request.form.get('name', '').strip()
+    category = request.form.get('category', 'General').strip()
+    stock = float(request.form.get('stock', 10.0))
+    unit = request.form.get('unit', 'kg').strip()
+    reorder_level = float(request.form.get('reorder_level', 15.0))
+
+    if name and stock >= 0:
+        inventory_items = session.get('kitchen_inventory', DEFAULT_INVENTORY)
+        new_id = max([i['id'] for i in inventory_items], default=0) + 1
+        new_item = {
+            "id": new_id,
+            "name": name,
+            "category": category,
+            "stock": stock,
+            "unit": unit,
+            "reorder_level": reorder_level
+        }
+        inventory_items.append(new_item)
+        session['kitchen_inventory'] = inventory_items
+        session.modified = True
+        flash(f"Added ingredient '{name}' to kitchen inventory!", "success")
+    else:
+        flash("Please provide valid ingredient details.", "danger")
+
+    return redirect(url_for('restaurant.inventory'))
+
 @restaurant_bp.route('/reviews')
 @role_required('restaurant', 'admin')
 def reviews():
@@ -176,5 +256,3 @@ def analytics():
         total_sales=total_sales,
         avg_order_val=avg_order_val
     )
-
-# Feature Dashboards: Restaurant Owner Kitchen Fulfillment & Analytics

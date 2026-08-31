@@ -20,7 +20,7 @@
     <div class="card p-4">
         {% if foods %}
             <div class="table-responsive">
-                <table class="table data-table">
+                <table class="table data-table align-middle">
                     <thead>
                         <tr>
                             <th>Dish Image</th>
@@ -64,13 +64,16 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <div class="flex-center gap-1">
+                                    <div class="d-flex align-items-center gap-1">
                                         <form action="{{ url_for('restaurant.toggle_food', food_id=food.id) }}" method="POST" class="d-inline">
                                             <button type="submit" class="btn btn-sm btn-outline-warning">
                                                 {% if food.is_available %}Disable{% else %}Enable{% endif %}
                                             </button>
                                         </form>
                                         <a href="{{ url_for('restaurant.edit_food', food_id=food.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        <form action="{{ url_for('restaurant.delete_food', food_id=food.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete dish {{ food.name }}?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
