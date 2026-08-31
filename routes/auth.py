@@ -17,11 +17,21 @@ def find_user_by_email(email):
             return user
     return None
 
+def get_role_redirect_url(role):
+    """Helper to return role-specific entrypoint URL."""
+    if role == 'restaurant':
+        return url_for('restaurant.dashboard')
+    elif role == 'delivery':
+        return url_for('delivery.dashboard')
+    elif role == 'admin':
+        return url_for('admin.dashboard')
+    return url_for('main.home')
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """User login endpoint supporting credentials and quick demo login."""
     if 'user' in session:
-        return redirect(url_for('main.home'))
+        return redirect(get_role_redirect_url(session['user']['role']))
 
     if request.method == 'POST':
         email = request.form.get('email', '').strip()
@@ -47,16 +57,7 @@ def login():
             session.permanent = True
             flash(f"Welcome back, {user['name']}! Signed in as {user['role'].capitalize()}.", "success")
 
-            # Redirect based on role
-            role = user['role']
-            if role == 'restaurant':
-                return redirect(url_for('main.home')) # Will point to restaurant dashboard in Phase 6
-            elif role == 'delivery':
-                return redirect(url_for('main.home')) # Will point to delivery dashboard in Phase 7
-            elif role == 'admin':
-                return redirect(url_for('main.home')) # Will point to admin dashboard in Phase 8
-            else:
-                return redirect(url_for('main.home'))
+            return redirect(get_role_redirect_url(user['role']))
 
         flash("Invalid email or password. Please try again or use a demo account below.", "danger")
         return render_template('auth/login.html', email=email)
@@ -92,6 +93,7 @@ def demo_login(role):
         }
         session.permanent = True
         flash(f"Quick Demo Login: Signed in as {user['name']} ({user['role'].capitalize()}).", "success")
+        return redirect(get_role_redirect_url(user['role']))
 
     return redirect(url_for('main.home'))
 
@@ -99,82 +101,50 @@ def demo_login(role):
 def register():
     """User registration route."""
     if 'user' in session:
-        return redirect(url_for('main.home'))
+        return redirect(get_role_redirect_url(session['user']['role']))
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
         email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
         password = request.form.get('password', '').strip()
-        confirm_password = request.form.get('confirm_password', '').strip()
-        address = request.form.get('address', '').strip()
-        role = request.form.get('role', 'customer').strip()
 
-        # Validation
-        if not name or not email or not password:
-            flash("Name, email, and password are required.", "danger")
-            return render_template('auth/register.html')
-
-        if not validate_email(email):
-            flash("Please enter a valid email address.", "danger")
-            return render_template('auth/register.html')
+        if not name or not validate_email(email) or not validate_password(password):
+            flash("Please provide valid registration details.", "danger")
+            return render_template('auth/register.html', name=name, email=email, phone=phone)
 
         if find_user_by_email(email):
-            flash("An account with this email already exists. Please log in.", "warning")
-            return redirect(url_for('auth.login'))
+            flash("An account with this email address already exists. Please sign in.", "warning")
+            return render_template('auth/register.html', name=name, email=email, phone=phone)
 
-        if password != confirm_password:
-            flash("Passwords do not match.", "danger")
-            return render_template('auth/register.html')
-
-        if not validate_password(password):
-            flash("Password must be at least 6 characters long.", "danger")
-            return render_template('auth/register.html')
-
-        # Create new user record
-        new_id = len(USERS) + 1
         new_user = {
-            'id': new_id,
-            'name': name,
-            'email': email,
-            'password_hash': generate_password_hash(password),
-            'role': role if role in ['customer', 'restaurant', 'delivery'] else 'customer',
-            'phone': phone,
-            'address': address,
-            'avatar': "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80"
+            "id": max(u['id'] for u in USERS) + 1,
+            "name": name,
+            "email": email,
+            "password_hash": generate_password_hash(password),
+            "role": "customer",
+            "phone": phone,
+            "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80"
         }
-
         USERS.append(new_user)
-
-        # Log in newly registered user
-        session['user'] = {
-            'id': new_user['id'],
-            'name': new_user['name'],
-            'email': new_user['email'],
-            'role': new_user['role'],
-            'phone': new_user['phone'],
-            'address': new_user['address'],
-            'avatar': new_user['avatar']
-        }
-        session.permanent = True
-
-        flash(f"Account created successfully! Welcome to FoodFlow, {name}.", "success")
-        return redirect(url_for('main.home'))
+        flash("Registration successful! You can now log in.", "success")
+        return redirect(url_for('auth.login'))
 
     return render_template('auth/register.html')
 
 @auth_bp.route('/logout')
 def logout():
-    """User sign out route."""
-    user_name = session.get('user', {}).get('name', 'User')
+    """Sign out user and clear session."""
     session.pop('user', None)
-    flash(f"Goodbye {user_name}, you have signed out successfully.", "info")
+    session.pop('cart', None)
+    session.pop('applied_coupon', None)
+    flash("You have been signed out.", "info")
     return redirect(url_for('main.home'))
 
 @auth_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    """Customer profile view and edit page."""
+    """User profile management."""
     current_user_id = session['user']['id']
     user = next((u for u in USERS if u['id'] == current_user_id), None)
 
@@ -184,22 +154,15 @@ def profile():
         address = request.form.get('address', '').strip()
 
         if name:
-            if user:
-                user['name'] = name
-                user['phone'] = phone
-                user['address'] = address
-
-            # Update session state
+            user['name'] = name
+            user['phone'] = phone
+            user['address'] = address
             session['user']['name'] = name
             session['user']['phone'] = phone
             session['user']['address'] = address
             session.modified = True
+            flash("Profile updated successfully!", "success")
 
-            flash("Your profile details have been updated!", "success")
-            return redirect(url_for('auth.profile'))
-
-    return render_template('customer/profile.html', user=user or session['user'])
-
-# Feature Auth: Session-based Authentication & Role Security Module
+    return render_template('auth/profile.html', user=user)
 
 # Feature Auth: Session-based Authentication & Role Security Module
