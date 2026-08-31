@@ -1,52 +1,181 @@
 {% extends 'base.html' %}
 
-{% block title %}Stock & Ingredients Inventory — Restaurant Dashboard{% endblock %}
+{% block title %}Kitchen Ingredients Inventory — FoodFlow Partner{% endblock %}
 
 {% block content %}
 <div class="container section-padding">
-    <div class="flex-between mb-4">
+    <!-- Header Section -->
+    <div class="flex-between mb-4 flex-wrap gap-3">
         <div>
-            <h1 class="font-weight-bold">Kitchen Ingredients Inventory 📦</h1>
-            <p class="text-muted">Monitor raw materials, stock levels, and automated reorder alerts</p>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-primary">INVENTORY & RAW MATERIALS</span>
+                <span class="text-muted">• {{ restaurant.name }}</span>
+            </div>
+            <h1 class="font-weight-bold mt-1">Kitchen Stock & Ingredient Manager 📦</h1>
+            <p class="text-muted">Real-time raw material tracking, low-stock threshold alerts, and quick supplier restock controls.</p>
         </div>
-        <div>
-            <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addIngredientModal">+ Add Ingredient</button>
-            <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Overview</a>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIngredientModal">
+                <span class="me-1">➕</span> Add New Ingredient
+            </button>
+            <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary">
+                ← Dashboard
+            </a>
         </div>
     </div>
 
-    <div class="card p-4">
+    <!-- Summary Metrics Grid -->
+    <div class="metrics-grid mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">📦</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">TOTAL INGREDIENTS</small>
+                <div class="display-6 mt-1">{{ items|length }} Items</div>
+                <small class="text-muted">Active kitchen inventory</small>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon text-success">✅</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">IN STOCK</small>
+                <div class="display-6 mt-1 text-success">
+                    {{ items | selectattr('stock', 'gt', 15) | list | length }} Items
+                </div>
+                <small class="text-success font-weight-bold">Optimal stock levels</small>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon text-danger">⚠️</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">LOW STOCK ALERTS</small>
+                <div class="display-6 mt-1 text-danger">
+                    {{ items | selectattr('stock', 'le', 15) | list | length }} Items
+                </div>
+                <small class="text-danger font-weight-bold">Requires quick restock</small>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon text-primary">💰</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">ESTIMATED STOCK VALUE</small>
+                <div class="display-6 mt-1 text-primary">₹48,500</div>
+                <small class="text-muted">Total inventory valuation</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Filter & Data Table Card -->
+    <div class="card p-4 shadow-sm border-0">
+        <!-- Search & Filter Controls -->
+        <div class="row align-items-center mb-4 g-3">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">🔍</span>
+                    <input type="text" id="inventorySearchInput" class="form-control border-start-0" placeholder="Search ingredient by name or category...">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select id="inventoryCategoryFilter" class="form-select">
+                    <option value="">All Categories</option>
+                    <option value="Grains & Rice">Grains & Rice</option>
+                    <option value="Poultry">Poultry</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Spices">Spices</option>
+                </select>
+            </div>
+            <div class="col-md-3 text-end">
+                <small class="text-muted font-weight-bold">Showing {{ items|length }} Items</small>
+            </div>
+        </div>
+
+        <!-- Inventory Data Table -->
         <div class="table-responsive">
-            <table class="table align-middle">
+            <table class="data-table align-middle" id="inventoryTable">
                 <thead>
                     <tr>
                         <th>Ingredient</th>
                         <th>Category</th>
-                        <th>Current Stock</th>
+                        <th>Current Stock Level</th>
                         <th>Reorder Threshold</th>
-                        <th>Status</th>
-                        <th>Quick Restock</th>
+                        <th>Stock Health</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in items %}
                     <tr>
-                        <td><strong>{{ item.name }}</strong></td>
-                        <td>{{ item.category }}</td>
-                        <td><strong>{{ item.stock }} {{ item.unit }}</strong></td>
-                        <td>{{ item.reorder_level }} {{ item.unit }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="avatar-circle bg-light p-2 rounded-circle text-center" style="width:40px; height:40px; font-size:1.2rem;">
+                                    {% if 'Rice' in item.name %}🌾
+                                    {% elif 'Chicken' in item.name %}🍗
+                                    {% elif 'Butter' in item.name or 'Paneer' in item.name %}🥛
+                                    {% else %}🌶️{% endif %}
+                                </div>
+                                <div>
+                                    <strong class="d-block text-dark">{{ item.name }}</strong>
+                                    <small class="text-muted">ID: #ING-10{{ item.id }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge badge-info">{{ item.category }}</span>
+                        </td>
+                        <td>
+                            <strong class="font-weight-bold font-size-lg">{{ item.stock }} {{ item.unit }}</strong>
+                            <div class="progress-sm mt-1" style="width: 120px;">
+                                {% set pct = (item.stock / (item.reorder_level * 3)) * 100 %}
+                                <div class="progress-bar-fill {% if item.stock <= item.reorder_level %}bg-danger{% else %}bg-success{% endif %}" style="width: {{ pct if pct <= 100 else 100 }}%;"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-muted font-weight-bold">{{ item.reorder_level }} {{ item.unit }}</span>
+                        </td>
                         <td>
                             {% if item.stock <= item.reorder_level %}
-                            <span class="badge badge-danger">⚠️ Low Stock Alert</span>
+                            <span class="badge badge-danger">⚠️ LOW STOCK ALERT</span>
                             {% else %}
-                            <span class="badge badge-success">In Stock</span>
+                            <span class="badge badge-success">✓ OPTIMAL STOCK</span>
                             {% endif %}
                         </td>
                         <td>
-                            <form action="{{ url_for('restaurant.restock_inventory', item_id=item.id) }}" method="POST" class="d-flex align-items-center">
-                                <input type="number" name="quantity" value="25" min="1" step="1" class="form-control form-control-sm me-2" style="width: 80px;">
-                                <button type="submit" class="btn btn-sm {% if item.stock <= item.reorder_level %}btn-warning{% else %}btn-outline-primary{% endif %}">+ Restock</button>
-                            </form>
+                            <button type="button" class="btn btn-sm {% if item.stock <= item.reorder_level %}btn-warning{% else %}btn-outline-primary{% endif %} shadow-sm" data-bs-toggle="modal" data-bs-target="#restockModal-{{ item.id }}">
+                                📦 Quick Restock
+                            </button>
+
+                            <!-- Quick Restock Modal -->
+                            <div class="modal fade" id="restockModal-{{ item.id }}" tabindex="-1" aria-hidden="true" style="display: none !important;">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ url_for('restaurant.restock_inventory', item_id=item.id) }}" method="POST">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title font-weight-bold">Restock {{ item.name }} 📦</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="card bg-light p-3 mb-3 border-0">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Current Stock:</span>
+                                                        <strong>{{ item.stock }} {{ item.unit }}</strong>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between mt-1">
+                                                        <span>Reorder Level:</span>
+                                                        <span class="text-muted">{{ item.reorder_level }} {{ item.unit }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label font-weight-bold">Quantity to Add ({{ item.unit }})</label>
+                                                    <input type="number" name="quantity" value="25" min="1" step="1" class="form-control form-control-lg" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-success px-4">Confirm Restock</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -56,23 +185,23 @@
     </div>
 </div>
 
-<!-- Add Ingredient Modal -->
-<div class="modal fade" id="addIngredientModal" tabindex="-1" aria-hidden="true">
+<!-- Add New Ingredient Modal -->
+<div class="modal fade" id="addIngredientModal" tabindex="-1" aria-hidden="true" style="display: none !important;">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="{{ url_for('restaurant.add_inventory_item') }}" method="POST">
                 <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold">Add Kitchen Ingredient</h5>
+                    <h5 class="modal-title font-weight-bold">Add Kitchen Ingredient ➕</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Ingredient Name</label>
-                        <input type="text" name="name" class="form-control" placeholder="e.g. Cooking Oil, Spices" required>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Extra Virgin Olive Oil" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Category</label>
-                        <input type="text" name="category" class="form-control" placeholder="e.g. Dairy, Spices, Grains" required>
+                        <input type="text" name="category" class="form-control" placeholder="e.g. Oils & Condiments" required>
                     </div>
                     <div class="row">
                         <div class="col-6 mb-3">
@@ -102,4 +231,21 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('inventorySearchInput');
+    const table = document.getElementById('inventoryTable');
+    if (input && table) {
+        input.addEventListener('keyup', () => {
+            const filter = input.value.toLowerCase();
+            const rows = table.getElementsByTagName('tr');
+            for (let i = 1; i < rows.length; i++) {
+                const text = rows[i].textContent.toLowerCase();
+                rows[i].style.display = text.includes(filter) ? '' : 'none';
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
