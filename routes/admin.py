@@ -62,6 +62,19 @@ def users():
         search_q=search_q
     )
 
+@admin_bp.route('/user/toggle/<int:user_id>', methods=['POST'])
+@role_required('admin')
+def toggle_user(user_id):
+    """Enable or disable user account."""
+    target = next((u for u in USERS if u['id'] == user_id), None)
+    if target:
+        target['is_active'] = not target.get('is_active', True)
+        status = "enabled" if target['is_active'] else "disabled"
+        flash(f"User account '{target['email']}' has been {status}.", "info")
+    else:
+        flash("User not found.", "warning")
+    return redirect(url_for('admin.users'))
+
 @admin_bp.route('/restaurants', methods=['GET', 'POST'])
 @role_required('admin')
 def restaurants():
@@ -97,8 +110,11 @@ def orders():
         order_id = request.form.get('order_id')
         new_status = request.form.get('status')
         if order_id and new_status:
-            update_order_status(order_id, new_status)
-            flash(f"Admin override: Order #{order_id} status changed to '{new_status}'.", "success")
+            success, msg = update_order_status(order_id, new_status, is_admin=True)
+            if success:
+                flash(f"Admin override: Order #{order_id} status changed to '{new_status}'.", "success")
+            else:
+                flash(msg, "danger")
             return redirect(url_for('admin.orders'))
 
     all_orders = get_all_orders()
@@ -137,6 +153,20 @@ def offers():
             return redirect(url_for('admin.offers'))
 
     return render_template('admin/offers.html', offers=OFFERS)
+
+@admin_bp.route('/offers/delete/<code>', methods=['POST'])
+@role_required('admin')
+def delete_offer(code):
+    """Delete a promo coupon code."""
+    global OFFERS
+    code_upper = code.strip().upper()
+    target = next((o for o in OFFERS if o['code'].upper() == code_upper), None)
+    if target:
+        OFFERS.remove(target)
+        flash(f"Promo coupon {code_upper} deleted.", "info")
+    else:
+        flash("Promo code not found.", "warning")
+    return redirect(url_for('admin.offers'))
 
 @admin_bp.route('/reports')
 @role_required('admin')
