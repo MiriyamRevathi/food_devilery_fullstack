@@ -32,6 +32,7 @@ def create_app():
         cart = session.get('cart', [])
         cart_totals = calculate_cart_totals(cart, coupon_code=session.get('applied_coupon'))
         current_user = session.get('user')
+        favorites = session.get('favorites', {'restaurants': [], 'foods': []})
         
         return {
             'app_name': Config.APP_NAME,
@@ -40,6 +41,7 @@ def create_app():
             'cart': cart,
             'cart_count': cart_totals['item_count'],
             'cart_totals': cart_totals,
+            'favorites': favorites,
             'current_year': datetime.datetime.now().year,
             'currency_symbol': Config.CURRENCY_SYMBOL
         }
@@ -58,6 +60,10 @@ def create_app():
         return time_ago(val)
 
     # Global Error Handlers
+    @app.errorhandler(400)
+    def bad_request(e):
+        return render_template('errors/400.html'), 400
+
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template('errors/404.html'), 404
