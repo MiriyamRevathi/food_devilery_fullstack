@@ -1,9 +1,10 @@
 """Main Blueprint serving landing page, public discovery, and static pages."""
-from flask import Blueprint, render_template, request, session, jsonify
+from flask import Blueprint, render_template, request, session, jsonify, redirect, url_for, flash
 from data.categories import CATEGORIES
 from data.restaurants import RESTAURANTS
 from data.foods import FOODS
 from data.offers import OFFERS
+from data.cities import CITIES
 from utils.filters import filter_restaurants, search_food_items
 from utils.calculations import calculate_cart_totals
 
@@ -12,6 +13,9 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 def home():
     """Render home landing page with categories, featured restaurants, popular dishes, and promo offers."""
+    selected_city = session.get('selected_city', 'Hyderabad')
+    selected_area = session.get('selected_area', 'Jubilee Hills')
+
     featured_restaurants = [r for r in RESTAURANTS if r.get("is_featured")]
     popular_foods = [f for f in FOODS if f.get("is_best_seller")][:8]
     active_offers = [o for o in OFFERS if o.get("is_active")][:4]
@@ -21,7 +25,7 @@ def home():
         "total_restaurants": len(RESTAURANTS),
         "total_dishes": len(FOODS),
         "happy_customers": "50,000+",
-        "cities": "25+"
+        "cities": len(CITIES)
     }
     
     return render_template(
@@ -30,8 +34,25 @@ def home():
         featured_restaurants=featured_restaurants,
         popular_foods=popular_foods,
         active_offers=active_offers,
-        stats=stats
+        stats=stats,
+        cities=CITIES,
+        selected_city=selected_city,
+        selected_area=selected_area
     )
+
+@main_bp.route('/location/select', methods=['POST'])
+def select_location():
+    """Update active delivery city and area in session."""
+    city = request.form.get('city', 'Hyderabad').strip()
+    area = request.form.get('area', 'Jubilee Hills').strip()
+
+    session['selected_city'] = city
+    session['selected_area'] = area
+    session.modified = True
+
+    flash(f"Delivery location updated to {area}, {city} 📍", "success")
+    next_url = request.referrer or url_for('main.home')
+    return redirect(next_url)
 
 @main_bp.route('/about')
 def about():
