@@ -7,8 +7,9 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import create_app
-from data.orders import ORDERS
+from data.orders import ORDERS, update_order_status
 from data.users import USERS
+from utils.validators import validate_order_status_transition
 
 @pytest.fixture
 def client():
@@ -89,6 +90,65 @@ def test_checkout_and_order_creation(client):
     assert res_checkout.status_code == 200
     assert len(ORDERS) == initial_orders_count + 1
     assert b'Order Confirmed!' in res_checkout.data
+
+def test_order_state_machine_transitions():
+    """Test order status state machine rules."""
+    valid, msg = validate_order_status_transition('Order Placed', 'Confirmed')
+    assert valid is True
+
+    valid_invalid, msg_invalid = validate_order_status_transition('Delivered', 'Preparing')
+    assert valid_invalid is False
+    assert 'terminal state' in msg_invalid or 'Cannot transition' in msg_invalid
+
+def test_favorites_and_addresses(client):
+    """Test favorites wishlist and delivery address management."""
+    client.get('/demo-login/customer')
+
+    res_fav = client.get('/favorites')
+    assert res_fav.status_code == 200
+
+    res_addr = client.get('/addresses')
+    assert res_addr.status_code == 200
+
+    res_add_addr = client.post('/addresses/add', data={
+        'label': 'WORK',
+        'name': 'Demo Customer',
+        'address': 'Cyber Towers, HITECH City',
+        'city': 'Hyderabad',
+        'phone': '+91 98765 43210'
+    }, follow_redirects=True)
+    assert res_add_addr.status_code == 200
+    assert b'Cyber Towers' in res_add_addr.data
+
+def test_restaurant_inventory_and_menu(client):
+    """Test restaurant partner inventory and menu management."""
+    client.get('/demo-login/restaurant')
+
+    res_inv = client.get('/restaurant/inventory')
+    assert res_inv.status_code == 200
+
+    res_restock = client.post('/restaurant/inventory/restock/1', data={'quantity': 50}, follow_redirects=True)
+    assert res_restock.status_code == 200
+
+def test_delivery_driver_workflow(client):
+    """Test delivery partner dashboard and active delivery stepper."""
+    client.get('/demo-login/delivery')
+
+    res_dash = client.get('/delivery/dashboard')
+    assert res_dash.status_code == 200
+
+    res_act = client.get('/delivery/active')
+    assert res_act.status_code == 200
+
+def test_admin_management_controls(client):
+    """Test admin portal user and promo coupon controls."""
+    client.get('/demo-login/admin')
+
+    res_users = client.get('/admin/users')
+    assert res_users.status_code == 200
+
+    res_offers = client.get('/admin/offers')
+    assert res_offers.status_code == 200
 
 def test_custom_error_pages(client):
     """Test custom 404 page for non-existent routes."""
