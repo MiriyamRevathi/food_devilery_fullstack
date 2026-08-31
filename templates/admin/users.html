@@ -5,13 +5,37 @@
 {% block content %}
 <div class="container section-padding">
     <div class="flex-between mb-4">
-        <h1 class="font-weight-bold">User Accounts Management 👥</h1>
+        <div>
+            <h1 class="font-weight-bold">User Accounts Management 👥</h1>
+            <p class="text-muted">Manage system users, customer roles, partner credentials, and active account status</p>
+        </div>
         <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="card p-3 mb-4">
+        <form action="{{ url_for('admin.users') }}" method="GET" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <input type="text" name="q" value="{{ search_q }}" class="form-control form-control-sm" placeholder="Search by name or email...">
+            </div>
+            <div class="col-md-4">
+                <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All Roles</option>
+                    <option value="customer" {% if selected_role == 'customer' %}selected{% endif %}>Customer</option>
+                    <option value="restaurant" {% if selected_role == 'restaurant' %}selected{% endif %}>Restaurant Owner</option>
+                    <option value="delivery" {% if selected_role == 'delivery' %}selected{% endif %}>Delivery Partner</option>
+                    <option value="admin" {% if selected_role == 'admin' %}selected{% endif %}>Administrator</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary btn-sm w-100">Filter Users</button>
+            </div>
+        </form>
     </div>
 
     <div class="card p-4">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table align-middle">
                 <thead>
                     <tr>
                         <th>User ID</th>
@@ -19,6 +43,8 @@
                         <th>Email Address</th>
                         <th>Phone</th>
                         <th>Role</th>
+                        <th>Account Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,6 +55,20 @@
                             <td>{{ u.email }}</td>
                             <td>{{ u.phone or 'N/A' }}</td>
                             <td><span class="role-badge role-{{ u.role }}">{{ u.role|capitalize }}</span></td>
+                            <td>
+                                {% if u.get('is_active', True) %}
+                                <span class="badge badge-success">Active</span>
+                                {% else %}
+                                <span class="badge badge-danger">Disabled</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form action="{{ url_for('admin.toggle_user', user_id=u.id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-sm {% if u.get('is_active', True) %}btn-outline-danger{% else %}btn-outline-success{% endif %}">
+                                        {% if u.get('is_active', True) %}Disable{% else %}Enable{% endif %}
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
