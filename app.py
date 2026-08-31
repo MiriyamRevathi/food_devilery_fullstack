@@ -1,6 +1,7 @@
 """FoodFlow main application entrypoint."""
 from flask import Flask, render_template, session
 from config import Config
+from data.cities import CITIES
 from routes.main import main_bp
 from routes.auth import auth_bp
 from routes.customer import customer_bp
@@ -33,6 +34,8 @@ def create_app():
         cart_totals = calculate_cart_totals(cart, coupon_code=session.get('applied_coupon'))
         current_user = session.get('user')
         favorites = session.get('favorites', {'restaurants': [], 'foods': []})
+        selected_city = session.get('selected_city', 'Hyderabad')
+        selected_area = session.get('selected_area', 'Jubilee Hills')
         
         return {
             'app_name': Config.APP_NAME,
@@ -42,6 +45,9 @@ def create_app():
             'cart_count': cart_totals['item_count'],
             'cart_totals': cart_totals,
             'favorites': favorites,
+            'cities': CITIES,
+            'selected_city': selected_city,
+            'selected_area': selected_area,
             'current_year': datetime.datetime.now().year,
             'currency_symbol': Config.CURRENCY_SYMBOL
         }
