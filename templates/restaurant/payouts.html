@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Earnings & Payouts — {{ restaurant.name }}{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="font-weight-bold">Earnings & Bank Payouts 💰</h1>
+            <p class="text-muted">Financial revenue summary, commission breakdown, and bank transfers</p>
+        </div>
+        <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Overview</a>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="grid grid-3 mb-4">
+        <div class="card p-4 border shadow-sm">
+            <small class="text-muted font-weight-bold">GROSS SALES REVENUE</small>
+            <h2 class="font-weight-bold text-success mt-1 mb-0">{{ gross_sales | currency }}</h2>
+            <small class="text-muted">From {{ orders|length }} fulfilled orders</small>
+        </div>
+        <div class="card p-4 border shadow-sm">
+            <small class="text-muted font-weight-bold">PLATFORM SERVICE FEE (15%)</small>
+            <h2 class="font-weight-bold text-danger mt-1 mb-0">-{{ platform_fee | currency }}</h2>
+            <small class="text-muted">Standard 15% partner commission</small>
+        </div>
+        <div class="card p-4 border shadow-sm bg-light">
+            <small class="text-muted font-weight-bold">NET BANK PAYOUT</small>
+            <h2 class="font-weight-bold text-primary mt-1 mb-0">{{ net_earnings | currency }}</h2>
+            <small class="text-success font-weight-bold">✓ Direct Bank Deposit Ready</small>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h3 class="font-weight-bold mb-3 border-bottom pb-2">Order Earnings Breakdown</h3>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Order Date</th>
+                        <th>Customer</th>
+                        <th>Gross Value</th>
+                        <th>Platform Fee (15%)</th>
+                        <th>Net Earnings</th>
+                        <th>Payout Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in orders %}
+                    <tr>
+                        <td><strong>#{{ o.order_number }}</strong></td>
+                        <td>{{ o.created_at }}</td>
+                        <td>{{ o.customer_name }}</td>
+                        <td>{{ o.total | currency }}</td>
+                        <td class="text-danger">-{{ (o.total * 0.15) | currency }}</td>
+                        <td class="text-success font-weight-bold">{{ (o.total * 0.85) | currency }}</td>
+                        <td><span class="badge badge-success">Paid to Bank</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

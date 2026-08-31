@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Customer Insights — {{ restaurant.name }}{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="font-weight-bold">Restaurant Customers Insights 👥</h1>
+            <p class="text-muted">Customers who have ordered from {{ restaurant.name }}</p>
+        </div>
+        <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Overview</a>
+    </div>
+
+    <div class="card p-4">
+        {% if customers %}
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Total Orders</th>
+                        <th>Total Lifetime Spend</th>
+                        <th>Last Order Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in customers %}
+                    <tr>
+                        <td>#CUST-{{ c.id }}</td>
+                        <td><strong>{{ c.name }}</strong></td>
+                        <td>{{ c.phone }}</td>
+                        <td><span class="badge badge-info">{{ c.orders_count }} Orders</span></td>
+                        <td><strong>{{ c.total_spent | currency }}</strong></td>
+                        <td>{{ c.last_order }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-4">No customer records available yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

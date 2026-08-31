@@ -5,6 +5,7 @@ from data.foods import FOODS
 from data.categories import CATEGORIES
 from data.orders import ORDERS, get_all_orders, get_order_by_id, update_order_status
 from data.reviews import REVIEWS
+from data.offers import OFFERS
 from utils.decorators import role_required
 
 restaurant_bp = Blueprint('restaurant', __name__, url_prefix='/restaurant')
@@ -229,6 +230,50 @@ def add_inventory_item():
         flash("Please provide valid ingredient details.", "danger")
 
     return redirect(url_for('restaurant.inventory'))
+
+@restaurant_bp.route('/customers')
+@role_required('restaurant', 'admin')
+def customers():
+    """List of customers who ordered from this restaurant."""
+    current_r = get_current_restaurant()
+    r_orders = [o for o in get_all_orders() if o['restaurant_id'] == current_r['id']]
+
+    customer_map = {}
+    for o in r_orders:
+        c_id = o['customer_id']
+        if c_id not in customer_map:
+            customer_map[c_id] = {
+                "id": c_id,
+                "name": o['customer_name'],
+                "phone": o.get('customer_phone', '+91 98765 43210'),
+                "orders_count": 0,
+                "total_spent": 0.0,
+                "last_order": o['created_at']
+            }
+        customer_map[c_id]["orders_count"] += 1
+        customer_map[c_id]["total_spent"] += o['total']
+
+    return render_template('restaurant/customers.html', restaurant=current_r, customers=list(customer_map.values()))
+
+@restaurant_bp.route('/payouts')
+@role_required('restaurant', 'admin')
+def payouts():
+    """Restaurant earnings payouts and platform commission log."""
+    current_r = get_current_restaurant()
+    r_orders = [o for o in get_all_orders() if o['restaurant_id'] == current_r['id'] and o['status'] != 'Cancelled']
+
+    gross_sales = sum(o['total'] for o in r_orders)
+    platform_fee = gross_sales * 0.15
+    net_earnings = gross_sales - platform_fee
+
+    return render_template(
+        'restaurant/payouts.html',
+        restaurant=current_r,
+        orders=r_orders,
+        gross_sales=gross_sales,
+        platform_fee=platform_fee,
+        net_earnings=net_earnings
+    )
 
 @restaurant_bp.route('/reviews')
 @role_required('restaurant', 'admin')
