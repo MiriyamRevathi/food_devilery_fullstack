@@ -443,17 +443,129 @@ def reorder(order_id):
 @customer_bp.route('/favorites')
 def view_favorites():
     """Customer saved favorites wishlist page."""
-    return render_template('customer/favorites.html')
+    fav_data = session.get('favorites', {'restaurants': [], 'foods': []})
+    
+    fav_restaurants = [r for r in RESTAURANTS if r['id'] in fav_data.get('restaurants', [])]
+    fav_foods = [f for f in FOODS if f['id'] in fav_data.get('foods', [])]
+
+    # Sample default fallback for demo customer if empty
+    if not fav_restaurants and not fav_foods and not fav_data.get('cleared'):
+        fav_restaurants = [RESTAURANTS[0]]
+        fav_foods = [FOODS[0]]
+
+    return render_template(
+        'customer/favorites.html',
+        favorite_restaurants=fav_restaurants,
+        favorite_foods=fav_foods
+    )
+
+@customer_bp.route('/favorites/remove/restaurant/<int:rest_id>', methods=['POST'])
+def remove_favorite_restaurant(rest_id):
+    """Remove restaurant from favorites."""
+    fav_data = session.get('favorites', {'restaurants': [], 'foods': []})
+    if rest_id in fav_data.get('restaurants', []):
+        fav_data['restaurants'].remove(rest_id)
+    fav_data['cleared'] = True
+    session['favorites'] = fav_data
+    session.modified = True
+    flash("Restaurant removed from favorites.", "info")
+    return redirect(url_for('customer.view_favorites'))
+
+@customer_bp.route('/favorites/remove/food/<int:food_id>', methods=['POST'])
+def remove_favorite_food(food_id):
+    """Remove food item from favorites."""
+    fav_data = session.get('favorites', {'restaurants': [], 'foods': []})
+    if food_id in fav_data.get('foods', []):
+        fav_data['foods'].remove(food_id)
+    fav_data['cleared'] = True
+    session['favorites'] = fav_data
+    session.modified = True
+    flash("Food item removed from favorites.", "info")
+    return redirect(url_for('customer.view_favorites'))
 
 @customer_bp.route('/addresses')
 def view_addresses():
     """Customer saved delivery address manager."""
-    return render_template('customer/addresses.html')
+    addresses = session.get('addresses')
+    if addresses is None:
+        addresses = [
+            {
+                "id": 1,
+                "label": "HOME",
+                "name": session.get('user', {}).get('name', 'Demo Customer'),
+                "address": "Flat 402, Jubilee Hills, Road No 36",
+                "city": "Hyderabad, Telangana 500033",
+                "phone": "+91 98765 43210",
+                "is_default": True
+            },
+            {
+                "id": 2,
+                "label": "WORK",
+                "name": session.get('user', {}).get('name', 'Demo Customer'),
+                "address": "Building 4, HITECH City IT Park, Madhapur",
+                "city": "Hyderabad, Telangana 500081",
+                "phone": "+91 98765 43210",
+                "is_default": False
+            }
+        ]
+        session['addresses'] = addresses
+
+    return render_template('customer/addresses.html', addresses=addresses)
+
+@customer_bp.route('/addresses/add', methods=['POST'])
+def add_address():
+    """Add a new delivery address."""
+    label = request.form.get('label', 'HOME').strip().upper()
+    name = request.form.get('name', 'Customer').strip()
+    address = request.form.get('address', '').strip()
+    city = request.form.get('city', 'Hyderabad').strip()
+    phone = request.form.get('phone', '').strip()
+
+    if address and phone:
+        addresses = session.get('addresses', [])
+        new_id = max([a['id'] for a in addresses], default=0) + 1
+        is_first = len(addresses) == 0
+        
+        new_addr = {
+            "id": new_id,
+            "label": label,
+            "name": name,
+            "address": address,
+            "city": city,
+            "phone": phone,
+            "is_default": is_first
+        }
+        addresses.append(new_addr)
+        session['addresses'] = addresses
+        session.modified = True
+        flash(f"New {label} address saved!", "success")
+    else:
+        flash("Please provide full address and phone number.", "danger")
+
+    return redirect(url_for('customer.view_addresses'))
+
+@customer_bp.route('/addresses/delete/<int:addr_id>', methods=['POST'])
+def delete_address(addr_id):
+    """Delete a saved delivery address."""
+    addresses = session.get('addresses', [])
+    session['addresses'] = [a for a in addresses if a['id'] != addr_id]
+    session.modified = True
+    flash("Address deleted successfully.", "info")
+    return redirect(url_for('customer.view_addresses'))
+
+@customer_bp.route('/addresses/set-default/<int:addr_id>', methods=['POST'])
+def set_default_address(addr_id):
+    """Set default delivery address."""
+    addresses = session.get('addresses', [])
+    for a in addresses:
+        a['is_default'] = (a['id'] == addr_id)
+    session['addresses'] = addresses
+    session.modified = True
+    flash("Default delivery address updated.", "success")
+    return redirect(url_for('customer.view_addresses'))
 
 @customer_bp.route('/offers')
 def view_offers():
     """Customer promo offers storefront."""
     return render_template('customer/offers.html', offers=OFFERS)
 
-
-# Feature Catalog: Multi-City Restaurant Directory & Catalog Search
