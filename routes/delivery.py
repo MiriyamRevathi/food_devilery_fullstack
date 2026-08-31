@@ -53,6 +53,24 @@ def dashboard():
         completed_orders=completed_orders
     )
 
+@delivery_bp.route('/accept/<order_id>', methods=['POST'])
+@role_required('delivery', 'admin')
+def accept_delivery(order_id):
+    """Accept an assigned order for pickup and delivery."""
+    order = get_order_by_id(order_id)
+    if not order:
+        flash("Order not found.", "danger")
+        return redirect(url_for('delivery.dashboard'))
+
+    driver = get_current_driver()
+    driver['active_order_id'] = order['id']
+    
+    if order['status'] in ['Confirmed', 'Preparing']:
+        update_order_status(order_id, 'Ready for Pickup')
+
+    flash(f"Order #{order.get('order_number')} accepted for delivery!", "success")
+    return redirect(url_for('delivery.active_delivery'))
+
 @delivery_bp.route('/active')
 @role_required('delivery', 'admin')
 def active_delivery():
@@ -97,8 +115,11 @@ def update_delivery_status(order_id):
     """Progress active delivery to next step."""
     new_status = request.form.get('status')
     if order_id and new_status:
-        update_order_status(order_id, new_status)
-        
+        success, msg = update_order_status(order_id, new_status)
+        if not success:
+            flash(msg, "danger")
+            return redirect(url_for('delivery.active_delivery'))
+
         driver = get_current_driver()
         if new_status == 'Delivered':
             driver['earnings_today'] += 50.0
