@@ -1,4 +1,4 @@
-/* Dashboards & Pure CSS Analytics Chart Stylesheet */
+/* Dashboards, Enterprise Inventory & Pure CSS Analytics Chart Stylesheet */
 
 .metrics-grid {
     display: grid;
@@ -10,10 +10,22 @@
     display: flex;
     align-items: center;
     gap: 1.25rem;
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e9ecef);
+    border-radius: var(--border-radius-md, 12px);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+    transition: var(--transition-fast, all 0.2s ease);
+}
+
+.metric-card:hover {
+    box-shadow: var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1));
+    transform: translateY(-2px);
 }
 
 .metric-icon {
     font-size: 2.5rem;
+    line-height: 1;
 }
 
 .display-6 {
@@ -22,28 +34,77 @@
 }
 
 .table-thumb {
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
     object-fit: cover;
-    border-radius: var(--border-radius-sm);
+    border-radius: var(--border-radius-sm, 6px);
 }
 
 .data-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .data-table th, .data-table td {
-    padding: 0.85rem;
-    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color, #e9ecef);
     vertical-align: middle;
 }
 
 .data-table th {
-    background-color: var(--bg-primary);
-    font-size: 0.8rem;
+    background-color: var(--bg-primary, #f8f9fa);
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
-    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    color: var(--text-muted, #93959f);
+}
+
+.data-table tbody tr {
+    transition: var(--transition-fast, all 0.2s ease);
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(252, 128, 25, 0.03);
+}
+
+/* Badges System */
+.badge {
+    display: inline-block;
+    padding: 0.35em 0.7em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 50rem;
+}
+
+.badge-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.badge-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-primary {
+    background-color: #ffe8d6;
+    color: #fc8019;
 }
 
 /* Pure CSS Bar Chart */
@@ -53,7 +114,7 @@
     align-items: flex-end;
     justify-content: space-around;
     padding-top: 1rem;
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color, #e9ecef);
 }
 
 .chart-bar-col {
@@ -67,12 +128,26 @@
 
 .chart-bar-col .bar {
     width: 100%;
-    background-color: var(--primary-color);
-    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
-    transition: var(--transition-normal);
+    background-color: var(--primary-color, #fc8019);
+    border-radius: var(--border-radius-sm, 6px) var(--border-radius-sm, 6px) 0 0;
+    transition: var(--transition-normal, all 0.3s ease);
 }
 
 .chart-bar-col .bar:hover {
-    background-color: var(--primary-hover);
+    background-color: var(--primary-hover, #e06c09);
     transform: scaleY(1.05);
+}
+
+/* Progress bar */
+.progress-sm {
+    height: 6px;
+    background-color: var(--border-color, #e9ecef);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--primary-color, #fc8019);
+    transition: width 0.4s ease;
 }

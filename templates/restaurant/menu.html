@@ -8,27 +8,82 @@
 
 {% block content %}
 <div class="container section-padding">
-    <div class="flex-between mb-4">
+    <!-- Header -->
+    <div class="flex-between mb-4 flex-wrap gap-3">
         <div>
-            <h1 class="font-weight-bold">Menu Management Catalog 📋</h1>
-            <p class="text-muted">Total Dishes: {{ foods|length }}</p>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-primary">MENU CATALOG</span>
+                <span class="text-muted">• {{ restaurant.name }}</span>
+            </div>
+            <h1 class="font-weight-bold mt-1">Restaurant Menu Catalog 📋</h1>
+            <p class="text-muted">Manage dishes, prices, discounts, dietary flags, and stock availability.</p>
         </div>
         
-        <a href="{{ url_for('restaurant.add_food') }}" class="btn btn-primary">+ Add New Dish</a>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('restaurant.add_food') }}" class="btn btn-primary shadow-sm">
+                ➕ Add New Dish
+            </a>
+            <a href="{{ url_for('restaurant.dashboard') }}" class="btn btn-outline-primary">
+                ← Dashboard
+            </a>
+        </div>
     </div>
 
-    <div class="card p-4">
+    <!-- Dish Summary Metrics -->
+    <div class="metrics-grid mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">🍽️</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">TOTAL DISHES</small>
+                <div class="display-6 mt-1">{{ foods|length }} Dishes</div>
+                <small class="text-muted">Active menu items</small>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon text-success">🟢</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">AVAILABLE IN STOCK</small>
+                <div class="display-6 mt-1 text-success">
+                    {{ foods | selectattr('is_available') | list | length }} Dishes
+                </div>
+                <small class="text-success font-weight-bold">Ready for customers</small>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon text-warning">⭐</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">BESTSELLERS</small>
+                <div class="display-6 mt-1 text-warning">
+                    {{ foods | selectattr('is_best_seller') | list | length }} Dishes
+                </div>
+                <small class="text-muted">Top customer favorites</small>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon text-info">🌱</div>
+            <div>
+                <small class="text-muted font-weight-bold d-block text-uppercase">VEGETARIAN DISHES</small>
+                <div class="display-6 mt-1 text-info">
+                    {{ foods | selectattr('is_veg') | list | length }} Dishes
+                </div>
+                <small class="text-muted">Pure veg offerings</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Table Card -->
+    <div class="card p-4 shadow-sm border-0">
         {% if foods %}
             <div class="table-responsive">
-                <table class="table data-table align-middle">
+                <table class="data-table align-middle">
                     <thead>
                         <tr>
                             <th>Dish Image</th>
-                            <th>Dish Name</th>
+                            <th>Dish Details</th>
                             <th>Category</th>
-                            <th>Price</th>
-                            <th>Diet</th>
-                            <th>Availability Status</th>
+                            <th>Pricing</th>
+                            <th>Dietary</th>
+                            <th>Stock Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -36,29 +91,34 @@
                         {% for food in foods %}
                             <tr>
                                 <td>
-                                    <img src="{{ food.image }}" alt="{{ food.name }}" class="table-thumb">
+                                    <img src="{{ food.image }}" alt="{{ food.name }}" class="table-thumb rounded shadow-sm">
                                 </td>
                                 <td>
-                                    <strong>{{ food.name }}</strong>
-                                    <small class="text-muted d-block">{{ food.description|truncate(50) }}</small>
+                                    <strong class="d-block text-dark">{{ food.name }}</strong>
+                                    <small class="text-muted d-block">{{ food.description|truncate(55) }}</small>
+                                    {% if food.is_best_seller %}
+                                    <span class="badge badge-warning mt-1">⭐ Bestseller</span>
+                                    {% endif %}
                                 </td>
-                                <td>Category #{{ food.category_id }}</td>
                                 <td>
-                                    <strong>{{ food.discount_price|currency }}</strong>
+                                    <span class="badge badge-info">Category #{{ food.category_id }}</span>
+                                </td>
+                                <td>
+                                    <strong class="text-primary font-weight-bold">{{ food.discount_price|currency }}</strong>
                                     {% if food.price > food.discount_price %}
                                         <small class="text-muted text-decoration-line-through d-block">{{ food.price|currency }}</small>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if food.is_veg %}
-                                        <span class="text-success font-weight-bold">🟢 Veg</span>
+                                        <span class="badge badge-success">🟢 Pure Veg</span>
                                     {% else %}
-                                        <span class="text-danger font-weight-bold">🔴 Non-Veg</span>
+                                        <span class="badge badge-danger">🔴 Non-Veg</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if food.is_available %}
-                                        <span class="badge badge-success">In Stock</span>
+                                        <span class="badge badge-success">✓ In Stock</span>
                                     {% else %}
                                         <span class="badge badge-danger">Out of Stock</span>
                                     {% endif %}
@@ -66,8 +126,8 @@
                                 <td>
                                     <div class="d-flex align-items-center gap-1">
                                         <form action="{{ url_for('restaurant.toggle_food', food_id=food.id) }}" method="POST" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-warning">
-                                                {% if food.is_available %}Disable{% else %}Enable{% endif %}
+                                            <button type="submit" class="btn btn-sm {% if food.is_available %}btn-outline-warning{% else %}btn-outline-success{% endif %}">
+                                                {% if food.is_available %}Pause Item{% else %}Enable Item{% endif %}
                                             </button>
                                         </form>
                                         <a href="{{ url_for('restaurant.edit_food', food_id=food.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
@@ -82,7 +142,12 @@
                 </table>
             </div>
         {% else %}
-            <p class="text-muted">No food items added yet.</p>
+            <div class="text-center py-5">
+                <div class="display-3 mb-2">🍽️</div>
+                <h4 class="font-weight-bold">No Dishes Added Yet</h4>
+                <p class="text-muted">Add your first restaurant dish to start taking online food orders.</p>
+                <a href="{{ url_for('restaurant.add_food') }}" class="btn btn-primary mt-2">➕ Add Dish Now</a>
+            </div>
         {% endif %}
     </div>
 </div>
