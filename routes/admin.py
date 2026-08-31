@@ -8,6 +8,7 @@ from data.offers import OFFERS
 from data.reviews import REVIEWS
 from data.cities import CITIES
 from utils.decorators import role_required
+import datetime
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -202,3 +203,15 @@ def cities():
 def diagnostics():
     """System health diagnostics."""
     return render_template('admin/diagnostics.html')
+
+@admin_bp.route('/audit-logs')
+@role_required('admin')
+def audit_logs():
+    """Admin system audit logs."""
+    logs = [
+        {"id": 101, "event": "Order #1001 status changed to Delivered", "actor": "system", "time": "2026-08-28 13:15:00"},
+        {"id": 102, "event": "Promo Coupon WELCOME50 applied by customer@foodflow.local", "actor": "customer", "time": "2026-08-28 12:31:00"},
+        {"id": 103, "event": "User account restaurant@foodflow.local updated menu", "actor": "restaurant", "time": "2026-08-28 11:20:00"},
+        {"id": 104, "event": "Admin user logged in from 127.0.0.1", "actor": "admin", "time": "2026-08-28 10:00:00"}
+    ]
+    return render_template('admin/audit_logs.html', logs=logs)
