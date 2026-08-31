@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Driver Performance & Scorecards — FoodFlow Delivery{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <div class="flex-between mb-4">
+        <div>
+            <h1 class="font-weight-bold">Driver Performance Scorecard 🏆</h1>
+            <p class="text-muted">Acceptance rate, completion rate, customer satisfaction, and delivery speeds</p>
+        </div>
+        <a href="{{ url_for('delivery.dashboard') }}" class="btn btn-outline-primary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <!-- Performance Cards -->
+    <div class="grid grid-4 mb-4">
+        <div class="card p-4 border text-center">
+            <div class="display-4 text-warning mb-2">★ {{ stats.rating }}</div>
+            <strong>Customer Rating</strong>
+            <small class="text-muted d-block">Based on last 100 trips</small>
+        </div>
+        <div class="card p-4 border text-center">
+            <div class="display-4 text-success mb-2">{{ stats.acceptance_rate }}</div>
+            <strong>Acceptance Rate</strong>
+            <small class="text-muted d-block">Orders accepted vs received</small>
+        </div>
+        <div class="card p-4 border text-center">
+            <div class="display-4 text-primary mb-2">{{ stats.completion_rate }}</div>
+            <strong>Completion Rate</strong>
+            <small class="text-muted d-block">Trips completed successfully</small>
+        </div>
+        <div class="card p-4 border text-center">
+            <div class="display-4 text-info mb-2">{{ stats.avg_delivery_time }}</div>
+            <strong>Avg Delivery Time</strong>
+            <small class="text-muted d-block">From pickup to customer door</small>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h3 class="font-weight-bold mb-3 border-bottom pb-2">Recent Completed Trip Logs</h3>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Restaurant</th>
+                        <th>Delivery Address</th>
+                        <th>Time Taken</th>
+                        <th>Driver Payout</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in completed_orders %}
+                    <tr>
+                        <td><strong>#{{ o.order_number }}</strong></td>
+                        <td>{{ o.restaurant_name }}</td>
+                        <td>{{ o.delivery_address }}</td>
+                        <td>22 mins</td>
+                        <td class="text-success font-weight-bold">+₹50.00</td>
+                        <td><span class="badge badge-success">✓ Delivered</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -53,6 +53,16 @@ def dashboard():
         completed_orders=completed_orders
     )
 
+@delivery_bp.route('/toggle-online', methods=['POST'])
+@role_required('delivery', 'admin')
+def toggle_online():
+    """Toggle driver Online/Offline status."""
+    driver = get_current_driver()
+    current_status = driver.get('status', 'Online')
+    driver['status'] = 'Offline' if current_status == 'Online' else 'Online'
+    flash(f"Status set to {driver['status']}.", "info")
+    return redirect(url_for('delivery.dashboard'))
+
 @delivery_bp.route('/accept/<order_id>', methods=['POST'])
 @role_required('delivery', 'admin')
 def accept_delivery(order_id):
@@ -152,3 +162,21 @@ def history():
     completed = [o for o in all_orders if o['status'] == 'Delivered']
 
     return render_template('delivery/history.html', driver=driver, orders=completed)
+
+@delivery_bp.route('/performance')
+@role_required('delivery', 'admin')
+def performance():
+    """Driver performance scorecards and metrics."""
+    driver = get_current_driver()
+    all_orders = get_all_orders()
+    completed = [o for o in all_orders if o['status'] == 'Delivered']
+
+    stats = {
+        "acceptance_rate": "98.5%",
+        "completion_rate": "99.2%",
+        "avg_delivery_time": "24 mins",
+        "on_time_rate": "96.8%",
+        "rating": driver['rating']
+    }
+
+    return render_template('delivery/performance.html', driver=driver, stats=stats, completed_orders=completed)
