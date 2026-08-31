@@ -1,10 +1,11 @@
 /**
  * FoodFlow — Main JavaScript Module
- * Initializes global UI features, dynamic toast notifications, and user menu dropdowns.
+ * Initializes global UI features, dynamic toast notifications, user menu dropdowns, and modal dialogs.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     initUserDropdown();
+    initLocationModal();
 });
 
 /**
@@ -57,4 +58,35 @@ function initUserDropdown() {
             menu.classList.remove('show');
         });
     }
+}
+
+/**
+ * Handle Location Selector Modal toggle cleanly without display artifacts.
+ */
+function initLocationModal() {
+    const pill = document.querySelector('.location-pill');
+    const modal = document.getElementById('locationModal');
+    if (!modal) return;
+
+    if (pill) {
+        pill.addEventListener('click', () => {
+            modal.style.display = 'block';
+            modal.classList.add('show');
+        });
+    }
+
+    const closeBtns = modal.querySelectorAll('[data-bs-dismiss="modal"], .btn-close');
+    closeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+        });
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+        }
+    });
 }
