@@ -1,235 +1,260 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow — Good food. Delivered simply.</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/launch.css') }}">
+</head>
+<body class="launch-body">
 
-{% block title %}FoodFlow — Order Food Online from Top Local Restaurants{% endblock %}
-
-{% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero-container container">
-        <div class="hero-content">
-            <span class="hero-badge">Ultra Fast 25-Min Delivery</span>
-            <h1 class="hero-title">Delicious Food Delivered Warm to Your Doorstep</h1>
-            <p class="hero-subtitle">Discover over 100+ gourmet dishes from top-rated local restaurants. Fast, fresh, and hassle-free.</p>
-
-            <!-- Search Form -->
-            <form action="{{ url_for('main.search') }}" method="GET" class="hero-search-box">
-                <div class="hero-search-input-group">
-                    <input type="text" name="q" class="hero-input" placeholder="Enter dish name, cuisine, or restaurant..." autocomplete="off">
-                    <button type="submit" class="btn btn-primary btn-hero-search">
-                        <span>Find Food</span>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Quick Cuisine Chips -->
-            <div class="quick-cuisines">
-                <span class="quick-label">Popular Searches:</span>
-                <a href="{{ url_for('main.search', q='Biryani') }}" class="chip">Biryani</a>
-                <a href="{{ url_for('main.search', q='Pizza') }}" class="chip">Pizza</a>
-                <a href="{{ url_for('main.search', q='Burger') }}" class="chip">Burgers</a>
-                <a href="{{ url_for('main.search', q='Dosa') }}" class="chip">South Indian</a>
-                <a href="{{ url_for('main.search', q='Momos') }}" class="chip">Chinese</a>
-            </div>
-        </div>
-
-        <div class="hero-visual">
-            <div class="hero-image-card">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&auto=format&fit=crop&q=80" alt="Delicious Food Bowl" class="hero-img">
-                <div class="hero-floating-card card-1">
-                    <div class="float-text">
-                        <strong>50% OFF</strong>
-                        <small>On First Order</small>
-                    </div>
-                </div>
-                <div class="hero-floating-card card-2">
-                    <div class="float-text">
-                        <strong>4.9 Rating</strong>
-                        <small>Over 10k Reviews</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Promo Offers Carousel Section -->
-<section class="offers-section section-padding">
-    <div class="container">
-        <div class="section-header flex-between">
-            <div>
-                <h2 class="section-title">Special Offers & Discount Coupons</h2>
-                <p class="section-subtitle">Use these promo codes at checkout to save big on your meals.</p>
-            </div>
-        </div>
-
-        <div class="offers-grid">
-            {% for offer in active_offers %}
-                <div class="offer-card">
-                    <div class="offer-badge">{{ offer.badge }}</div>
-                    <div class="offer-code-wrapper">
-                        <strong class="offer-code">{{ offer.code }}</strong>
-                    </div>
-                    <p class="offer-desc">{{ offer.description }}</p>
-                    <div class="offer-footer">
-                        <small>Min spend: {{ offer.min_order_amount|currency }}</small>
-                        <button type="button" class="btn-copy-code" onclick="copyCouponCode('{{ offer.code }}')">Copy Code</button>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<!-- Categories Section -->
-<section class="categories-section section-padding bg-light">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Explore Categories</h2>
-            <p class="section-subtitle">Discover popular cuisines and trending cravings.</p>
-        </div>
-
-        <div class="categories-grid">
-            {% for cat in categories %}
-                <a href="{{ url_for('main.search', q=cat.name) }}" class="category-card">
-                    <div class="category-img-wrapper">
-                        <img src="{{ cat.image }}" alt="{{ cat.name }}" class="category-img" loading="lazy">
-                    </div>
-                    <h3 class="category-name mt-2">{{ cat.name }}</h3>
-                    <small class="category-tag">{{ cat.popular_tag }}</small>
+    <!-- Header Navigation -->
+    <header class="launch-header">
+        <div class="container">
+            <nav class="launch-navbar">
+                <a href="{{ url_for('main.home') }}" class="launch-logo">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-forest);"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <span>Food<span class="launch-logo-accent">Flow</span></span>
                 </a>
-            {% endfor %}
-        </div>
-    </div>
-</section>
 
-<!-- Featured Restaurants Section -->
-<section class="restaurants-section section-padding">
-    <div class="container">
-        <div class="section-header flex-between">
-            <div>
-                <h2 class="section-title">Top Rated Restaurants</h2>
-                <p class="section-subtitle">Handpicked restaurants serving authentic flavors in your neighborhood.</p>
-            </div>
-            <a href="{{ url_for('main.search') }}" class="btn btn-outline-primary">View All Restaurants &rarr;</a>
-        </div>
-
-        <div class="restaurants-grid">
-            {% for restaurant in featured_restaurants %}
-                <div class="restaurant-card">
-                    <div class="card-media">
-                        <img src="{{ restaurant.image }}" alt="{{ restaurant.name }}" class="card-img" loading="lazy">
-                        {% if restaurant.discount %}
-                            <span class="discount-tag">{{ restaurant.discount }}</span>
-                        {% endif %}
-                        <span class="delivery-badge">{{ restaurant.delivery_time }}</span>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="card-header flex-between">
-                            <h3 class="restaurant-title">{{ restaurant.name }}</h3>
-                            <span class="rating-badge">★ {{ restaurant.rating }}</span>
-                        </div>
-
-                        <p class="cuisines-list">{{ restaurant.cuisines|join(', ') }}</p>
-                        <p class="address-text">{{ restaurant.address }}</p>
-
-                        <div class="card-footer flex-between">
-                            <span class="price-range">{{ restaurant.price_range }} • Min {{ restaurant.min_order|currency }}</span>
-                            {% if restaurant.is_veg_only %}
-                                <span class="veg-only-pill">Pure Veg</span>
-                            {% else %}
-                                <span class="non-veg-pill">Non-Veg Available</span>
-                            {% endif %}
-                        </div>
-                    </div>
+                <div class="launch-nav-links">
+                    {% if current_user %}
+                    <span style="font-size:0.85rem; font-weight:700; color:var(--color-forest);">Welcome, {{ current_user.name }}</span>
+                    {% endif %}
+                    <a href="{{ url_for('main.search') }}" class="launch-nav-item">Explore</a>
+                    <a href="{{ url_for('customer.restaurants') }}" class="launch-nav-item">Restaurants</a>
+                    <a href="{{ url_for('customer.view_offers') }}" class="launch-nav-item">Offers</a>
+                    <a href="{{ url_for('main.about') }}" class="launch-nav-item">About</a>
+                    {% if current_user %}
+                    <a href="{{ url_for('auth.logout') }}" class="launch-nav-item text-danger">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="launch-nav-item">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn-launch-primary">Sign Up</a>
+                    {% endif %}
                 </div>
-            {% endfor %}
+            </nav>
         </div>
-    </div>
-</section>
+    </header>
 
-<!-- Popular Dishes Section -->
-<section class="dishes-section section-padding bg-light">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Trending Dishes Near You</h2>
-            <p class="section-subtitle">Most ordered and highest rated meals loved by customers.</p>
-        </div>
+    <!-- HERO LAUNCH SECTION -->
+    <section class="hero-launch-section">
+        <div class="container">
+            <div class="hero-launch-grid">
+                <div class="hero-launch-content">
+                    <span class="hero-tagline-badge">Good food. Delivered simply.</span>
+                    <h1 class="hero-launch-headline">Good food.<br>Delivered simply.</h1>
+                    <p class="hero-launch-subtitle">Discover great restaurants and delicious food delivered warm to your doorstep in minutes.</p>
 
-        <div class="foods-grid">
-            {% for food in popular_foods %}
-                <div class="food-card">
-                    <div class="food-media">
-                        <img src="{{ food.image }}" alt="{{ food.name }}" class="food-img" loading="lazy">
-                        {% if food.is_veg %}
-                            <span class="diet-tag veg-tag" title="Vegetarian">Pure Veg</span>
-                        {% else %}
-                            <span class="diet-tag non-veg-tag" title="Non-Vegetarian">Non-Veg</span>
-                        {% endif %}
-                        {% if food.is_best_seller %}
-                            <span class="bestseller-tag">Bestseller</span>
-                        {% endif %}
-                    </div>
-
-                    <div class="food-info">
-                        <div class="food-header flex-between">
-                            <h4 class="food-name">{{ food.name }}</h4>
-                            <span class="food-rating">★ {{ food.rating }}</span>
-                        </div>
-                        <p class="food-desc">{{ food.description }}</p>
-
-                        <div class="food-action flex-between">
-                            <div class="price-box">
-                                <strong class="current-price">{{ food.discount_price|currency }}</strong>
-                                {% if food.price > food.discount_price %}
-                                    <span class="old-price">{{ food.price|currency }}</span>
-                                {% endif %}
-                            </div>
-                            <button type="button" class="btn btn-sm btn-primary add-to-cart-btn" onclick="quickAddToCart({{ food.id }}, '{{ food.name }}', {{ food.discount_price }})">
-                                + Add
+                    <!-- Location & Search Bar -->
+                    <div class="hero-search-wrapper">
+                        <form action="{{ url_for('main.search') }}" method="GET" class="hero-search-inputs">
+                            <button type="button" class="location-picker-btn" data-bs-toggle="modal" data-bs-target="#locationModal" onclick="document.getElementById('locationModal').style.display='block'; document.getElementById('locationModal').classList.add('show');">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <span>{{ selected_area }}, {{ selected_city }}</span>
                             </button>
+                            <input type="text" name="q" class="search-input-field" placeholder="Search restaurants, dishes & cuisines..." autocomplete="off">
+                            <button type="submit" class="btn-launch-primary">
+                                Explore Food
+                            </button>
+                        </form>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <a href="{{ url_for('customer.restaurants') }}" class="btn-launch-outline">View Restaurants &rarr;</a>
+                        <small style="color: var(--color-text-muted); font-weight: 600;">Over 500+ Verified Partners</small>
+                    </div>
+                </div>
+
+                <div class="hero-showcase-wrapper">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&auto=format&fit=crop&q=80" alt="Delicious Food Showcase" class="hero-main-img">
+                    <div class="hero-float-badge">
+                        <div style="background: #ffe8d6; padding: 0.6rem; border-radius: 50%; color: var(--color-accent-gold); font-weight: 900;">★</div>
+                        <div>
+                            <strong style="display: block; font-size: 1.1rem; color: var(--color-forest);">4.8 / 5 Rating</strong>
+                            <small style="color: var(--color-text-muted);">From 2M+ Happy Customers</small>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Platform Advantages Section -->
-<section class="advantages-section section-padding">
+    <!-- FIRST ORDER PROMO BANNER -->
     <div class="container">
-        <div class="advantages-grid">
-            <div class="advantage-card">
-                <h3>Lightning Fast Delivery</h3>
-                <p>Hot, fresh meals delivered to your location within 25-30 minutes guaranteed.</p>
+        <div class="launch-promo-banner">
+            <div class="launch-promo-text">
+                <h3>{{ first_order_offer.discount }}</h3>
+                <p>{{ first_order_offer.headline }} • Use Code: <strong style="color: var(--color-accent-gold);">{{ first_order_offer.code }}</strong></p>
+                <small style="color: #cbd5e1; display: block; margin-top: 0.3rem;">{{ first_order_offer.min_spend }}</small>
             </div>
-            <div class="advantage-card">
-                <h3>100% Hygiene Assured</h3>
-                <p>All restaurant partners strictly follow WHO safety standards and tamper-proof sealing.</p>
+            <a href="{{ url_for('customer.view_offers') }}" class="btn-launch-gold">Explore Offers</a>
+        </div>
+    </div>
+
+    <!-- NUMBERED EDITORIAL FOOD CATEGORIES -->
+    <section class="editorial-section">
+        <div class="container">
+            <div class="section-editorial-header">
+                <span class="section-label">CUISINES & CRAVINGS</span>
+                <h2 class="section-editorial-title">Browse Cuisines</h2>
             </div>
-            <div class="advantage-card">
-                <h3>Multiple Payment Options</h3>
-                <p>Simulated Cash on Delivery, Credit/Debit Cards, and instant UPI payments supported.</p>
+
+            <div class="categories-editorial-grid">
+                {% for cat in editorial_categories %}
+                    <a href="{{ url_for('main.search', q=cat.name) }}" class="category-editorial-card">
+                        <span class="category-num">{{ cat.num }}</span>
+                        <img src="{{ cat.image }}" alt="{{ cat.name }}" class="category-thumb">
+                        <div class="category-info">
+                            <h4>{{ cat.name }}</h4>
+                            <small>{{ cat.tag }}</small>
+                        </div>
+                    </a>
+                {% endfor %}
             </div>
-            <div class="advantage-card">
-                <h3>Live Status Stepper</h3>
-                <p>Track your order status step-by-step from kitchen preparation to final doorstep arrival.</p>
+        </div>
+    </section>
+
+    <!-- NEARBY RESTAURANTS PREVIEW -->
+    <section class="editorial-section" style="background-color: var(--color-cream-surface);">
+        <div class="container">
+            <div class="section-editorial-header d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="section-label">RECOMMENDED NEAR YOU</span>
+                    <h2 class="section-editorial-title">Top Local Restaurants</h2>
+                </div>
+                <a href="{{ url_for('customer.restaurants') }}" class="btn-launch-outline">See All &rarr;</a>
+            </div>
+
+            <div class="preview-restaurants-grid">
+                {% for r in preview_restaurants %}
+                    <div class="preview-restaurant-card">
+                        <img src="{{ r.image }}" alt="{{ r.name }}" class="preview-card-img">
+                        <div class="preview-card-body">
+                            <h3 class="preview-card-title">{{ r.name }}</h3>
+                            <p class="preview-card-meta">{{ r.cuisine }} • {{ r.price_for_two }}</p>
+                            <div class="preview-card-footer">
+                                <span>★ {{ r.rating }}</span>
+                                <span>{{ r.delivery_time }}</span>
+                                <span style="color: var(--color-accent-gold);">{{ r.delivery_fee }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- PLATFORM LAUNCH STATS -->
+    <section class="launch-stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                {% for stat in launch_stats %}
+                    <div>
+                        <div class="stat-item-val">{{ stat.value }}</div>
+                        <div class="stat-item-lbl">{{ stat.label }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- HORIZONTAL FOOD IMAGE STRIP -->
+    <section class="food-strip-section">
+        <div class="container">
+            <div class="food-strip-container">
+                {% for strip in food_strip_images %}
+                    <div class="food-strip-item">
+                        <img src="{{ strip.url }}" alt="{{ strip.title }}">
+                        <span>{{ strip.title }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <div class="container">
+        <div class="launch-final-cta">
+            <h2>Your next favorite meal is waiting.</h2>
+            <p>Discover delicious food from top restaurants around you.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; align-items: center;">
+                <a href="{{ url_for('customer.restaurants') }}" class="btn-launch-primary">Explore Restaurants</a>
+                <a href="{{ url_for('auth.register') }}" class="btn-launch-outline">Get Started</a>
             </div>
         </div>
     </div>
-</section>
-{% endblock %}
 
-{% block extra_js %}
-<script>
-    function quickAddToCart(id, name, price) {
-        showToast(name + ' added to your cart!', 'success');
-        const badge = document.getElementById('cart-badge-count');
-        if (badge) {
-            let count = parseInt(badge.textContent || '0') + 1;
-            badge.textContent = count;
-        }
-    }
-</script>
-{% endblock %}
+    <!-- FOOTER -->
+    <footer class="launch-footer">
+        <div class="container">
+            <div class="footer-launch-grid">
+                <div>
+                    <div class="footer-launch-brand">FoodFlow</div>
+                    <p style="max-width: 320px; line-height: 1.6;">Good food. Delivered simply. Connecting food lovers with top local restaurants across India.</p>
+                </div>
+                <div class="footer-launch-links">
+                    <h4>FoodFlow</h4>
+                    <ul>
+                        <li><a href="{{ url_for('main.about') }}">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-launch-links">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="{{ url_for('customer.restaurants') }}">Restaurants</a></li>
+                        <li><a href="{{ url_for('main.search') }}">Cuisines</a></li>
+                        <li><a href="{{ url_for('customer.view_offers') }}">Offers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-launch-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="{{ url_for('main.contact') }}">Help Center</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                &copy; {{ current_year }} FoodFlow Technologies. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Location Modal -->
+    <div id="locationModal" class="modal" style="display: none !important;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="padding: 1.5rem; border-radius: 16px;">
+                <form action="{{ url_for('main.select_location') }}" method="POST">
+                    <h3 style="margin-top: 0; color: var(--color-forest);">Select Delivery Location 📍</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 700; margin-bottom: 0.3rem;">City</label>
+                        <select name="city" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #ccc;">
+                            {% for c in cities %}
+                            <option value="{{ c.name }}" {% if c.name == selected_city %}selected{% endif %}>{{ c.name }}, {{ c.state }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-weight: 700; margin-bottom: 0.3rem;">Delivery Hub / Area</label>
+                        <select name="area" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #ccc;">
+                            <option value="Indiranagar">Indiranagar (Bengaluru)</option>
+                            <option value="Koramangala">Koramangala (Bengaluru)</option>
+                            <option value="Jubilee Hills">Jubilee Hills (Hyderabad)</option>
+                            <option value="Madhapur">Madhapur (Hyderabad)</option>
+                            <option value="T Nagar">T Nagar (Chennai)</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button type="button" class="btn-launch-outline" onclick="document.getElementById('locationModal').style.display='none'; document.getElementById('locationModal').classList.remove('show');">Cancel</button>
+                        <button type="submit" class="btn-launch-primary">Set Location</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
