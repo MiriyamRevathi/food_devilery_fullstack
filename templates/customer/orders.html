@@ -14,16 +14,16 @@
     <div class="row g-4">
         <!-- Left Column: Tabs & Order Cards -->
         <div class="col-lg-8 col-12">
-            <!-- Filter Tabs -->
-            <div class="d-flex gap-3 mb-4 border-bottom pb-2">
-                <button type="button" class="btn btn-link text-primary font-weight-bold border-bottom border-primary text-decoration-none px-3 py-1">All</button>
-                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3 py-1">Ongoing</button>
-                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3 py-1">Delivered</button>
-                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3 py-1">Cancelled</button>
+            <!-- Interactive Filter Tabs -->
+            <div class="d-flex gap-2 mb-4 border-bottom pb-2">
+                <button type="button" class="btn btn-primary px-4 rounded-pill font-weight-bold order-tab-btn active" onclick="filterOrderList('all', this)">All</button>
+                <button type="button" class="btn btn-outline-primary px-4 rounded-pill font-weight-bold order-tab-btn" onclick="filterOrderList('ongoing', this)">Ongoing</button>
+                <button type="button" class="btn btn-outline-primary px-4 rounded-pill font-weight-bold order-tab-btn" onclick="filterOrderList('delivered', this)">Delivered</button>
+                <button type="button" class="btn btn-outline-primary px-4 rounded-pill font-weight-bold order-tab-btn" onclick="filterOrderList('cancelled', this)">Cancelled</button>
             </div>
 
             <!-- Ongoing Order Card -->
-            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #fff8f0; border-left: 4px solid #fc8019 !important;">
+            <div class="card p-4 border shadow-sm mb-4 order-card-item" data-order-status="ongoing" style="border-radius: 16px; background-color: #fff8f0; border-left: 4px solid #fc8019 !important;">
                 <div class="row align-items-center g-3">
                     <div class="col-auto">
                         <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
@@ -43,7 +43,7 @@
             </div>
 
             <!-- Delivered Order Card 1 -->
-            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #ffffff;">
+            <div class="card p-4 border shadow-sm mb-4 order-card-item" data-order-status="delivered" style="border-radius: 16px; background-color: #ffffff;">
                 <div class="row align-items-center g-3">
                     <div class="col-auto">
                         <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
@@ -67,7 +67,7 @@
             </div>
 
             <!-- Delivered Order Card 2 -->
-            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #ffffff;">
+            <div class="card p-4 border shadow-sm mb-4 order-card-item" data-order-status="delivered" style="border-radius: 16px; background-color: #ffffff;">
                 <div class="row align-items-center g-3">
                     <div class="col-auto">
                         <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
@@ -89,6 +89,15 @@
                     <span class="badge bg-secondary">3 items</span>
                 </div>
             </div>
+
+            <!-- Empty Order State Placeholder -->
+            <div class="card p-4 border-0 shadow-sm text-center" id="emptyOrderState" style="border-radius: 16px; background-color: #f8f9fa; display: none;">
+                <h5 class="font-weight-bold text-dark mb-1">No orders found in this category</h5>
+                <p class="text-muted small mb-3">Explore our top local restaurants and place your first delicious order!</p>
+                <div>
+                    <a href="{{ url_for('customer.restaurants') }}" class="btn btn-primary btn-sm font-weight-bold">Browse restaurants</a>
+                </div>
+            </div>
         </div>
 
         <!-- Right Column: Filters Card -->
@@ -99,7 +108,7 @@
 
                 <div class="mb-3">
                     <label class="form-label small font-weight-bold text-dark">Select date range</label>
-                    <select class="form-select">
+                    <select class="form-select" id="orderDateSelect">
                         <option value="30">Last 30 days</option>
                         <option value="60">Last 60 days</option>
                         <option value="2024">Year 2024</option>
@@ -109,17 +118,42 @@
 
                 <div class="mb-4">
                     <label class="form-label small font-weight-bold text-dark">Filter by restaurant</label>
-                    <select class="form-select">
+                    <select class="form-select" id="orderRestSelect">
                         <option value="all">All restaurants</option>
-                        <option value="namma">Namma Biryani House</option>
-                        <option value="tiffin">The Bangalore Tiffin Room</option>
-                        <option value="curry">Curry Leaf Kitchen</option>
+                        <option value="Namma Biryani House">Namma Biryani House</option>
+                        <option value="The Bangalore Tiffin Room">The Bangalore Tiffin Room</option>
+                        <option value="Curry Leaf Kitchen">Curry Leaf Kitchen</option>
                     </select>
                 </div>
 
-                <button type="button" class="btn btn-outline-primary w-100 font-weight-bold" onclick="showToast('Filters applied to order history.', 'info')">Apply filters</button>
+                <button type="button" class="btn btn-primary w-100 font-weight-bold" onclick="showToast('Filter criteria applied.', 'info')">Apply filters</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function filterOrderList(status, btn) {
+    document.querySelectorAll('.order-tab-btn').forEach(b => {
+        b.classList.remove('btn-primary', 'active');
+        b.classList.add('btn-outline-primary');
+    });
+    btn.classList.remove('btn-outline-primary');
+    btn.classList.add('btn-primary', 'active');
+
+    let visibleCount = 0;
+    document.querySelectorAll('.order-card-item').forEach(card => {
+        let cardStatus = card.dataset.orderStatus;
+        if (status === 'all' || cardStatus === status) {
+            card.style.display = 'block';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    document.getElementById('emptyOrderState').style.display = (visibleCount === 0) ? 'block' : 'none';
+    showToast('Filtered orders by: ' + status, 'info');
+}
+</script>
 {% endblock %}
