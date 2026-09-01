@@ -42,7 +42,7 @@
     --transition-normal: all 0.3s ease-in-out;
 }
 
-/* 2. Global Reset & Typography */
+/* Global Reset & Typography */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -59,6 +59,31 @@ body {
     line-height: 1.5;
     margin: 0;
     padding: 0;
+}
+
+/* GLOBAL FOODFLOW BUTTON OVERRIDES (NO BOOTSTRAP BLUE) */
+.btn-primary, .btn-primary:focus, .btn-primary:active {
+    background-color: #fc8019 !important;
+    border-color: #fc8019 !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover {
+    background-color: #e06c09 !important;
+    border-color: #e06c09 !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-primary {
+    color: #fc8019 !important;
+    border-color: #fc8019 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:active, .btn-outline-primary.active {
+    background-color: #fc8019 !important;
+    border-color: #fc8019 !important;
+    color: #ffffff !important;
 }
 
 /* Card Layout & Image Isolation Safeguards */
@@ -121,15 +146,10 @@ body {
     -moz-appearance: none;
 }
 
-.form-select:focus {
-    border-color: #fc8019;
+.form-select:focus, .form-control:focus {
+    border-color: #fc8019 !important;
     outline: 0;
-    box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.15);
-}
-
-.form-control:focus {
-    border-color: #fc8019;
-    box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.15);
+    box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.15) !important;
 }
 
 /* Role Badges */

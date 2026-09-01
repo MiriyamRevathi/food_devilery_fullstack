@@ -5,37 +5,39 @@
 {% block content %}
 <div class="container section-padding">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 24px;">
+        <div class="col-lg-8 col-12">
+            <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 24px; background-color: #ffffff;">
                 <!-- Header Image -->
-                <div class="position-relative" style="height: 320px;">
-                    <img src="{{ food.image }}" alt="{{ food.name }}" class="w-100 h-100" style="object-fit: cover;">
+                <div class="position-relative" style="height: 320px; width: 100%; overflow: hidden; background-color: #f8f9fa;">
+                    <img src="{{ food.image }}" alt="{{ food.name }}" style="width: 100%; height: 100%; object-fit: cover;">
                     <div class="position-absolute top-0 start-0 p-3">
-                        <a href="{{ url_for('customer.restaurants') }}" class="btn btn-light rounded-circle shadow-sm" style="width:42px; height:42px; display:flex; align-items:center; justify-content:center;">&larr;</a>
+                        <a href="{{ url_for('customer.restaurants') }}" class="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width:42px; height:42px; text-decoration: none;">&larr;</a>
                     </div>
                 </div>
 
                 <div class="card-body p-4 p-md-5">
                     <!-- Title & Diet Tag -->
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
                         <div>
                             {% if food.is_veg %}
-                            <span class="badge badge-success mb-2">🟢 Pure Veg</span>
+                            <span class="badge bg-success text-white mb-2 font-weight-bold">🟢 Pure Veg</span>
                             {% else %}
-                            <span class="badge badge-danger mb-2">🔴 Non-Veg</span>
+                            <span class="badge bg-danger text-white mb-2 font-weight-bold">🔴 Non-Veg</span>
                             {% endif %}
-                            <h2 class="font-weight-bold text-dark mb-1">{{ food.name }}</h2>
-                            <p class="text-muted mb-0">From <strong>{{ restaurant.name if restaurant else 'Namma Biryani House' }}</strong></p>
+                            <h2 class="font-weight-bold text-dark mb-1" style="font-size: 1.8rem;">{{ food.name }}</h2>
+                            <p class="text-muted mb-0">From <strong class="text-dark">{{ restaurant.name if restaurant else 'Namma Biryani House' }}</strong></p>
                         </div>
                         <div class="text-end">
-                            <h3 class="font-weight-bold text-primary mb-0">₹{{ food.discount_price }}</h3>
-                            <small class="text-muted text-decoration-line-through">₹{{ food.price }}</small>
+                            <h3 class="font-weight-bold text-primary mb-0" style="font-size: 1.6rem;">₹{{ food.discount_price|int }}</h3>
+                            {% if food.price > food.discount_price %}
+                            <small class="text-muted text-decoration-line-through">₹{{ food.price|int }}</small>
+                            {% endif %}
                         </div>
                     </div>
 
                     <!-- Rating & Description -->
                     <div class="d-flex align-items-center gap-2 mb-3">
-                        <span class="badge badge-warning font-weight-bold">★ 4.8</span>
+                        <span class="badge bg-warning text-dark font-weight-bold">★ 4.8</span>
                         <small class="text-muted">(142 customer reviews)</small>
                     </div>
 
@@ -45,15 +47,15 @@
 
                     <!-- Spice Level Selection -->
                     <div class="mb-4">
-                        <h5 class="font-weight-bold mb-3">Choice of Spice Level</h5>
-                        <div class="d-flex gap-3">
-                            <label class="form-check-label border p-3 rounded flex-1 text-center card-hover cursor-pointer">
+                        <h5 class="font-weight-bold text-dark mb-3">Choice of Spice Level</h5>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <label class="form-check-label border p-3 rounded flex-1 text-center cursor-pointer spice-option bg-light">
                                 <input type="radio" name="spice" value="Mild" class="form-check-input me-2"> Mild
                             </label>
-                            <label class="form-check-label border p-3 rounded flex-1 text-center card-hover cursor-pointer border-primary bg-light">
+                            <label class="form-check-label border p-3 rounded flex-1 text-center cursor-pointer spice-option border-primary bg-light">
                                 <input type="radio" name="spice" value="Medium" class="form-check-input me-2" checked> Medium
                             </label>
-                            <label class="form-check-label border p-3 rounded flex-1 text-center card-hover cursor-pointer">
+                            <label class="form-check-label border p-3 rounded flex-1 text-center cursor-pointer spice-option bg-light">
                                 <input type="radio" name="spice" value="Spicy" class="form-check-input me-2"> Spicy
                             </label>
                         </div>
@@ -61,48 +63,48 @@
 
                     <!-- Add-ons Checklist -->
                     <div class="mb-4">
-                        <h5 class="font-weight-bold mb-3">Add Extra Goodness</h5>
-                        <div class="list-group">
+                        <h5 class="font-weight-bold text-dark mb-3">Add Extra Goodness</h5>
+                        <div class="list-group border rounded overflow-hidden">
                             <label class="list-group-item d-flex justify-content-between align-items-center p-3 cursor-pointer">
                                 <div>
                                     <input type="checkbox" class="form-check-input me-2 addon-checkbox" data-price="50" onchange="updateTotalCost()"> Extra Tandoori Paneer Cubes
                                 </div>
-                                <span class="font-weight-bold">+₹50</span>
+                                <strong class="text-dark">+₹50</strong>
                             </label>
 
                             <label class="list-group-item d-flex justify-content-between align-items-center p-3 cursor-pointer">
                                 <div>
                                     <input type="checkbox" class="form-check-input me-2 addon-checkbox" data-price="30" onchange="updateTotalCost()"> Special Mint Raita Bowl
                                 </div>
-                                <span class="font-weight-bold">+₹30</span>
+                                <strong class="text-dark">+₹30</strong>
                             </label>
 
                             <label class="list-group-item d-flex justify-content-between align-items-center p-3 cursor-pointer">
                                 <div>
                                     <input type="checkbox" class="form-check-input me-2 addon-checkbox" data-price="40" onchange="updateTotalCost()"> Gulab Jamun (2 pcs)
                                 </div>
-                                <span class="font-weight-bold">+₹40</span>
+                                <strong class="text-dark">+₹40</strong>
                             </label>
                         </div>
                     </div>
 
                     <!-- Special Instructions -->
                     <div class="mb-4">
-                        <label class="form-label font-weight-bold">Special Cooking Instructions</label>
+                        <label class="form-label font-weight-bold text-dark">Special Cooking Instructions</label>
                         <textarea id="instructionsInput" class="form-control" rows="2" maxlength="150" placeholder="e.g. Less oil, extra cutlery, make it extra spicy..." oninput="document.getElementById('charCount').textContent = this.value.length;"></textarea>
                         <small class="text-muted d-block text-end mt-1"><span id="charCount">0</span>/150 characters</small>
                     </div>
 
                     <!-- Footer Quantity & Dynamic Add Button -->
-                    <div class="d-flex justify-content-between align-items-center pt-3 border-top gap-3">
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top gap-3 flex-wrap">
                         <div class="d-flex align-items-center border rounded-pill px-3 py-2 bg-light">
                             <button type="button" class="btn btn-link text-dark p-0 text-decoration-none font-weight-bold" onclick="changeItemQty(-1)">-</button>
-                            <span class="px-3 font-weight-bold" id="itemQtyVal">1</span>
+                            <span class="px-3 font-weight-bold text-dark" id="itemQtyVal">1</span>
                             <button type="button" class="btn btn-link text-dark p-0 text-decoration-none font-weight-bold" onclick="changeItemQty(1)">+</button>
                         </div>
 
                         <button type="button" class="btn btn-primary btn-lg flex-1 rounded-pill font-weight-bold" onclick="addToCartCustomized({{ food.id }}, '{{ food.name }}')">
-                            Add to Cart — <span id="dynamicTotalPrice">₹{{ food.discount_price }}</span>
+                            Add to Cart — <span id="dynamicTotalPrice">₹{{ food.discount_price|int }}</span>
                         </button>
                     </div>
                 </div>
@@ -112,7 +114,7 @@
 </div>
 
 <script>
-let basePrice = {{ food.discount_price }};
+let basePrice = {{ food.discount_price|int }};
 let currentQty = 1;
 
 function changeItemQty(delta) {
@@ -124,17 +126,33 @@ function changeItemQty(delta) {
 function updateTotalCost() {
     let addonSum = 0;
     document.querySelectorAll('.addon-checkbox:checked').forEach(cb => {
-        addonSum += parseFloat(cb.dataset.price);
+        addonSum += parseInt(cb.dataset.price || '0');
     });
     let total = (basePrice + addonSum) * currentQty;
-    document.getElementById('dynamicTotalPrice').textContent = '₹' + total.toFixed(0);
+    document.getElementById('dynamicTotalPrice').textContent = '₹' + total;
 }
 
 function addToCartCustomized(id, name) {
-    showToast(name + ' added to your cart!', 'success');
-    setTimeout(() => {
-        window.location.href = "{{ url_for('customer.view_cart') }}";
-    }, 800);
+    let selectedSpice = document.querySelector('input[name="spice"]:checked') ? document.querySelector('input[name="spice"]:checked').value : 'Medium';
+    
+    fetch("{{ url_for('customer.cart_add') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            food_id: id,
+            quantity: currentQty,
+            spice_level: selectedSpice
+        })
+    }).then(res => res.json()).then(data => {
+        if (data.success) {
+            showToast(name + ' added to your cart!', 'success');
+            let badge = document.getElementById('cart-badge-count');
+            if (badge) badge.textContent = data.cart_count;
+            setTimeout(() => {
+                window.location.href = "{{ url_for('customer.view_cart') }}";
+            }, 600);
+        }
+    });
 }
 </script>
 {% endblock %}
