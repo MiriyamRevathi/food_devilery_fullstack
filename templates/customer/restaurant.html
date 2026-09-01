@@ -1,159 +1,109 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ restaurant.name }} — Menu & Online Order{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/restaurant.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/food.css') }}">
-{% endblock %}
+{% block title %}{{ restaurant.name }} — Menu & Order Online — FoodFlow{% endblock %}
 
 {% block content %}
 <!-- Restaurant Hero Banner -->
-<div class="restaurant-hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('{{ restaurant.cover_image }}');">
-    <div class="container hero-banner-content">
-        <div class="restaurant-header-flex">
-            <img src="{{ restaurant.image }}" alt="{{ restaurant.name }}" class="restaurant-logo-lg">
-            
-            <div class="restaurant-info-box">
-                <div class="flex-between">
-                    <h1 class="restaurant-name-lg">{{ restaurant.name }}</h1>
-                    <span class="rating-badge-lg">★ {{ restaurant.rating }} <small>({{ restaurant.review_count }}+ reviews)</small></span>
+<div class="bg-dark text-white py-5 position-relative" style="background: linear-gradient(rgba(20,51,35,0.85), rgba(20,51,35,0.95)), url('{{ restaurant.cover_image or restaurant.image }}') center/cover no-repeat;">
+    <div class="container">
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+            <img src="{{ restaurant.image }}" alt="{{ restaurant.name }}" class="rounded-circle shadow-lg" style="width:100px; height:100px; object-fit:cover; border:3px solid #fc8019;">
+            <div class="flex-1">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <h1 class="font-weight-bold mb-1 text-white">{{ restaurant.name }}</h1>
+                        <p class="text-white-50 mb-2 font-size-md">{{ restaurant.cuisines|join(' • ') }} • {{ restaurant.address }}</p>
+                    </div>
+                    <span class="badge badge-success font-size-md p-2 px-3">★ {{ restaurant.rating }} ({{ restaurant.review_count }}+ reviews)</span>
                 </div>
-                <p class="cuisines-text">{{ restaurant.cuisines|join(' • ') }}</p>
-                <p class="address-subtext">📍 {{ restaurant.address }} | 🕒 {{ restaurant.opening_hours }}</p>
-                
-                <div class="restaurant-meta-row mt-3">
-                    <span class="meta-item">⚡ Delivery in {{ restaurant.delivery_time }}</span>
-                    <span class="meta-item">🚚 {{ restaurant.delivery_fee|currency }} Delivery Fee</span>
-                    <span class="meta-item">💰 Min Order: {{ restaurant.min_order|currency }}</span>
-                    {% if restaurant.discount %}
-                        <span class="promo-pill">🎁 {{ restaurant.discount }} (Code: {{ restaurant.offer_code }})</span>
-                    {% endif %}
+
+                <div class="d-flex gap-4 flex-wrap mt-2 small text-white-50">
+                    <span>⚡ {{ restaurant.delivery_time }} delivery</span>
+                    <span>📍 2.4 km away</span>
+                    <span>💰 Min order: ₹{{ restaurant.min_order|int }}</span>
+                    <span>🚚 {{ restaurant.delivery_fee or 'Free Delivery' }}</span>
                 </div>
+
+                {% if restaurant.discount %}
+                <div class="mt-3">
+                    <span class="badge badge-warning text-dark font-weight-bold p-2 px-3">🏷️ {{ restaurant.discount }} (Use code: WELCOME50)</span>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
 
-<!-- Menu Sticky Navigation Bar -->
-<div class="menu-sticky-nav" id="menu-nav">
-    <div class="container flex-between">
-        <div class="category-tabs-scroll">
-            {% for cat_name, items in grouped_foods.items() %}
-                <a href="#cat-{{ loop.index }}" class="category-nav-tab {% if loop.first %}active{% endif %}">
-                    {{ cat_name }} <small>({{ items|length }})</small>
-                </a>
-            {% endfor %}
-            <a href="#reviews-section" class="category-nav-tab">Reviews <small>({{ reviews|length }})</small></a>
-        </div>
-
-        <div class="menu-search-wrapper">
-            <input type="text" id="menu-item-search" class="form-control form-control-sm" placeholder="Search dish in menu..." onkeyup="filterMenuItems(this.value)">
-        </div>
-    </div>
-</div>
-
-<!-- Main Menu Content -->
+<!-- Menu Navigation & Items Container -->
 <div class="container section-padding">
-    <div class="menu-layout">
-        <!-- Foods Section -->
-        <main class="menu-main">
+    <div class="row g-4">
+        <!-- Main Menu Column -->
+        <div class="col-lg-8">
+            <!-- Search in Menu -->
+            <div class="card p-3 border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                <input type="text" id="menuSearchInput" class="form-control border-0" placeholder="Search dish in menu..." onkeyup="filterMenu(this.value)">
+            </div>
+
             {% for cat_name, items in grouped_foods.items() %}
-                <section class="menu-category-block" id="cat-{{ loop.index }}">
-                    <h2 class="category-block-title">{{ cat_name }}</h2>
+            <div class="menu-cat-block mb-5">
+                <h3 class="font-weight-bold text-dark mb-3 pb-2 border-bottom">{{ cat_name }} <small class="text-muted font-size-md">({{ items|length }})</small></h3>
 
-                    <div class="menu-items-list">
-                        {% for food in items %}
-                            <div class="menu-item-card" data-name="{{ food.name.lower() }}">
-                                <div class="menu-item-info">
-                                    {% if food.is_veg %}
-                                        <span class="diet-icon veg-icon" title="Vegetarian">🟢</span>
-                                    {% else %}
-                                        <span class="diet-icon non-veg-icon" title="Non-Vegetarian">🔴</span>
-                                    {% endif %}
-
-                                    {% if food.is_best_seller %}
-                                        <span class="bestseller-badge">⭐ Bestseller</span>
-                                    {% endif %}
-
-                                    <h3 class="menu-item-name">{{ food.name }}</h3>
-                                    <div class="price-row">
-                                        <strong class="menu-price">{{ food.discount_price|currency }}</strong>
-                                        {% if food.price > food.discount_price %}
-                                            <span class="menu-old-price">{{ food.price|currency }}</span>
+                <div class="row g-3">
+                    {% for food in items %}
+                    <div class="col-12 dish-card-item" data-name="{{ food.name.lower() }}">
+                        <div class="card p-4 border-0 shadow-sm card-hover" style="border-radius: 16px;">
+                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                <div class="flex-1">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        {% if food.is_veg %}
+                                        <span class="badge badge-success">🟢 Veg</span>
+                                        {% else %}
+                                        <span class="badge badge-danger">🔴 Non-Veg</span>
+                                        {% endif %}
+                                        {% if food.is_best_seller %}
+                                        <span class="badge badge-warning">★ Bestseller</span>
                                         {% endif %}
                                     </div>
-                                    <p class="menu-item-desc">{{ food.description }}</p>
+                                    <h4 class="font-weight-bold text-dark mb-1">{{ food.name }}</h4>
+                                    <strong class="text-primary font-size-lg d-block mb-2">₹{{ food.discount_price|int }}</strong>
+                                    <p class="text-muted small mb-0">{{ food.description }}</p>
                                 </div>
 
-                                <div class="menu-item-media">
-                                    <img src="{{ food.image }}" alt="{{ food.name }}" class="menu-item-img" loading="lazy">
-                                    <button type="button" class="btn btn-primary btn-add-dish" onclick="openFoodModal({{ food.id }})">
-                                        + ADD
-                                    </button>
+                                <div class="text-center position-relative" style="width: 120px;">
+                                    <img src="{{ food.image }}" alt="{{ food.name }}" class="rounded shadow-sm mb-2" style="width:110px; height:90px; object-fit:cover;">
+                                    <a href="{{ url_for('customer.food_detail', food_id=food.id) }}" class="btn btn-primary btn-sm rounded-pill w-100 font-weight-bold">+ ADD</a>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                </section>
-            {% endfor %}
-
-            <!-- Customer Reviews Section -->
-            <section class="reviews-block section-padding" id="reviews-section">
-                <h2 class="category-block-title">Customer Reviews & Ratings ({{ reviews|length }})</h2>
-
-                <div class="reviews-list">
-                    {% for review in reviews %}
-                        <div class="review-card card p-3 mb-3">
-                            <div class="flex-between">
-                                <div class="flex-center gap-2">
-                                    <img src="{{ review.avatar }}" alt="{{ review.customer_name }}" class="review-avatar">
-                                    <div>
-                                        <strong>{{ review.customer_name }}</strong>
-                                        <small class="text-muted d-block">{{ review.date }}</small>
-                                    </div>
-                                </div>
-                                <span class="rating-badge">★ {{ review.rating }}.0</span>
-                            </div>
-                            <p class="review-comment mt-2 mb-0">{{ review.comment }}</p>
                         </div>
-                    {% else %}
-                        <p class="text-muted">No reviews yet for this restaurant. Be the first to leave one after ordering!</p>
+                    </div>
                     {% endfor %}
                 </div>
-            </section>
-        </main>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Right Side: Quick Cart Summary Card -->
+        <div class="col-lg-4">
+            <div class="card p-4 border-0 shadow-sm sticky-top" style="top: 100px; border-radius: 16px;">
+                <h5 class="font-weight-bold mb-3">Your Cart</h5>
+                <p class="text-muted small mb-4">Items added from {{ restaurant.name }} will appear here.</p>
+                <a href="{{ url_for('customer.view_cart') }}" class="btn btn-primary w-100 rounded-pill font-weight-bold">View Cart & Checkout &rarr;</a>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Modal Container for Customization -->
-<div id="food-modal-container"></div>
-{% endblock %}
-
-{% block extra_js %}
 <script>
-    function filterMenuItems(query) {
-        const q = query.toLowerCase().trim();
-        const cards = document.querySelectorAll('.menu-item-card');
-        cards.forEach(card => {
-            const name = card.getAttribute('data-name');
-            if (name.includes(q)) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    function openFoodModal(foodId) {
-        showToast('Adding food to cart...', 'info', 1500);
-        // Direct add fallback or fetch modal details
-        const badge = document.getElementById('cart-badge-count');
-        if (badge) {
-            let count = parseInt(badge.textContent || '0') + 1;
-            badge.textContent = count;
+function filterMenu(query) {
+    let q = query.toLowerCase().strip();
+    document.querySelectorAll('.dish-card-item').forEach(card => {
+        let name = card.dataset.name;
+        if (!q || name.includes(q)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
         }
-        showToast('Added to cart! 🛒', 'success');
-    }
+    });
+}
 </script>
 {% endblock %}

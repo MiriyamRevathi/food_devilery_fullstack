@@ -1,85 +1,183 @@
 {% extends 'base.html' %}
 
-{% block title %}Live Order Tracking — {{ order.order_number }}{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/orders.css') }}">
-{% endblock %}
+{% block title %}Track Your Order — {{ order.order_number }}{% endblock %}
 
 {% block content %}
 <div class="container section-padding">
-    <div class="tracking-header card p-4 mb-4 text-center">
-        <div class="flex-between mb-2">
-            <span class="badge badge-primary font-size-md">Live Order Tracking 🛵</span>
-            <span class="order-status-badge status-{{ order.status|lower|replace(' ', '-') }}">{{ order.status }}</span>
-        </div>
-        <h1 class="display-5 font-weight-bold">Order #{{ order.order_number }}</h1>
-        <p class="text-muted">Estimated Delivery Time: <strong>25 - 30 Mins</strong> (Arriving at {{ order.delivery_address }})</p>
+    <!-- Page Heading -->
+    <div class="mb-4">
+        <h1 class="font-weight-bold" style="color: var(--color-forest); font-size: 2.2rem;">Track your order</h1>
+        <p class="text-muted font-size-lg">Order ID <strong class="text-primary">{{ order.order_number }}</strong></p>
     </div>
 
-    <!-- Visual Stepper Progress Bar -->
-    <div class="card p-4 mb-4">
-        <h3 class="font-weight-bold mb-4 text-center">Order Progress Milestones</h3>
-
-        <div class="stepper-wrapper">
-            {% for step in tracking_steps %}
-                <div class="stepper-item {% if loop.index0 < active_index %}completed{% elif loop.index0 == active_index %}active pulse{% else %}pending{% endif %}">
-                    <div class="step-counter">
-                        {% if loop.index0 < active_index %}
-                            ✓
-                        {% else %}
-                            {{ step.icon }}
-                        {% endif %}
+    <!-- Main Content Layout -->
+    <div class="row g-4">
+        <!-- Left Column (Order Status Card, Map Simulation & Timeline) -->
+        <div class="col-lg-8">
+            <!-- Order Status Summary Card -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px; background: #fff8f0; border-left: 4px solid #fc8019 !important;">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&auto=format&fit=crop&q=80" alt="Restaurant" class="rounded-circle" style="width:64px; height:64px; object-fit:cover;">
+                    <div>
+                        <small class="text-muted font-weight-bold d-block">Restaurant</small>
+                        <h4 class="font-weight-bold text-dark mb-0">{{ order.restaurant_name }}</h4>
+                        <small class="text-muted">{{ order.restaurant_location }}</small>
                     </div>
-                    <strong class="step-title">{{ step.title }}</strong>
-                    <small class="step-desc text-muted d-block">{{ step.desc }}</small>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
 
-    <!-- Simulated Map & Delivery Partner Card -->
-    <div class="tracking-grid">
-        <div class="card p-4">
-            <h3 class="font-weight-bold mb-3">📍 Simulated Live Location Map</h3>
-            <div class="map-simulation-box">
-                <div class="map-pin restaurant-pin" style="top: 30%; left: 25%;" title="{{ order.restaurant_name }}">
-                    🏬 {{ order.restaurant_name }}
-                </div>
-                <div class="map-pin courier-pin" style="top: 48%; left: 55%;" title="Courier on the way">
-                    🛵 Courier En Route
-                </div>
-                <div class="map-pin destination-pin" style="top: 70%; left: 80%;" title="Your Home">
-                    🏠 Your Location
-                </div>
-                <div class="map-route-line"></div>
-            </div>
-        </div>
+                    <div class="ms-auto me-3 text-start">
+                        <small class="text-muted font-weight-bold d-block">Status</small>
+                        <span class="badge badge-warning text-dark font-weight-bold">🍊 {{ order.status }}</span>
+                        <small class="text-muted d-block mt-1">{{ order.status_detail }}</small>
+                    </div>
 
-        <div class="card p-4">
-            <h3 class="font-weight-bold mb-3">🛵 Delivery Partner Details</h3>
-
-            <div class="flex-center gap-3 mb-3">
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" alt="Delivery Partner" class="driver-avatar">
-                <div>
-                    <h4 class="font-weight-bold mb-0">Ramesh Kumar</h4>
-                    <small class="text-muted d-block">⭐ 4.9 Rating (340+ deliveries)</small>
-                    <small class="badge badge-light mt-1">Honda Activa (KA-01-EV-4021)</small>
+                    <div class="text-end">
+                        <small class="text-muted font-weight-bold d-block">Estimated arrival</small>
+                        <strong class="text-primary" style="font-size: 1.4rem;">{{ order.estimated_arrival }}</strong>
+                    </div>
                 </div>
             </div>
 
-            <button type="button" class="btn btn-outline-primary btn-block mb-3" onclick="showToast('Calling driver Ramesh Kumar (+91 91234 56789)...', 'info')">
-                📞 Call Delivery Agent
-            </button>
+            <!-- Simulated Visual Map Box matching Screenshot 5 -->
+            <div class="card border-0 shadow-sm mb-4 overflow-hidden" style="border-radius: 16px;">
+                <div class="position-relative p-4" style="height: 220px; background: #e8f0fe url('https://maps.googleapis.com/maps/api/staticmap?center=12.9716,77.6412&zoom=14&size=800x300&sensor=false') center/cover no-repeat;">
+                    <!-- Map Route Overlay Lines & Pin Markers matching screenshot -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-between px-5" style="background: rgba(255,255,255,0.75);">
+                        <!-- Restaurant Pin -->
+                        <div class="text-center">
+                            <div class="avatar-circle mx-auto shadow" style="width:48px; height:48px; background:#fc8019; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem;">🍴</div>
+                            <span class="badge bg-white text-dark shadow-sm mt-2 d-block">Namma Biryani</span>
+                        </div>
 
-            <h4 class="font-weight-bold mt-4 mb-2">Order Items ({{ order['items']|length }})</h4>
-            <div class="small-items-list border-top pt-2">
-                {% for item in order['items'] %}
-                    <div class="flex-between py-1 small">
-                        <span>{{ item.quantity }}x {{ item.name }}</span>
-                        <strong>{{ (item.price * item.quantity)|currency }}</strong>
+                        <!-- Animated Delivery Driver Pin -->
+                        <div class="text-center position-relative">
+                            <div class="avatar-circle mx-auto shadow" style="width:52px; height:52px; background:#1b3b2b; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.5rem; animation: pulse 2s infinite;">🛵</div>
+                            <span class="badge badge-warning text-dark shadow-sm mt-2 d-block font-weight-bold">Arjun (On the way)</span>
+                        </div>
+
+                        <!-- Customer Home Pin -->
+                        <div class="text-center">
+                            <div class="avatar-circle mx-auto shadow" style="width:48px; height:48px; background:#28a745; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem;">🏠</div>
+                            <span class="badge bg-white text-dark shadow-sm mt-2 d-block">Home (Indiranagar)</span>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Stepper Progress Timeline matching Screenshot 5 -->
+                <div class="p-4 bg-white border-top">
+                    <div class="d-flex justify-content-between align-items-center position-relative">
+                        <!-- Progress Line -->
+                        <div class="position-absolute top-50 start-0 end-0 translate-middle-y bg-light" style="height:4px; z-index:1;"></div>
+                        <div class="position-absolute top-50 start-0 translate-middle-y bg-primary" style="height:4px; width:60%; z-index:1;"></div>
+
+                        <!-- Step 1 -->
+                        <div class="text-center position-relative z-index-2 bg-white px-2">
+                            <div class="avatar-circle mx-auto mb-1 shadow-sm" style="width:36px; height:36px; background:#fc8019; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.9rem;">✓</div>
+                            <strong class="d-block small text-dark">Order placed</strong>
+                            <small class="text-muted">12:15 PM</small>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="text-center position-relative z-index-2 bg-white px-2">
+                            <div class="avatar-circle mx-auto mb-1 shadow-sm" style="width:36px; height:36px; background:#fc8019; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.9rem;">✓</div>
+                            <strong class="d-block small text-dark">Restaurant accepted</strong>
+                            <small class="text-muted">12:16 PM</small>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="text-center position-relative z-index-2 bg-white px-2">
+                            <div class="avatar-circle mx-auto mb-1 shadow-sm" style="width:40px; height:40px; background:#fc8019; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1rem; border:3px solid #ffe3cb;">🍳</div>
+                            <strong class="d-block small text-primary font-weight-bold">Food being prepared</strong>
+                            <small class="text-muted">12:20 PM</small>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="text-center position-relative z-index-2 bg-white px-2">
+                            <div class="avatar-circle mx-auto mb-1 shadow-sm" style="width:36px; height:36px; background:#e9ecef; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#6c757d; font-size:0.9rem;">🛵</div>
+                            <strong class="d-block small text-muted">Out for delivery</strong>
+                            <small class="text-muted">--:--</small>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="text-center position-relative z-index-2 bg-white px-2">
+                            <div class="avatar-circle mx-auto mb-1 shadow-sm" style="width:36px; height:36px; background:#e9ecef; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#6c757d; font-size:0.9rem;">🏠</div>
+                            <strong class="d-block small text-muted">Delivered</strong>
+                            <small class="text-muted">--:--</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Order States (Delayed & Delivered Banners matching Screenshot 5) -->
+            <h5 class="font-weight-bold text-muted mb-3">Other order states</h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card p-3 border-0 shadow-sm" style="border-radius: 12px; background: #fffbe6; border-left: 4px solid #faad14 !important;">
+                        <strong class="d-block text-dark mb-1">Your order is taking a little longer</strong>
+                        <small class="text-muted d-block mb-2">We're experiencing high demand at the moment. Thank you for your patience!</small>
+                        <small class="text-muted font-weight-bold">Updated ETA: 1:10 PM - 1:25 PM</small>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-3 border-0 shadow-sm" style="border-radius: 12px; background: #f6ffed; border-left: 4px solid #52c41a !important;">
+                        <strong class="d-block text-dark mb-1">Order delivered</strong>
+                        <small class="text-muted d-block mb-2">Your order has been delivered. We hope you enjoyed your meal!</small>
+                        <a href="{{ url_for('customer.support') }}" class="text-success small font-weight-bold">View order details &gt;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column (Driver Card, Order Summary, SMS Updates & Support) -->
+        <div class="col-lg-4">
+            <!-- Delivery Partner Card matching Screenshot 5 -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                <small class="text-muted font-weight-bold text-uppercase d-block mb-2">Delivery partner</small>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="avatar-circle" style="width:52px; height:52px; background:#1b3b2b; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem;">🛵</div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0">{{ order.driver_name }} is delivering your order</h5>
+                        <small class="text-muted">★ {{ order.driver_rating }} • {{ order.driver_deliveries }}</small>
+                        <small class="text-muted d-block">{{ order.driver_phone }}</small>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-primary btn-sm flex-1" onclick="showToast('Calling driver {{ order.driver_name }}...', 'info')">Call</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm flex-1" onclick="showToast('Opening chat with driver...', 'info')">Message</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm flex-1" onclick="copyCouponCode('https://foodflow.local/track/FF-240819')">Share tracking</button>
+                </div>
+            </div>
+
+            <!-- Order Summary Card matching Screenshot 5 -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                <h5 class="font-weight-bold mb-3">Order summary</h5>
+                
+                {% for item in order.items %}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <span class="text-dark">{{ item.name }} <small class="text-muted">x {{ item.quantity }}</small></span>
+                    <strong class="text-dark">₹{{ item.price }}</strong>
+                </div>
                 {% endfor %}
+
+                <div class="d-flex justify-content-between align-items-center pt-3 font-weight-bold">
+                    <span class="text-dark font-size-lg">Total</span>
+                    <strong class="text-primary font-size-lg">₹{{ order.total }}</strong>
+                </div>
+
+                <a href="{{ url_for('customer.order_history') }}" class="text-primary small font-weight-bold mt-3 d-block">View order details</a>
+            </div>
+
+            <!-- Get Updates by SMS Card -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                <h5 class="font-weight-bold mb-1">Get updates by SMS</h5>
+                <p class="text-muted small mb-0">We'll send you order status updates on your phone</p>
+            </div>
+
+            <!-- Need Help Card matching Screenshot 5 -->
+            <div class="card p-4 border-0 shadow-sm text-center" style="border-radius: 16px; background: #fafafa;">
+                <h5 class="font-weight-bold mb-1">Need help?</h5>
+                <a href="{{ url_for('customer.support') }}" class="text-primary font-weight-bold">Chat with support</a>
             </div>
         </div>
     </div>

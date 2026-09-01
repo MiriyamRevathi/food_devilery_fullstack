@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}How can we help? — FoodFlow Support{% endblock %}
+
+{% block content %}
+<div class="container section-padding">
+    <!-- Header -->
+    <div class="mb-4">
+        <h1 class="font-weight-bold" style="color: var(--color-forest); font-size: 2.2rem;">How can we help?</h1>
+        <p class="text-muted font-size-lg">Find answers or get in touch with our support team.</p>
+    </div>
+
+    <!-- Help Search Bar -->
+    <div class="card p-3 mb-5 shadow-sm border-0" style="border-radius: 16px;">
+        <div class="input-group">
+            <span class="input-group-text bg-white border-0 ps-3">🔍</span>
+            <input type="text" id="supportSearchInput" class="form-control border-0 font-size-lg" placeholder="Search for help topics, order issues, refunds..." style="box-shadow: none;">
+        </div>
+    </div>
+
+    <!-- 5 Support Category Action Cards -->
+    <div class="grid grid-5 mb-5" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;">
+        <div class="card p-4 text-center border-0 shadow-sm card-hover text-decoration-none" style="cursor: pointer; border-radius: 16px;">
+            <div class="avatar-circle mx-auto mb-3" style="width:54px; height:54px; background: #ffe8d6; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fc8019; font-size:1.4rem;">🛵</div>
+            <strong class="d-block mb-1 text-dark">Orders and delivery</strong>
+            <small class="text-muted">Track orders, delivery issues, cancellations</small>
+        </div>
+
+        <div class="card p-4 text-center border-0 shadow-sm card-hover text-decoration-none" style="cursor: pointer; border-radius: 16px;">
+            <div class="avatar-circle mx-auto mb-3" style="width:54px; height:54px; background: #fff3cd; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#856404; font-size:1.4rem;">👛</div>
+            <strong class="d-block mb-1 text-dark">Payments and refunds</strong>
+            <small class="text-muted">Payments, refunds, and invoices</small>
+        </div>
+
+        <div class="card p-4 text-center border-0 shadow-sm card-hover text-decoration-none" style="cursor: pointer; border-radius: 16px;">
+            <div class="avatar-circle mx-auto mb-3" style="width:54px; height:54px; background: #ffe8d6; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fc8019; font-size:1.4rem;">👤</div>
+            <strong class="d-block mb-1 text-dark">Account and profile</strong>
+            <small class="text-muted">Manage your account, addresses and settings</small>
+        </div>
+
+        <div class="card p-4 text-center border-0 shadow-sm card-hover text-decoration-none" style="cursor: pointer; border-radius: 16px;">
+            <div class="avatar-circle mx-auto mb-3" style="width:54px; height:54px; background: #fff3cd; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#856404; font-size:1.4rem;">🎟️</div>
+            <strong class="d-block mb-1 text-dark">Offers and coupons</strong>
+            <small class="text-muted">Apply coupons, offers and cashback</small>
+        </div>
+
+        <div class="card p-4 text-center border-0 shadow-sm card-hover text-decoration-none" style="cursor: pointer; border-radius: 16px;">
+            <div class="avatar-circle mx-auto mb-3" style="width:54px; height:54px; background: #ffe8d6; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fc8019; font-size:1.4rem;">🏪</div>
+            <strong class="d-block mb-1 text-dark">Restaurant partners</strong>
+            <small class="text-muted">Partner enquiries and onboarding support</small>
+        </div>
+    </div>
+
+    <!-- Main Content Layout Grid -->
+    <div class="row g-4">
+        <!-- Left & Middle Column (FAQs & Report Form) -->
+        <div class="col-lg-8">
+            <div class="row g-4">
+                <!-- FAQs Accordion Card -->
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+                        <h4 class="font-weight-bold mb-3">Frequently asked questions</h4>
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 border-bottom text-dark font-weight-bold">
+                                Where is my order? <span class="text-muted">&rarr;</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 border-bottom text-dark font-weight-bold">
+                                How do I request a refund? <span class="text-muted">&rarr;</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 text-dark font-weight-bold">
+                                Why was my coupon rejected? <span class="text-muted">&rarr;</span>
+                            </a>
+                        </div>
+                        <a href="#" class="mt-3 text-primary font-weight-bold d-inline-block">View all FAQs &gt;</a>
+                    </div>
+                </div>
+
+                <!-- Report an Issue Card & Submitted Success Card -->
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;" id="reportIssueFormCard">
+                        <h4 class="font-weight-bold mb-3">Report an issue</h4>
+                        <p class="text-muted small">What's the issue about?</p>
+                        
+                        <div class="grid grid-2 gap-2 mb-3">
+                            <button type="button" class="btn btn-outline-primary btn-sm text-start active" onclick="this.classList.toggle('active')">Track your order</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm text-start">Wrong item</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm text-start">Food quality</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm text-start">Delivery problem</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small font-weight-bold">Tell us more</label>
+                            <textarea id="issueNotes" class="form-control" rows="3" placeholder="Tell us what happened..."></textarea>
+                        </div>
+
+                        <button type="button" class="btn btn-primary w-100" onclick="submitSupportReport()">Submit report</button>
+                    </div>
+
+                    <!-- Submitted Success State Card -->
+                    <div class="card p-4 border-0 shadow-sm text-center" style="border-radius: 16px; display: none;" id="reportSuccessCard">
+                        <div class="avatar-circle mx-auto mb-3" style="width:60px; height:60px; background: #d4edda; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#155724; font-size:1.8rem;">✓</div>
+                        <h4 class="font-weight-bold mb-1">Thanks, your report has been submitted</h4>
+                        <p class="text-muted small mb-4">We've received your report and our support team will get back to you shortly.</p>
+                        <button type="button" class="btn btn-primary w-100" onclick="resetSupportReport()">View support request</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column (Recent Order Help & Contact Us) -->
+        <div class="col-lg-4">
+            <!-- Recent Order Help Card -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="font-weight-bold mb-0">Recent order help</h5>
+                    <a href="{{ url_for('customer.order_history') }}" class="text-primary small font-weight-bold">View all orders</a>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 p-2 bg-light rounded mb-3">
+                    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=150&auto=format&fit=crop&q=80" alt="Food" class="rounded" style="width:60px; height:60px; object-fit:cover;">
+                    <div>
+                        <strong class="d-block text-dark">#{{ recent_order.id }}</strong>
+                        <small class="text-muted d-block">{{ recent_order.restaurant_name }}</small>
+                        <small class="text-muted d-block">{{ recent_order.date }}</small>
+                    </div>
+                    <div class="ms-auto text-end">
+                        <strong class="d-block text-dark">₹{{ recent_order.total }}</strong>
+                        <span class="badge badge-success">✓ Delivered</span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm flex-1" onclick="document.getElementById('issueNotes').focus()">Report an issue</button>
+                    <a href="{{ url_for('customer.order_tracking', order_id=recent_order.id) }}" class="btn btn-primary btn-sm flex-1">View order details</a>
+                </div>
+            </div>
+
+            <!-- Contact Us Card -->
+            <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="font-weight-bold mb-0">Contact us</h5>
+                    <span class="badge badge-success">🟢 Available 8 AM - 11 PM</span>
+                </div>
+
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-bottom" onclick="showToast('Initiating live chat support session...', 'success'); return false;">
+                        <span style="font-size:1.3rem;">💬</span>
+                        <div>
+                            <strong class="d-block text-dark">Chat with us</strong>
+                            <small class="text-muted">Get instant help from our support team</small>
+                        </div>
+                        <span class="ms-auto text-muted">&gt;</span>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-bottom" onclick="showToast('Calling Support Hotline: +91 1800-FOODFLOW', 'info'); return false;">
+                        <span style="font-size:1.3rem;">📞</span>
+                        <div>
+                            <strong class="d-block text-dark">Call support</strong>
+                            <small class="text-muted">Speak with our support executive</small>
+                        </div>
+                        <span class="ms-auto text-muted">&gt;</span>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3" onclick="showToast('Support Email: support@foodflow.com', 'info'); return false;">
+                        <span style="font-size:1.3rem;">✉️</span>
+                        <div>
+                            <strong class="d-block text-dark">Email support</strong>
+                            <small class="text-muted">We'll get back to you within 24 hours</small>
+                        </div>
+                        <span class="ms-auto text-muted">&gt;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function submitSupportReport() {
+    document.getElementById('reportIssueFormCard').style.display = 'none';
+    document.getElementById('reportSuccessCard').style.display = 'block';
+    showToast('Support report submitted successfully!', 'success');
+}
+
+function resetSupportReport() {
+    document.getElementById('reportSuccessCard').style.display = 'none';
+    document.getElementById('reportIssueFormCard').style.display = 'block';
+}
+</script>
+{% endblock %}
