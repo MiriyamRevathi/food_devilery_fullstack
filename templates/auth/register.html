@@ -11,9 +11,8 @@
     <div class="container flex-center">
         <div class="auth-card">
             <div class="auth-header text-center">
-                <span class="auth-icon">📝</span>
-                <h2 class="auth-title">Create Your FoodFlow Account</h2>
-                <p class="auth-subtitle">Join thousands of foodies enjoying lightning-fast delivery.</p>
+                <h2 class="auth-title">Create Your Account</h2>
+                <p class="auth-subtitle">Join thousands of customers enjoying instant food delivery.</p>
             </div>
 
             <form action="{{ url_for('auth.register') }}" method="POST" class="auth-form" id="register-form">
@@ -38,19 +37,19 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label class="form-label">Register As</label>
+                    <label class="form-label">Account Role</label>
                     <div class="role-selector-grid">
                         <label class="role-option">
                             <input type="radio" name="role" value="customer" checked>
-                            <span class="role-box">👤 Customer</span>
+                            <span class="role-box">Customer</span>
                         </label>
                         <label class="role-option">
                             <input type="radio" name="role" value="restaurant">
-                            <span class="role-box">🍳 Restaurant Partner</span>
+                            <span class="role-box">Restaurant Partner</span>
                         </label>
                         <label class="role-option">
                             <input type="radio" name="role" value="delivery">
-                            <span class="role-box">🛵 Delivery Partner</span>
+                            <span class="role-box">Delivery Agent</span>
                         </label>
                     </div>
                 </div>
@@ -71,7 +70,7 @@
             </form>
 
             <div class="auth-footer text-center mt-3">
-                <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></p>
+                <p>Already have an account? <a href="{{ url_for('auth.login') }}" class="font-weight-bold">Sign In</a></p>
             </div>
         </div>
     </div>

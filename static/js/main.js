@@ -1,6 +1,6 @@
 /**
  * FoodFlow — Main JavaScript Module
- * Initializes global UI features, dynamic toast notifications, user menu dropdowns, and modal dialogs.
+ * Handles UI interactions, toast notifications, user menu dropdowns, modals, and coupon copy helpers.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,14 +20,9 @@ function showToast(message, type = 'success', duration = 3500) {
 
     const toast = document.createElement('div');
     toast.className = `toast-item toast-${type}`;
-    
-    let icon = '🔔';
-    if (type === 'success') icon = '✅';
-    if (type === 'warning') icon = '⚠️';
-    if (type === 'danger') icon = '❌';
 
     toast.innerHTML = `
-        <span>${icon} ${message}</span>
+        <span>${message}</span>
         <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#fff;cursor:pointer;">&times;</button>
     `;
 
@@ -56,6 +51,12 @@ function initUserDropdown() {
 
         document.addEventListener('click', () => {
             menu.classList.remove('show');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                menu.classList.remove('show');
+            }
         });
     }
 }
@@ -88,5 +89,25 @@ function initLocationModal() {
             modal.style.display = 'none';
             modal.classList.remove('show');
         }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+        }
+    });
+}
+
+/**
+ * Copy promo coupon code to clipboard with toast notification.
+ * @param {string} code - The promo coupon code string.
+ */
+function copyCouponCode(code) {
+    if (!code) return;
+    navigator.clipboard.writeText(code).then(() => {
+        showToast(`Coupon code ${code} copied to clipboard!`, 'success');
+    }).catch(() => {
+        showToast(`Coupon code: ${code}`, 'info');
     });
 }

@@ -11,9 +11,8 @@
     <div class="container flex-center">
         <div class="auth-card">
             <div class="auth-header text-center">
-                <span class="auth-icon">🚴‍♂️</span>
                 <h2 class="auth-title">Sign In to FoodFlow</h2>
-                <p class="auth-subtitle">Welcome back! Please enter your details below.</p>
+                <p class="auth-subtitle">Welcome back! Access your account details below.</p>
             </div>
 
             <!-- Login Form -->
@@ -24,38 +23,36 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <div class="flex-between">
-                        <label for="password" class="form-label">Password</label>
-                        <a href="#" class="forgot-link" onclick="showToast('Demo passwords are provided in the section below!', 'info'); return false;">Forgot?</a>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="password" class="form-label mb-0">Password</label>
+                        <a href="#" class="forgot-link" onclick="showToast('Demo passwords are provided in the quick section below.', 'info'); return false;">Forgot?</a>
                     </div>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                    <input type="password" id="password" name="password" class="form-control mt-1" placeholder="••••••••" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block btn-lg">Sign In</button>
             </form>
 
             <div class="auth-footer text-center mt-3">
-                <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+                <p>Don't have an account? <a href="{{ url_for('auth.register') }}" class="font-weight-bold">Register here</a></p>
             </div>
 
             <hr class="auth-divider">
 
             <!-- Demo Login Accounts Quick Select Section -->
             <div class="demo-accounts-section">
-                <h4 class="demo-title text-center">⚡ One-Click Demo Login</h4>
+                <h4 class="demo-title text-center">One-Click Demo Login</h4>
                 <p class="demo-subtitle text-center text-muted">Test any role instantly without typing passwords:</p>
 
                 <div class="demo-buttons-grid">
                     <a href="{{ url_for('auth.demo_login', role='customer') }}" class="demo-btn demo-customer">
-                        <span class="demo-role-icon">👤</span>
                         <div class="demo-btn-text">
-                            <strong>Customer Demo</strong>
+                            <strong>Customer Account</strong>
                             <small>customer@foodflow.local</small>
                         </div>
                     </a>
 
                     <a href="{{ url_for('auth.demo_login', role='restaurant') }}" class="demo-btn demo-restaurant">
-                        <span class="demo-role-icon">🍳</span>
                         <div class="demo-btn-text">
                             <strong>Restaurant Partner</strong>
                             <small>restaurant@foodflow.local</small>
@@ -63,7 +60,6 @@
                     </a>
 
                     <a href="{{ url_for('auth.demo_login', role='delivery') }}" class="demo-btn demo-delivery">
-                        <span class="demo-role-icon">🛵</span>
                         <div class="demo-btn-text">
                             <strong>Delivery Agent</strong>
                             <small>delivery@foodflow.local</small>
@@ -71,7 +67,6 @@
                     </a>
 
                     <a href="{{ url_for('auth.demo_login', role='admin') }}" class="demo-btn demo-admin">
-                        <span class="demo-role-icon">⚡</span>
                         <div class="demo-btn-text">
                             <strong>Admin Portal</strong>
                             <small>admin@foodflow.local</small>
