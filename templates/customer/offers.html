@@ -1,25 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}Offers & Promo Coupons — FoodFlow{% endblock %}
+{% block title %}Active Offers & Promo Deals — FoodFlow{% endblock %}
 
 {% block content %}
 <div class="container section-padding">
-    <div class="flex-between mb-4">
+    <div class="flex-between mb-4 flex-wrap gap-3">
         <div>
-            <h1 class="font-weight-bold">Offers & Promo Deals 🎁</h1>
-            <p class="text-muted">Save big with instant discount coupons and partner bank offers</p>
+            <span class="badge badge-primary mb-1">EXCLUSIVE SAVINGS</span>
+            <h1 class="font-weight-bold">Offers & Promo Deals</h1>
+            <p class="text-muted">Save on your favorite meals with instant discount coupons and partner bank offers.</p>
         </div>
-        <a href="{{ url_for('customer.restaurants') }}" class="btn btn-primary btn-sm">Use Offer Now</a>
+        <a href="{{ url_for('customer.restaurants') }}" class="btn btn-primary">Browse Restaurants</a>
     </div>
 
     <div class="grid grid-3">
         {% for o in offers %}
-            <div class="card p-4 border border-warning">
-                <div class="flex-between mb-2">
-                    <span class="badge badge-warning font-size-md">{{ o.code }}</span>
-                    <small class="text-muted">{{ o.badge }}</small>
+            <div class="coupon-card shadow-sm card-hover">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="coupon-code-badge">{{ o.code }}</span>
+                    <small class="badge badge-info">{{ o.badge }}</small>
                 </div>
-                <h3 class="font-weight-bold text-primary mb-1">
+                <h3 class="font-weight-bold text-primary my-2">
                     {% if o.discount_type == 'percentage' %}
                         {{ o.discount_value }}% OFF
                     {% else %}
@@ -27,9 +28,11 @@
                     {% endif %}
                 </h3>
                 <p class="text-muted small mb-3">{{ o.description }}</p>
-                <div class="border-top pt-2 flex-between">
-                    <small class="text-muted">Min order: {{ o.min_order_amount|currency }}</small>
-                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="navigator.clipboard.writeText('{{ o.code }}'); alert('Copied coupon code {{ o.code }}!');">Copy Code</button>
+                <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                    <small class="text-muted">Min order: <strong>{{ o.min_order_amount|currency }}</strong></small>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="copyCouponCode('{{ o.code }}');">
+                        Copy Code
+                    </button>
                 </div>
             </div>
         {% endfor %}

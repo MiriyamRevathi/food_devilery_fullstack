@@ -11,7 +11,7 @@
     --secondary-hover: #4d9635;
     --accent-color: #ff3269;
     
-    /* Neutral Palette (Light Theme Defaults) */
+    /* Neutral Palette */
     --bg-primary: #f8f9fa;
     --bg-surface: #ffffff;
     --card-bg: #ffffff;
@@ -30,19 +30,19 @@
     /* Typography & Spacing */
     --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --border-radius-sm: 6px;
-    --border-radius-md: 12px;
-    --border-radius-lg: 20px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 16px;
     --border-radius-pill: 50px;
     
     /* Shadows */
-    --shadow-sm: 0 2px 8px rgba(40, 44, 63, 0.08);
-    --shadow-md: 0 4px 16px rgba(40, 44, 63, 0.12);
-    --shadow-lg: 0 8px 30px rgba(40, 44, 63, 0.16);
+    --shadow-sm: 0 2px 8px rgba(40, 44, 63, 0.06);
+    --shadow-md: 0 4px 16px rgba(40, 44, 63, 0.1);
+    --shadow-lg: 0 8px 30px rgba(40, 44, 63, 0.14);
     --transition-fast: all 0.2s ease-in-out;
     --transition-normal: all 0.3s ease-in-out;
 }
 
-/* 2. Global Reset & Box Sizing */
+/* 2. Global Reset & Typography */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -58,7 +58,7 @@ body {
     font-family: var(--font-family-base);
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: 1.5;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -97,10 +97,197 @@ img {
 }
 
 .section-padding {
-    padding: 3.5rem 0;
+    padding: 3rem 0;
 }
 
-/* 4. Modal Visibility Safeguard Rules */
+/* 4. Form Controls & Dropdowns System */
+.form-control, .form-select {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
+    background-clip: padding-box;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-fast);
+}
+
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23282c3f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 12px 10px;
+    padding-right: 2.25rem;
+    cursor: pointer;
+}
+
+.form-control:focus, .form-select:focus {
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.15);
+}
+
+.form-label {
+    margin-bottom: 0.4rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* 5. Button System */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-fast);
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    color: #ffffff;
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    box-shadow: 0 4px 12px rgba(252, 128, 25, 0.25);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    background-color: transparent;
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-secondary {
+    color: var(--text-primary);
+    background-color: #ffffff;
+    border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    border-color: #ced4da;
+}
+
+.btn-danger {
+    color: #ffffff;
+    background-color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.btn-danger:hover {
+    color: #ffffff;
+    background-color: #c82333;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.82rem;
+    border-radius: var(--border-radius-sm);
+}
+
+/* 6. Card System */
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: var(--card-bg);
+    background-clip: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+
+.card-hover:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* 7. Coupon Cards */
+.coupon-card {
+    background: #ffffff;
+    border: 1px dashed #fc8019;
+    border-radius: var(--border-radius-md);
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.coupon-code-badge {
+    display: inline-block;
+    background: #ffe8d6;
+    color: #fc8019;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+}
+
+/* 8. Role Selection Cards */
+.role-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.role-card-option {
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 1rem 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    background: #ffffff;
+    transition: var(--transition-fast);
+}
+
+.role-card-option:hover {
+    border-color: var(--primary-color);
+    background: rgba(252, 128, 25, 0.02);
+}
+
+.role-card-option.active {
+    border-color: var(--primary-color);
+    background: #ffe8d6;
+    color: #fc8019;
+    font-weight: 700;
+}
+
+/* 9. Modal Visibility Safeguard Rules */
 .modal {
     display: none;
     position: fixed;
@@ -142,4 +329,17 @@ img {
     border-radius: var(--border-radius-md);
     outline: 0;
     box-shadow: var(--shadow-lg);
+}
+
+/* SVG Outline Icon Utility */
+.icon-svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: text-bottom;
 }

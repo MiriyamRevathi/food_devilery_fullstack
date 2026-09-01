@@ -4,28 +4,31 @@
         {% if current_user and current_user.role == 'restaurant' %}
             <!-- RESTAURANT PARTNER NAVBAR -->
             <a href="{{ url_for('restaurant.dashboard') }}" class="navbar-brand">
-                <span class="brand-icon">🍳</span>
+                <svg class="icon-svg text-primary me-1" viewBox="0 0 24 24" style="width:24px; height:24px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                 <span class="brand-name">Food<span class="brand-accent">Flow</span> <small class="text-primary font-weight-bold" style="font-size: 0.7em;">PARTNER</small></span>
             </a>
 
             <nav class="navbar-nav">
                 <a href="{{ url_for('restaurant.dashboard') }}" class="nav-link {% if request.endpoint == 'restaurant.dashboard' %}active{% endif %}">
-                    <span class="nav-icon">📊</span> Dashboard
+                    Dashboard
                 </a>
                 <a href="{{ url_for('restaurant.manage_orders') }}" class="nav-link {% if request.endpoint == 'restaurant.manage_orders' %}active{% endif %}">
-                    <span class="nav-icon">🛒</span> Orders
+                    Orders
                 </a>
                 <a href="{{ url_for('restaurant.menu') }}" class="nav-link {% if request.endpoint == 'restaurant.menu' or request.endpoint == 'restaurant.add_food' or request.endpoint == 'restaurant.edit_food' %}active{% endif %}">
-                    <span class="nav-icon">📋</span> Menu
+                    Menu Catalog
                 </a>
                 <a href="{{ url_for('restaurant.inventory') }}" class="nav-link {% if request.endpoint == 'restaurant.inventory' %}active{% endif %}">
-                    <span class="nav-icon">📦</span> Inventory
+                    Inventory
                 </a>
                 <a href="{{ url_for('restaurant.reviews') }}" class="nav-link {% if request.endpoint == 'restaurant.reviews' %}active{% endif %}">
-                    <span class="nav-icon">⭐</span> Reviews
+                    Reviews
                 </a>
                 <a href="{{ url_for('restaurant.analytics') }}" class="nav-link {% if request.endpoint == 'restaurant.analytics' %}active{% endif %}">
-                    <span class="nav-icon">📈</span> Analytics
+                    Analytics
+                </a>
+                <a href="{{ url_for('restaurant.payouts') }}" class="nav-link {% if request.endpoint == 'restaurant.payouts' %}active{% endif %}">
+                    Payouts
                 </a>
 
                 <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
@@ -44,18 +47,20 @@
                         <div class="dropdown-header">
                             <strong>{{ current_user.name }}</strong>
                             <small class="role-badge role-restaurant">Restaurant Partner</small>
-                            <span class="badge badge-success d-block mt-1">🟢 Kitchen Open</span>
+                            <span class="badge badge-success d-block mt-1">Kitchen Open</span>
                         </div>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Partner Profile</a>
-                        <a href="{{ url_for('restaurant.dashboard') }}" class="dropdown-item">📊 Partner Dashboard</a>
-                        <a href="{{ url_for('restaurant.manage_orders') }}" class="dropdown-item">🛒 Orders Center</a>
-                        <a href="{{ url_for('restaurant.menu') }}" class="dropdown-item">📋 Menu Catalog</a>
-                        <a href="{{ url_for('restaurant.inventory') }}" class="dropdown-item">📦 Ingredients Inventory</a>
-                        <a href="{{ url_for('restaurant.analytics') }}" class="dropdown-item">📈 Revenue Analytics</a>
-                        <a href="{{ url_for('restaurant.reviews') }}" class="dropdown-item">⭐ Customer Reviews</a>
+                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">Partner Profile</a>
+                        <a href="{{ url_for('restaurant.dashboard') }}" class="dropdown-item">Partner Dashboard</a>
+                        <a href="{{ url_for('restaurant.manage_orders') }}" class="dropdown-item">Orders Center</a>
+                        <a href="{{ url_for('restaurant.menu') }}" class="dropdown-item">Menu Catalog</a>
+                        <a href="{{ url_for('restaurant.inventory') }}" class="dropdown-item">Ingredients Inventory</a>
+                        <a href="{{ url_for('restaurant.analytics') }}" class="dropdown-item">Revenue Analytics</a>
+                        <a href="{{ url_for('restaurant.reviews') }}" class="dropdown-item">Customer Reviews</a>
+                        <a href="{{ url_for('restaurant.payouts') }}" class="dropdown-item">Earnings Payouts</a>
+                        <a href="{{ url_for('main.contact') }}" class="dropdown-item">Help & Support</a>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">🚪 Sign Out</a>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
                     </div>
                 </div>
             </nav>
@@ -63,22 +68,25 @@
         {% elif current_user and current_user.role == 'delivery' %}
             <!-- DELIVERY PARTNER NAVBAR -->
             <a href="{{ url_for('delivery.dashboard') }}" class="navbar-brand">
-                <span class="brand-icon">🛵</span>
+                <svg class="icon-svg text-warning me-1" viewBox="0 0 24 24" style="width:24px; height:24px;"><path d="M5 18H3c-.6 0-1-.4-1-1V9c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v8c0 .6-.4 1-1 1h-2M14 18h4.5c.3 0 .6-.2.8-.4l3-4c.2-.2.3-.5.3-.8V11c0-.6-.4-1-1-1h-6.6"/></svg>
                 <span class="brand-name">Food<span class="brand-accent">Flow</span> <small class="text-warning font-weight-bold" style="font-size: 0.7em;">DELIVERY</small></span>
             </a>
 
             <nav class="navbar-nav">
                 <a href="{{ url_for('delivery.dashboard') }}" class="nav-link {% if request.endpoint == 'delivery.dashboard' %}active{% endif %}">
-                    <span class="nav-icon">📊</span> Dashboard
+                    Dashboard
                 </a>
                 <a href="{{ url_for('delivery.active_delivery') }}" class="nav-link {% if request.endpoint == 'delivery.active_delivery' %}active{% endif %}">
-                    <span class="nav-icon">📍</span> Active Delivery
+                    Active Delivery
                 </a>
                 <a href="{{ url_for('delivery.history') }}" class="nav-link {% if request.endpoint == 'delivery.history' %}active{% endif %}">
-                    <span class="nav-icon">📦</span> History
+                    Deliveries History
                 </a>
                 <a href="{{ url_for('delivery.earnings') }}" class="nav-link {% if request.endpoint == 'delivery.earnings' %}active{% endif %}">
-                    <span class="nav-icon">💰</span> Earnings
+                    Earnings
+                </a>
+                <a href="{{ url_for('delivery.performance') }}" class="nav-link {% if request.endpoint == 'delivery.performance' %}active{% endif %}">
+                    Performance
                 </a>
 
                 <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
@@ -97,16 +105,18 @@
                         <div class="dropdown-header">
                             <strong>{{ current_user.name }}</strong>
                             <small class="role-badge role-delivery">Delivery Agent</small>
-                            <span class="badge badge-success d-block mt-1">🟢 Online & Ready</span>
+                            <span class="badge badge-success d-block mt-1">Online & Ready</span>
                         </div>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Driver Profile</a>
-                        <a href="{{ url_for('delivery.dashboard') }}" class="dropdown-item">🛵 Delivery Dashboard</a>
-                        <a href="{{ url_for('delivery.active_delivery') }}" class="dropdown-item">📍 Active Stepper</a>
-                        <a href="{{ url_for('delivery.history') }}" class="dropdown-item">📜 Delivery History</a>
-                        <a href="{{ url_for('delivery.earnings') }}" class="dropdown-item">💰 Daily Earnings</a>
+                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">Driver Profile</a>
+                        <a href="{{ url_for('delivery.dashboard') }}" class="dropdown-item">Delivery Dashboard</a>
+                        <a href="{{ url_for('delivery.active_delivery') }}" class="dropdown-item">Active Delivery</a>
+                        <a href="{{ url_for('delivery.history') }}" class="dropdown-item">Delivery History</a>
+                        <a href="{{ url_for('delivery.earnings') }}" class="dropdown-item">Earnings Summary</a>
+                        <a href="{{ url_for('delivery.performance') }}" class="dropdown-item">Performance Metrics</a>
+                        <a href="{{ url_for('main.contact') }}" class="dropdown-item">Help & Support</a>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">🚪 Sign Out</a>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
                     </div>
                 </div>
             </nav>
@@ -114,31 +124,31 @@
         {% elif current_user and current_user.role == 'admin' %}
             <!-- ADMINISTRATOR NAVBAR -->
             <a href="{{ url_for('admin.dashboard') }}" class="navbar-brand">
-                <span class="brand-icon">⚡</span>
+                <svg class="icon-svg text-danger me-1" viewBox="0 0 24 24" style="width:24px; height:24px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                 <span class="brand-name">Food<span class="brand-accent">Flow</span> <small class="text-danger font-weight-bold" style="font-size: 0.7em;">ADMIN</small></span>
             </a>
 
             <nav class="navbar-nav">
                 <a href="{{ url_for('admin.dashboard') }}" class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
-                    <span class="nav-icon">📊</span> Overview
+                    Overview
                 </a>
                 <a href="{{ url_for('admin.users') }}" class="nav-link {% if request.endpoint == 'admin.users' %}active{% endif %}">
-                    <span class="nav-icon">👥</span> Users
+                    Users
                 </a>
                 <a href="{{ url_for('admin.restaurants') }}" class="nav-link {% if request.endpoint == 'admin.restaurants' %}active{% endif %}">
-                    <span class="nav-icon">🏪</span> Restaurants
+                    Restaurants
                 </a>
                 <a href="{{ url_for('admin.orders') }}" class="nav-link {% if request.endpoint == 'admin.orders' %}active{% endif %}">
-                    <span class="nav-icon">📦</span> Orders
+                    Orders
                 </a>
                 <a href="{{ url_for('admin.offers') }}" class="nav-link {% if request.endpoint == 'admin.offers' %}active{% endif %}">
-                    <span class="nav-icon">🎁</span> Coupons
+                    Coupons
                 </a>
                 <a href="{{ url_for('admin.cities') }}" class="nav-link {% if request.endpoint == 'admin.cities' %}active{% endif %}">
-                    <span class="nav-icon">🌆</span> Cities
+                    Cities
                 </a>
                 <a href="{{ url_for('admin.reports') }}" class="nav-link {% if request.endpoint == 'admin.reports' %}active{% endif %}">
-                    <span class="nav-icon">📈</span> Reports
+                    Reports
                 </a>
 
                 <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
@@ -159,15 +169,16 @@
                             <small class="role-badge role-admin">Administrator</small>
                         </div>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item">⚡ Admin Dashboard</a>
-                        <a href="{{ url_for('admin.users') }}" class="dropdown-item">👥 Manage Accounts</a>
-                        <a href="{{ url_for('admin.restaurants') }}" class="dropdown-item">🏪 Restaurant Audit</a>
-                        <a href="{{ url_for('admin.orders') }}" class="dropdown-item">📦 Orders Control</a>
-                        <a href="{{ url_for('admin.offers') }}" class="dropdown-item">🎁 Promo Coupons</a>
-                        <a href="{{ url_for('admin.cities') }}" class="dropdown-item">🌆 Multi-City Delivery</a>
-                        <a href="{{ url_for('admin.diagnostics') }}" class="dropdown-item">🔧 System Health</a>
+                        <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item">Admin Overview</a>
+                        <a href="{{ url_for('admin.users') }}" class="dropdown-item">Manage Accounts</a>
+                        <a href="{{ url_for('admin.restaurants') }}" class="dropdown-item">Restaurant Audit</a>
+                        <a href="{{ url_for('admin.orders') }}" class="dropdown-item">Orders Control</a>
+                        <a href="{{ url_for('admin.offers') }}" class="dropdown-item">Promo Coupons</a>
+                        <a href="{{ url_for('admin.cities') }}" class="dropdown-item">Multi-City Delivery</a>
+                        <a href="{{ url_for('admin.diagnostics') }}" class="dropdown-item">System Health</a>
+                        <a href="{{ url_for('admin.audit_logs') }}" class="dropdown-item">Security Audit Logs</a>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">🚪 Sign Out</a>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
                     </div>
                 </div>
             </nav>
@@ -175,13 +186,13 @@
         {% else %}
             <!-- CUSTOMER & GUEST NAVBAR -->
             <a href="{{ url_for('main.home') }}" class="navbar-brand">
-                <span class="brand-icon">🚴‍♂️</span>
+                <svg class="icon-svg text-primary me-1" viewBox="0 0 24 24" style="width:24px; height:24px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                 <span class="brand-name">Food<span class="brand-accent">Flow</span></span>
             </a>
 
             <!-- Location Selector Trigger Pill -->
             <div class="location-pill" data-bs-toggle="modal" data-bs-target="#locationModal" style="cursor: pointer;" title="Change Delivery City & Area">
-                <span class="location-icon">📍</span>
+                <svg class="icon-svg text-primary me-1" viewBox="0 0 24 24" style="width:16px; height:16px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div class="location-text">
                     <span class="location-label">Deliver to</span>
                     <span class="location-value">{{ selected_area }}, {{ selected_city }}</span>
@@ -192,23 +203,27 @@
             <!-- Global Search Bar -->
             <form action="{{ url_for('main.search') }}" method="GET" class="navbar-search-form">
                 <div class="search-input-wrapper">
-                    <span class="search-icon">🔍</span>
+                    <svg class="icon-svg text-muted me-1 search-icon" viewBox="0 0 24 24" style="width:16px; height:16px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                     <input type="text" name="q" class="navbar-search-input" placeholder="Search biryani, pizza, restaurants..." value="{{ request.args.get('q', '') }}" autocomplete="off">
                 </div>
             </form>
 
             <nav class="navbar-nav">
                 <a href="{{ url_for('main.home') }}" class="nav-link {% if request.endpoint == 'main.home' %}active{% endif %}">
-                    <span class="nav-icon">🏠</span> Home
+                    Home
                 </a>
                 
                 <a href="{{ url_for('customer.restaurants') }}" class="nav-link {% if request.endpoint == 'customer.restaurants' %}active{% endif %}">
-                    <span class="nav-icon">🍽️</span> Restaurants
+                    Restaurants
+                </a>
+
+                <a href="{{ url_for('customer.view_offers') }}" class="nav-link {% if request.endpoint == 'customer.view_offers' %}active{% endif %}">
+                    Offers
                 </a>
 
                 <a href="{{ url_for('customer.view_cart') }}" class="nav-link cart-link {% if request.endpoint == 'customer.view_cart' %}active{% endif %}">
                     <span class="cart-icon-wrapper">
-                        🛒
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width:18px; height:18px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         <span class="cart-badge" id="cart-badge-count">{{ cart_count }}</span>
                     </span>
                     <span class="cart-label">Cart</span>
@@ -232,13 +247,14 @@
                                 <small class="role-badge role-customer">Customer</small>
                             </div>
                             <hr class="dropdown-divider">
-                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Profile & Account</a>
-                            <a href="{{ url_for('customer.order_history') }}" class="dropdown-item">📦 My Orders</a>
-                            <a href="{{ url_for('customer.view_favorites') }}" class="dropdown-item">❤️ Saved Favorites</a>
-                            <a href="{{ url_for('customer.view_addresses') }}" class="dropdown-item">📍 Saved Addresses</a>
-                            <a href="{{ url_for('customer.view_offers') }}" class="dropdown-item">🎁 Active Coupons</a>
+                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">My Profile</a>
+                            <a href="{{ url_for('customer.order_history') }}" class="dropdown-item">My Orders</a>
+                            <a href="{{ url_for('customer.view_favorites') }}" class="dropdown-item">Saved Favorites</a>
+                            <a href="{{ url_for('customer.view_addresses') }}" class="dropdown-item">Saved Delivery Addresses</a>
+                            <a href="{{ url_for('customer.view_offers') }}" class="dropdown-item">Active Promo Deals</a>
+                            <a href="{{ url_for('main.contact') }}" class="dropdown-item">Help & Support</a>
                             <hr class="dropdown-divider">
-                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">🚪 Sign Out</a>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
                         </div>
                     </div>
                 {% else %}
@@ -265,7 +281,7 @@
         <div class="modal-content">
             <form action="{{ url_for('main.select_location') }}" method="POST">
                 <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold" id="locationModalLabel">Select Delivery Location 📍</h5>
+                    <h5 class="modal-title font-weight-bold" id="locationModalLabel">Select Delivery Location</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -296,7 +312,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary px-4">Set Location</button>
                 </div>
             </form>
