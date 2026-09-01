@@ -6,11 +6,11 @@
 <div class="container section-padding">
     <!-- Page Heading -->
     <div class="mb-4">
-        <h1 class="font-weight-bold" style="color: var(--color-forest); font-size: 2.2rem;">Offers for you</h1>
+        <h1 class="font-weight-bold text-dark" style="font-size: 2.2rem; color: #143323 !important;">Offers for you</h1>
         <p class="text-muted font-size-lg">Save more on every order with instant discount coupons</p>
     </div>
 
-    <!-- Category Filter Tabs -->
+    <!-- Filter Tabs -->
     <div class="d-flex gap-2 mb-4 overflow-auto pb-2" style="scrollbar-width: none;">
         <button type="button" class="btn btn-primary px-4 rounded-pill font-weight-bold">All</button>
         <button type="button" class="btn btn-outline-secondary px-4 rounded-pill font-weight-bold">FoodFlow offers</button>
@@ -18,94 +18,100 @@
         <button type="button" class="btn btn-outline-secondary px-4 rounded-pill font-weight-bold">Free delivery</button>
     </div>
 
-    <!-- Top Quick Offer Cards Grid -->
-    <div class="grid grid-4 gap-3 mb-5" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-        <div class="card p-3 border-0 shadow-sm card-hover" style="border-radius: 16px; background: #fff5eb; border: 1px dashed #fc8019 !important;">
-            <span class="badge badge-warning text-uppercase mb-2" style="width: max-content;">First order offer</span>
-            <h4 class="font-weight-bold text-dark mb-1">WELCOME50</h4>
-            <p class="text-muted small mb-3">50% off up to ₹100 on your first order</p>
-            <button type="button" class="btn btn-primary btn-sm w-100" onclick="copyCouponCode('WELCOME50')">Apply offer</button>
+    <!-- Top Quick Promo Cards Grid -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="card p-3 border shadow-sm h-100" style="border-radius: 16px; background-color: #fff5eb; border: 1px dashed #fc8019 !important;">
+                <span class="badge bg-warning text-dark text-uppercase mb-2 align-self-start">First order offer</span>
+                <h4 class="font-weight-bold text-dark mb-1" style="font-size: 1.2rem;">WELCOME50</h4>
+                <p class="text-muted small mb-3">50% off up to ₹100 on your first order</p>
+                <button type="button" class="btn btn-primary btn-sm w-100 mt-auto font-weight-bold" onclick="copyCouponCode('WELCOME50')">Apply offer</button>
+            </div>
         </div>
 
-        <div class="card p-3 border-0 shadow-sm card-hover" style="border-radius: 16px; background: #e8f5e9; border: 1px dashed #2e7d32 !important;">
-            <span class="badge badge-success text-uppercase mb-2" style="width: max-content;">Free delivery</span>
-            <h4 class="font-weight-bold text-dark mb-1">FREEDEL</h4>
-            <p class="text-muted small mb-3">Free delivery on orders above ₹249</p>
-            <button type="button" class="btn btn-outline-success btn-sm w-100" onclick="copyCouponCode('FREEDEL')">Apply offer</button>
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="card p-3 border shadow-sm h-100" style="border-radius: 16px; background-color: #e8f5e9; border: 1px dashed #2e7d32 !important;">
+                <span class="badge bg-success text-white text-uppercase mb-2 align-self-start">Free delivery</span>
+                <h4 class="font-weight-bold text-dark mb-1" style="font-size: 1.2rem;">FREEDEL</h4>
+                <p class="text-muted small mb-3">Free delivery on orders above ₹249</p>
+                <button type="button" class="btn btn-outline-success btn-sm w-100 mt-auto font-weight-bold" onclick="copyCouponCode('FREEDEL')">Apply offer</button>
+            </div>
         </div>
 
-        <div class="card p-3 border-0 shadow-sm card-hover" style="border-radius: 16px; background: #fffde7; border: 1px dashed #fbc02d !important;">
-            <span class="badge badge-warning text-uppercase mb-2" style="width: max-content;">Restaurant offer</span>
-            <h4 class="font-weight-bold text-dark mb-1">NAMMA20</h4>
-            <p class="text-muted small mb-3">20% off up to ₹80 at Namma Biryani House</p>
-            <button type="button" class="btn btn-outline-primary btn-sm w-100" onclick="copyCouponCode('NAMMA20')">Apply offer</button>
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="card p-3 border shadow-sm h-100" style="border-radius: 16px; background-color: #fffde7; border: 1px dashed #fbc02d !important;">
+                <span class="badge bg-warning text-dark text-uppercase mb-2 align-self-start">Restaurant offer</span>
+                <h4 class="font-weight-bold text-dark mb-1" style="font-size: 1.2rem;">NAMMA20</h4>
+                <p class="text-muted small mb-3">20% off up to ₹80 at Namma Biryani House</p>
+                <button type="button" class="btn btn-outline-primary btn-sm w-100 mt-auto font-weight-bold" onclick="copyCouponCode('NAMMA20')">Apply offer</button>
+            </div>
         </div>
 
-        <div class="card p-3 border-0 shadow-sm card-hover" style="border-radius: 16px; background: #f3e5f5; border: 1px dashed #8e24aa !important;">
-            <span class="badge badge-info text-uppercase mb-2" style="width: max-content;">Lunch special</span>
-            <h4 class="font-weight-bold text-dark mb-1">LUNCH75</h4>
-            <p class="text-muted small mb-3">Flat ₹75 off on lunch orders between 12 PM - 3 PM</p>
-            <button type="button" class="btn btn-outline-info btn-sm w-100" onclick="copyCouponCode('LUNCH75')">Apply offer</button>
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="card p-3 border shadow-sm h-100" style="border-radius: 16px; background-color: #f3e5f5; border: 1px dashed #8e24aa !important;">
+                <span class="badge bg-info text-white text-uppercase mb-2 align-self-start">Lunch special</span>
+                <h4 class="font-weight-bold text-dark mb-1" style="font-size: 1.2rem;">LUNCH75</h4>
+                <p class="text-muted small mb-3">Flat ₹75 off on lunch orders between 12 PM - 3 PM</p>
+                <button type="button" class="btn btn-outline-info btn-sm w-100 mt-auto font-weight-bold" onclick="copyCouponCode('LUNCH75')">Apply offer</button>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content Row -->
+    <!-- Detailed Offers Section -->
     <div class="row g-4">
-        <!-- Left Column: Active & Applicable Offers -->
-        <div class="col-lg-8">
-            <!-- Active Offer Card Detailed -->
-            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
-                <div class="d-flex justify-content-between align-items-start flex-wrap mb-3">
+        <!-- Left Column: Detailed Offer Cards -->
+        <div class="col-lg-8 col-12">
+            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #ffffff;">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
                     <div>
-                        <span class="badge badge-warning text-uppercase mb-1">First order offer</span>
-                        <h3 class="font-weight-bold text-dark mb-1">WELCOME50</h3>
-                        <p class="text-muted mb-0 font-weight-bold">50% off up to ₹100 on your first order</p>
+                        <span class="badge bg-warning text-dark text-uppercase mb-2">First order offer</span>
+                        <h3 class="font-weight-bold text-dark mb-1" style="font-size: 1.5rem;">WELCOME50</h3>
+                        <p class="text-dark font-weight-bold mb-0">50% off up to ₹100 on your first order</p>
                     </div>
-                    <span class="badge badge-success">Offer applicable ✓</span>
+                    <span class="badge bg-success text-white font-weight-bold p-2">Offer applicable ✓</span>
                 </div>
 
-                <div class="row text-center my-3 p-3 bg-light rounded g-2">
+                <div class="row text-center my-3 p-3 bg-light rounded g-2 border">
                     <div class="col-3">
-                        <small class="text-muted d-block">Code</small>
+                        <small class="text-muted d-block font-weight-bold">Code</small>
                         <strong class="text-dark">WELCOME50</strong>
                     </div>
                     <div class="col-3">
-                        <small class="text-muted d-block">Minimum order</small>
+                        <small class="text-muted d-block font-weight-bold">Minimum order</small>
                         <strong class="text-dark">₹199</strong>
                     </div>
                     <div class="col-3">
-                        <small class="text-muted d-block">Valid till</small>
+                        <small class="text-muted d-block font-weight-bold">Valid till</small>
                         <strong class="text-success">Valid today</strong>
                     </div>
                     <div class="col-3">
-                        <small class="text-muted d-block">Applicable on</small>
+                        <small class="text-muted d-block font-weight-bold">Applicable on</small>
                         <strong class="text-dark">First order only</strong>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top flex-wrap gap-2">
                     <small class="text-muted">Max discount ₹100. Not valid on alcoholic beverages and combos.</small>
-                    <button type="button" class="btn btn-primary px-4" onclick="copyCouponCode('WELCOME50')">Apply offer</button>
+                    <button type="button" class="btn btn-primary px-4 font-weight-bold" onclick="copyCouponCode('WELCOME50')">Apply offer</button>
                 </div>
             </div>
 
-            <!-- Empty / No Offers State Card -->
-            <div class="card p-4 border-0 shadow-sm text-center" style="border-radius: 16px; background: #fafafa;">
-                <div class="avatar-circle mx-auto mb-2" style="width:48px; height:48px; background:#e0e0e0; border-radius:50%; display:flex; align-items:center; justify-content:center;">🏷️</div>
+            <!-- Empty / No Offers Banner -->
+            <div class="card p-4 border-0 shadow-sm text-center" style="border-radius: 16px; background-color: #f8f9fa;">
                 <h5 class="font-weight-bold text-dark mb-1">No more offers available right now</h5>
                 <p class="text-muted small mb-3">Check back soon for exciting deals and promo codes.</p>
                 <div>
-                    <a href="{{ url_for('customer.restaurants') }}" class="btn btn-outline-primary btn-sm">Browse restaurants</a>
+                    <a href="{{ url_for('customer.restaurants') }}" class="btn btn-outline-primary btn-sm font-weight-bold">Browse restaurants</a>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Applied & Invalid Offer States -->
-        <div class="col-lg-4">
-            <!-- Applied Offer State Card -->
-            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0 !important;">
+        <!-- Right Column: Applied & Invalid Offer Cards -->
+        <div class="col-lg-4 col-12">
+            <!-- Applied Offer Card State -->
+            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #f0fdf4; border: 1px solid #bbf7d0 !important;">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge badge-success font-weight-bold">✓ Applied offer</span>
+                    <span class="badge bg-success text-white font-weight-bold">✓ Applied offer</span>
                     <button type="button" class="btn btn-sm btn-outline-danger p-1 px-2" onclick="showToast('Offer WELCOME50 removed.', 'info')">Remove</button>
                 </div>
 
@@ -137,10 +143,10 @@
                 </div>
             </div>
 
-            <!-- Invalid Offer State Card -->
-            <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px; background: #fff5f5; border: 1px solid #fecaca !important;">
+            <!-- Invalid Offer Card State -->
+            <div class="card p-4 border shadow-sm" style="border-radius: 16px; background-color: #fff5f5; border: 1px solid #fecaca !important;">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge badge-danger font-weight-bold">✖ Invalid offer</span>
+                    <span class="badge bg-danger text-white font-weight-bold">✖ Invalid offer</span>
                     <button type="button" class="btn btn-sm btn-outline-secondary p-1 px-2">Remove</button>
                 </div>
 
@@ -151,7 +157,7 @@
                     ⚠️ This offer isn't available for your order
                 </div>
 
-                <a href="{{ url_for('customer.restaurants') }}" class="btn btn-outline-danger btn-sm w-100">Browse eligible restaurants</a>
+                <a href="{{ url_for('customer.restaurants') }}" class="btn btn-outline-danger btn-sm w-100 font-weight-bold">Browse eligible restaurants</a>
             </div>
         </div>
     </div>
