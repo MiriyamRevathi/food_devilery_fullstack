@@ -6,118 +6,99 @@
 <div class="container section-padding">
     <!-- Page Heading -->
     <div class="mb-4">
-        <h1 class="font-weight-bold" style="color: var(--color-forest); font-size: 2.2rem;">Your orders</h1>
+        <h1 class="font-weight-bold text-dark" style="font-size: 2.2rem; color: #143323 !important;">Your orders</h1>
         <p class="text-muted font-size-lg">View your past and ongoing orders</p>
     </div>
 
-    <!-- Tabs & Main Grid -->
+    <!-- Main Grid -->
     <div class="row g-4">
         <!-- Left Column: Tabs & Order Cards -->
-        <div class="col-lg-8">
-            <!-- Order Filter Tabs -->
-            <div class="d-flex gap-2 mb-4 border-bottom pb-2">
-                <button type="button" class="btn btn-link text-primary font-weight-bold border-bottom border-primary text-decoration-none px-3" id="tabAll">All</button>
-                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3" id="tabOngoing">Ongoing</button>
-                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3" id="tabDelivered">Delivered</button>
-                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3" id="tabCancelled">Cancelled</button>
+        <div class="col-lg-8 col-12">
+            <!-- Filter Tabs -->
+            <div class="d-flex gap-3 mb-4 border-bottom pb-2">
+                <button type="button" class="btn btn-link text-primary font-weight-bold border-bottom border-primary text-decoration-none px-3 py-1">All</button>
+                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3 py-1">Ongoing</button>
+                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3 py-1">Delivered</button>
+                <button type="button" class="btn btn-link text-muted font-weight-bold text-decoration-none px-3 py-1">Cancelled</button>
             </div>
 
-            <!-- Ongoing Order Card (Highlight Orange Soft Background) -->
-            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px; background: #fff8f0; border-left: 4px solid #fc8019 !important;">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
-                    <div>
-                        <small class="text-muted font-weight-bold d-block">Order ID <span class="text-primary">FF-24081</span></small>
-                        <h4 class="font-weight-bold text-dark mb-0">Namma Biryani House</h4>
+            <!-- Ongoing Order Card -->
+            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #fff8f0; border-left: 4px solid #fc8019 !important;">
+                <div class="row align-items-center g-3">
+                    <div class="col-auto">
+                        <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
+                    </div>
+                    <div class="col">
+                        <small class="text-muted font-weight-bold d-block">Order ID <span class="text-primary font-weight-bold">FF-24081</span></small>
+                        <h4 class="font-weight-bold text-dark mb-0" style="font-size: 1.2rem;">Namma Biryani House</h4>
                         <small class="text-muted">Indiranagar, Bengaluru</small>
                     </div>
-
-                    <div class="ms-auto me-3 text-start">
-                        <small class="text-muted font-weight-bold d-block">Status</small>
-                        <span class="badge badge-warning text-dark font-weight-bold">🍊 Food is being prepared</span>
-                        <small class="text-muted d-block mt-1">by 1:05 PM - 1:10 PM</small>
-                    </div>
-
-                    <div class="text-center me-3">
-                        <small class="text-muted font-weight-bold d-block">Estimated arrival</small>
-                        <strong class="text-dark font-size-lg">25-30 min</strong>
-                    </div>
-
-                    <div class="text-end">
-                        <small class="text-muted font-weight-bold d-block">Total</small>
-                        <strong class="text-dark font-size-lg d-block mb-2">₹690</strong>
-                        <a href="{{ url_for('customer.order_tracking', order_id='FF-240819') }}" class="btn btn-primary btn-sm px-3">Track order</a>
+                    <div class="col-md-auto text-md-end">
+                        <span class="badge bg-warning text-dark font-weight-bold d-block mb-1 p-2">🍊 Food is being prepared</span>
+                        <small class="text-muted d-block">Estimated arrival: <strong>25-30 min</strong></small>
+                        <strong class="text-dark font-size-lg d-block mt-1">Total ₹690</strong>
+                        <a href="{{ url_for('customer.order_tracking', order_id='FF-240819') }}" class="btn btn-primary btn-sm px-3 mt-2 font-weight-bold">Track order</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Delivered Order Card -->
-            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
-                    <div>
-                        <small class="text-muted font-weight-bold d-block">Order ID <span class="text-primary">FF-24062</span></small>
-                        <h4 class="font-weight-bold text-dark mb-0">The Bangalore Tiffin Room</h4>
+            <!-- Delivered Order Card 1 -->
+            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #ffffff;">
+                <div class="row align-items-center g-3">
+                    <div class="col-auto">
+                        <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
+                    </div>
+                    <div class="col">
+                        <small class="text-muted font-weight-bold d-block">Order ID <span class="text-primary font-weight-bold">FF-24062</span></small>
+                        <h4 class="font-weight-bold text-dark mb-0" style="font-size: 1.2rem;">The Bangalore Tiffin Room</h4>
                         <small class="text-muted">Indiranagar, Bengaluru</small>
                     </div>
-
-                    <div class="ms-auto me-3 text-start">
-                        <small class="text-muted font-weight-bold d-block">Status</small>
-                        <span class="badge badge-success">✓ Delivered</span>
-                        <small class="text-muted d-block mt-1">Yesterday - 1:15 PM</small>
-                    </div>
-
-                    <div class="text-end">
-                        <small class="text-muted font-weight-bold d-block">Total</small>
-                        <strong class="text-dark font-size-lg d-block mb-2">₹318</strong>
-                        <a href="{{ url_for('customer.order_tracking', order_id='FF-24062') }}" class="btn btn-outline-primary btn-sm px-3">View details</a>
+                    <div class="col-md-auto text-md-end">
+                        <span class="badge bg-success text-white font-weight-bold d-block mb-1 p-2">✓ Delivered</span>
+                        <small class="text-muted d-block">Yesterday - 1:15 PM</small>
+                        <strong class="text-dark font-size-lg d-block mt-1">Total ₹318</strong>
+                        <a href="{{ url_for('customer.order_tracking', order_id='FF-24062') }}" class="btn btn-outline-primary btn-sm px-3 mt-2 font-weight-bold">View details</a>
                     </div>
                 </div>
-
                 <div class="border-top mt-3 pt-3 text-muted small d-flex justify-content-between align-items-center">
                     <span>• Masala Dosa x2 &nbsp; • Filter Coffee x1 &nbsp; • Vada Pav x2</span>
-                    <span class="badge badge-secondary">2 items</span>
+                    <span class="badge bg-secondary">2 items</span>
                 </div>
             </div>
 
             <!-- Delivered Order Card 2 -->
-            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
-                    <div>
-                        <small class="text-muted font-weight-bold d-block">Order ID <span class="text-primary">FF-239884</span></small>
-                        <h4 class="font-weight-bold text-dark mb-0">Curry Leaf Kitchen</h4>
+            <div class="card p-4 border shadow-sm mb-4" style="border-radius: 16px; background-color: #ffffff;">
+                <div class="row align-items-center g-3">
+                    <div class="col-auto">
+                        <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&auto=format&fit=crop&q=80" alt="Order Food" class="rounded" style="width:72px; height:72px; object-fit:cover;">
+                    </div>
+                    <div class="col">
+                        <small class="text-muted font-weight-bold d-block">Order ID <span class="text-primary font-weight-bold">FF-239884</span></small>
+                        <h4 class="font-weight-bold text-dark mb-0" style="font-size: 1.2rem;">Curry Leaf Kitchen</h4>
                         <small class="text-muted">Indiranagar, Bengaluru</small>
                     </div>
-
-                    <div class="ms-auto me-3 text-start">
-                        <small class="text-muted font-weight-bold d-block">Status</small>
-                        <span class="badge badge-success">✓ Delivered</span>
-                        <small class="text-muted d-block mt-1">15 Aug 2024 - 8:30 PM</small>
-                    </div>
-
-                    <div class="text-end">
-                        <small class="text-muted font-weight-bold d-block">Total</small>
-                        <strong class="text-dark font-size-lg d-block mb-2">₹520</strong>
-                        <a href="{{ url_for('customer.order_tracking', order_id='FF-239884') }}" class="btn btn-outline-primary btn-sm px-3">View details</a>
+                    <div class="col-md-auto text-md-end">
+                        <span class="badge bg-success text-white font-weight-bold d-block mb-1 p-2">✓ Delivered</span>
+                        <small class="text-muted d-block">15 Aug 2024 - 8:30 PM</small>
+                        <strong class="text-dark font-size-lg d-block mt-1">Total ₹520</strong>
+                        <a href="{{ url_for('customer.order_tracking', order_id='FF-239884') }}" class="btn btn-outline-primary btn-sm px-3 mt-2 font-weight-bold">View details</a>
                     </div>
                 </div>
-
                 <div class="border-top mt-3 pt-3 text-muted small d-flex justify-content-between align-items-center">
                     <span>• Paneer Butter Masala x1 &nbsp; • Butter Naan x3 &nbsp; • Jeera Rice x1</span>
-                    <span class="badge badge-secondary">3 items</span>
+                    <span class="badge bg-secondary">3 items</span>
                 </div>
             </div>
         </div>
 
         <!-- Right Column: Filters Card -->
-        <div class="col-lg-4">
-            <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
-                <h5 class="font-weight-bold mb-1">Filters help you find orders faster</h5>
+        <div class="col-lg-4 col-12">
+            <div class="card p-4 border shadow-sm" style="border-radius: 16px; background-color: #ffffff;">
+                <h5 class="font-weight-bold text-dark mb-1">Filters help you find orders faster</h5>
                 <p class="text-muted small mb-4">Narrow down by date range or specific restaurant</p>
 
                 <div class="mb-3">
-                    <label class="form-label small font-weight-bold">Select date range</label>
+                    <label class="form-label small font-weight-bold text-dark">Select date range</label>
                     <select class="form-select">
                         <option value="30">Last 30 days</option>
                         <option value="60">Last 60 days</option>
@@ -127,7 +108,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label small font-weight-bold">Filter by restaurant</label>
+                    <label class="form-label small font-weight-bold text-dark">Filter by restaurant</label>
                     <select class="form-select">
                         <option value="all">All restaurants</option>
                         <option value="namma">Namma Biryani House</option>
@@ -136,7 +117,7 @@
                     </select>
                 </div>
 
-                <button type="button" class="btn btn-outline-primary w-100" onclick="showToast('Filters applied to order history.', 'info')">Apply filters</button>
+                <button type="button" class="btn btn-outline-primary w-100 font-weight-bold" onclick="showToast('Filters applied to order history.', 'info')">Apply filters</button>
             </div>
         </div>
     </div>

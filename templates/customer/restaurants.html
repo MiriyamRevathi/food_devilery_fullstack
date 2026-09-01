@@ -3,10 +3,11 @@
 {% block title %}Restaurants near Indiranagar, Bengaluru — FoodFlow{% endblock %}
 
 {% block content %}
-<div class="bg-light py-4 border-bottom">
+<!-- Page Header -->
+<div class="bg-light py-4 border-bottom mb-4">
     <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
-            <h1 class="font-weight-bold mb-1" style="color: var(--color-forest);">Restaurants near Indiranagar, Bengaluru</h1>
+            <h1 class="font-weight-bold mb-1 text-dark" style="font-size: 2rem; color: #143323 !important;">Restaurants near Indiranagar, Bengaluru</h1>
             <p class="text-muted mb-0">Showing {{ total_count }} top rated restaurant kitchens open for instant delivery</p>
         </div>
 
@@ -15,7 +16,7 @@
             <input type="hidden" name="q" value="{{ query }}">
             <input type="hidden" name="cuisine" value="{{ selected_cuisine }}">
             <label class="font-weight-bold text-dark small me-1">Sort by:</label>
-            <select name="sort" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+            <select name="sort" class="form-select form-select-sm shadow-sm" style="width: 180px; border-radius: 8px;" onchange="this.form.submit()">
                 <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Best Rated</option>
                 <option value="delivery_time" {% if selected_sort == 'delivery_time' %}selected{% endif %}>Fastest Delivery</option>
                 <option value="nearest" {% if selected_sort == 'nearest' %}selected{% endif %}>Nearest</option>
@@ -28,46 +29,52 @@
     <div class="row g-4">
         <!-- Filter Sidebar -->
         <div class="col-lg-3">
-            <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="font-weight-bold mb-0">Filter Results</h5>
-                    <a href="{{ url_for('customer.restaurants') }}" class="text-primary small font-weight-bold">Reset</a>
+            <div class="card p-4 border shadow-sm" style="border-radius: 16px; background-color: #ffffff;">
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h5 class="font-weight-bold mb-0 text-dark">Filter Results</h5>
+                    <a href="{{ url_for('customer.restaurants') }}" class="text-primary small font-weight-bold text-decoration-none">Reset All</a>
                 </div>
 
                 <form action="{{ url_for('customer.restaurants') }}" method="GET">
                     <input type="hidden" name="sort" value="{{ selected_sort }}">
 
-                    <div class="mb-3">
-                        <label class="form-label small font-weight-bold">Search Dish / Restaurant</label>
+                    <!-- Search Input -->
+                    <div class="mb-4">
+                        <label class="form-label small font-weight-bold text-dark">Search Dish / Restaurant</label>
                         <input type="text" name="q" class="form-control" placeholder="Biryani, Dosa, Pizza..." value="{{ query }}">
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label small font-weight-bold">Dietary</label>
+                    <!-- Veg Filter -->
+                    <div class="mb-4">
+                        <label class="form-label small font-weight-bold text-dark">Dietary Preference</label>
                         <div class="form-check">
                             <input type="checkbox" name="veg" value="1" class="form-check-input" id="vegCheck" {% if selected_veg %}checked{% endif %} onchange="this.form.submit()">
-                            <label class="form-check-label small" for="vegCheck">Pure Veg Only</label>
+                            <label class="form-check-label small font-weight-bold text-dark" for="vegCheck">🟢 Pure Veg Only</label>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label small font-weight-bold">Minimum Rating</label>
+                    <!-- Minimum Rating -->
+                    <div class="mb-4">
+                        <label class="form-label small font-weight-bold text-dark">Minimum Rating</label>
                         <select name="min_rating" class="form-select" onchange="this.form.submit()">
-                            <option value="0.0" {% if selected_rating == 0.0 %}checked{% endif %}>Any Rating</option>
-                            <option value="4.0" {% if selected_rating == 4.0 %}checked{% endif %}>★ 4.0 & above</option>
-                            <option value="4.5" {% if selected_rating == 4.5 %}checked{% endif %}>★ 4.5 & above (Top Rated)</option>
+                            <option value="0.0" {% if selected_rating == 0.0 %}selected{% endif %}>Any Rating</option>
+                            <option value="4.0" {% if selected_rating == 4.0 %}selected{% endif %}>★ 4.0 & above</option>
+                            <option value="4.5" {% if selected_rating == 4.5 %}selected{% endif %}>★ 4.5 & above (Top Rated)</option>
                         </select>
                     </div>
 
+                    <!-- Cuisine Radio List -->
                     <div class="mb-3">
-                        <label class="form-label small font-weight-bold">Cuisines</label>
-                        <div class="list-group list-group-flush small" style="max-height: 200px; overflow-y: auto;">
-                            <label class="list-group-item p-2">
-                                <input type="radio" name="cuisine" value="" {% if not selected_cuisine %}checked{% endif %} onchange="this.form.submit()"> All Cuisines
+                        <label class="form-label small font-weight-bold text-dark">Select Cuisine</label>
+                        <div class="d-flex flex-column gap-2" style="max-height: 260px; overflow-y: auto; padding-right: 4px;">
+                            <label class="form-check-label d-flex align-items-center gap-2 p-2 rounded bg-light border cursor-pointer">
+                                <input type="radio" name="cuisine" value="" class="form-check-input mt-0" {% if not selected_cuisine %}checked{% endif %} onchange="this.form.submit()">
+                                <span class="small font-weight-bold text-dark">All Cuisines</span>
                             </label>
                             {% for c in all_cuisines %}
-                            <label class="list-group-item p-2">
-                                <input type="radio" name="cuisine" value="{{ c }}" {% if selected_cuisine == c %}checked{% endif %} onchange="this.form.submit()"> {{ c }}
+                            <label class="form-check-label d-flex align-items-center gap-2 p-2 rounded bg-light border cursor-pointer">
+                                <input type="radio" name="cuisine" value="{{ c }}" class="form-check-input mt-0" {% if selected_cuisine == c %}checked{% endif %} onchange="this.form.submit()">
+                                <span class="small text-dark">{{ c }}</span>
                             </label>
                             {% endfor %}
                         </div>
@@ -81,30 +88,32 @@
             {% if restaurants %}
             <div class="row g-4">
                 {% for r in restaurants %}
-                <div class="col-md-6">
-                    <div class="card border-0 shadow-sm h-100 card-hover overflow-hidden" style="border-radius: 16px;">
-                        <div class="position-relative" style="height: 190px;">
-                            <img src="{{ r.image }}" alt="{{ r.name }}" class="w-100 h-100" style="object-fit: cover;">
+                <div class="col-md-6 col-12">
+                    <div class="card border shadow-sm h-100 overflow-hidden" style="border-radius: 16px; background-color: #ffffff; transition: transform 0.2s ease;">
+                        <!-- Image Container with badges -->
+                        <div class="position-relative" style="height: 180px; width: 100%; overflow: hidden; background-color: #f8f9fa;">
+                            <img src="{{ r.image }}" alt="{{ r.name }}" style="width: 100%; height: 100%; object-fit: cover;">
                             {% if r.discount %}
-                            <span class="position-absolute top-0 start-0 m-3 badge badge-warning shadow-sm font-weight-bold">{{ r.discount }}</span>
+                            <span class="position-absolute top-0 start-0 m-3 badge bg-warning text-dark font-weight-bold shadow-sm" style="font-size: 0.85rem;">{{ r.discount }}</span>
                             {% endif %}
-                            <button type="button" class="position-absolute top-0 end-0 m-3 btn btn-light rounded-circle shadow-sm p-1" style="width:36px; height:36px;" onclick="showToast('Added {{ r.name }} to your favorites!', 'success')">❤️</button>
+                            <button type="button" class="position-absolute top-0 end-0 m-3 btn btn-light rounded-circle shadow-sm p-0 d-flex align-items-center justify-content-center" style="width:36px; height:36px;" onclick="showToast('Added {{ r.name }} to favorites!', 'success')">❤️</button>
                         </div>
 
-                        <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <!-- Card Details Content Below Image -->
+                        <div class="card-body p-4 d-flex flex-column justify-content-between" style="background-color: #ffffff;">
                             <div>
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <h4 class="font-weight-bold text-dark mb-0">{{ r.name }}</h4>
-                                    <span class="badge badge-success">★ {{ r.rating }}</span>
+                                    <h4 class="font-weight-bold text-dark mb-0" style="font-size: 1.15rem;">{{ r.name }}</h4>
+                                    <span class="badge bg-success text-white font-weight-bold">★ {{ r.rating }}</span>
                                 </div>
                                 <p class="text-muted small mb-2">{{ r.cuisines|join(', ') }}</p>
-                                <p class="text-muted small mb-3">{{ r.address }}</p>
+                                <p class="text-muted small mb-3">📍 {{ r.address }}</p>
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
                                 <div>
-                                    <small class="text-muted d-block">{{ r.price_range }} • {{ r.delivery_time }}</small>
-                                    <span class="text-success small font-weight-bold">{{ r.delivery_fee or 'Free Delivery' }}</span>
+                                    <small class="text-dark font-weight-bold d-block">{{ r.price_range }} • {{ r.delivery_time }}</small>
+                                    <small class="text-success font-weight-bold">{{ r.delivery_fee or 'Free Delivery' }}</small>
                                 </div>
                                 <a href="{{ url_for('customer.restaurant_detail', slug=r.slug) }}" class="btn btn-primary btn-sm px-3 rounded-pill font-weight-bold">See Menu &rarr;</a>
                             </div>

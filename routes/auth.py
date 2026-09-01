@@ -163,6 +163,6 @@ def profile():
             session.modified = True
             flash("Profile updated successfully!", "success")
 
-    return render_template('auth/profile.html', user=user)
+    return render_template('customer/profile.html', user=user)
 
 # Feature Auth: Session-based Authentication & Role Security Module
