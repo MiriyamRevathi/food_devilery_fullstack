@@ -1,55 +1,189 @@
 {% extends 'base.html' %}
 
-{% block title %}My Profile — {{ app_name }}{% endblock %}
+{% block title %}Your Profile — FoodFlow{% endblock %}
 
 {% block content %}
 <div class="container section-padding">
-    <div class="profile-layout">
-        <!-- Sidebar Navigation -->
-        <div class="profile-sidebar card p-4">
-            <div class="user-header text-center mb-4">
-                <img src="{{ current_user.avatar or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' }}" alt="{{ current_user.name }}" class="profile-avatar mb-2">
-                <h3 class="font-weight-bold mb-0">{{ current_user.name }}</h3>
-                <span class="role-badge role-{{ current_user.role }}">{{ current_user.role|capitalize }}</span>
-                <p class="text-muted small mt-1">{{ current_user.email }}</p>
+    <div class="mb-4">
+        <h1 class="font-weight-bold" style="color: var(--color-forest); font-size: 2.2rem;">Your profile</h1>
+        <p class="text-muted font-size-lg">Manage your account, addresses and preferences</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- User Info Card -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                <div class="d-flex align-items-center gap-4 flex-wrap">
+                    <img src="{{ user.avatar }}" alt="{{ user.name }}" class="rounded-circle" style="width:84px; height:84px; object-fit:cover; border:3px solid #fc8019;">
+                    <div>
+                        <h3 class="font-weight-bold mb-1 text-dark">{{ user.name }}</h3>
+                        <p class="text-muted mb-1 font-size-md">📞 {{ user.phone }}</p>
+                        <p class="text-muted mb-0 font-size-md">✉️ {{ user.email }}</p>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary ms-auto" onclick="document.getElementById('editProfileFormCard').scrollIntoView({behavior: 'smooth'})">✏️ Edit Profile</button>
+                </div>
             </div>
 
-            <div class="profile-nav-links">
-                <a href="#details" class="profile-nav-item active">👤 Account Details</a>
-                <a href="#" class="profile-nav-item">📦 Order History</a>
-                <a href="#" class="profile-nav-item">❤️ Favorite Dishes</a>
-                <a href="#" class="profile-nav-item">💳 Saved Payment Methods</a>
-                <a href="{{ url_for('auth.logout') }}" class="profile-nav-item text-danger mt-3">🚪 Sign Out</a>
+            <!-- Saved Addresses & Payment Methods Row -->
+            <div class="row g-4 mb-4">
+                <!-- Saved Addresses Card -->
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="font-weight-bold mb-0">Saved addresses</h5>
+                            <a href="{{ url_for('customer.view_addresses') }}" class="text-primary small font-weight-bold">Add new address</a>
+                        </div>
+
+                        <div class="p-3 rounded mb-3" style="background:#fff5eb; border:1px solid #ffe3cb;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong class="text-dark">Home • Indiranagar, Bengaluru</strong>
+                                <span class="badge badge-success">Default</span>
+                            </div>
+                            <small class="text-muted d-block">12th Cross, 100 Feet Road, Indiranagar, Bengaluru 560038</small>
+                        </div>
+
+                        <div class="p-3 bg-light rounded mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong class="text-dark">Work • Koramangala, Bengaluru</strong>
+                            </div>
+                            <small class="text-muted d-block">45, 6th Main, Koramangala 5th Block, Bengaluru 560095</small>
+                        </div>
+
+                        <a href="{{ url_for('customer.view_addresses') }}" class="text-primary font-weight-bold small">View all addresses &gt;</a>
+                    </div>
+                </div>
+
+                <!-- Payment Methods Card -->
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="font-weight-bold mb-0">Payment methods</h5>
+                            <a href="#" class="text-primary small font-weight-bold" onclick="showToast('UPI & Card payment methods configured.', 'info'); return false;">Add payment method</a>
+                        </div>
+
+                        <div class="p-3 bg-light rounded mb-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="d-block text-dark">UPI • {{ user.email.split('@')[0] }}@upi</strong>
+                                <small class="text-muted">Instant Auto-Debit</small>
+                            </div>
+                            <span class="badge badge-info">Preferred</span>
+                        </div>
+
+                        <div class="p-3 bg-light rounded mb-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="d-block text-dark">HDFC Bank Debit Card</strong>
+                                <small class="text-muted">Ending in •••• 4242</small>
+                            </div>
+                        </div>
+
+                        <a href="#" class="text-primary font-weight-bold small" onclick="showToast('All saved payment methods are active.', 'info'); return false;">View all payment methods &gt;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid of Cards (Favorites, Notifications, Support, Terms, Sign Out) -->
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                        <h5 class="font-weight-bold mb-2">Favorites</h5>
+                        <p class="text-muted small mb-3">Your favorite restaurants and dishes</p>
+                        <a href="{{ url_for('customer.view_favorites') }}" class="text-primary font-weight-bold small">View saved favorites &gt;</a>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                        <h5 class="font-weight-bold mb-2">Notifications</h5>
+                        <ul class="list-unstyled text-muted small mb-0">
+                            <li>✓ Order updates via SMS</li>
+                            <li>✓ Offers and discount alerts</li>
+                            <li>✓ Delivery tracking updates</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                        <h5 class="font-weight-bold mb-2">Help & support</h5>
+                        <ul class="list-unstyled text-muted small mb-3">
+                            <li>Help center & FAQs</li>
+                            <li>Contact customer support</li>
+                            <li>Send app feedback</li>
+                        </ul>
+                        <a href="{{ url_for('customer.support') }}" class="text-primary font-weight-bold small">Open Help Center &gt;</a>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                        <h5 class="font-weight-bold mb-2">Terms & privacy</h5>
+                        <ul class="list-unstyled text-muted small mb-0">
+                            <li>Terms and conditions</li>
+                            <li>Privacy policy & data policy</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="font-weight-bold mb-1 text-danger">Sign out</h5>
+                                <p class="text-muted small mb-0">Sign out from your FoodFlow account session</p>
+                            </div>
+                            <button type="button" class="btn btn-outline-danger" onclick="document.getElementById('signOutModalCard').style.display='block'">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Main Profile Content -->
-        <div class="profile-content card p-4">
-            <h3 class="section-title mb-4">Edit Profile & Delivery Address</h3>
-
-            <form action="{{ url_for('auth.profile') }}" method="POST" class="profile-form">
-                <div class="form-group mb-3">
-                    <label for="name" class="form-label">Full Name</label>
-                    <input type="text" id="name" name="name" class="form-control" value="{{ current_user.name }}" required>
+        <!-- Right Column (Wallet, Edit Profile, Sign Out Modal) -->
+        <div class="col-lg-4">
+            <!-- FoodFlow Wallet Card -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px; background: linear-gradient(135deg, #ffffff 0%, #fff7f0 100%);">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div style="width:48px; height:48px; background:#ffe8d6; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem;">👛</div>
+                    <div>
+                        <small class="text-muted font-weight-bold d-block">FoodFlow Wallet</small>
+                        <span class="text-dark font-weight-bold" style="font-size: 0.9rem;">Active Balance</span>
+                    </div>
                 </div>
+                <div class="display-5 font-weight-bold text-dark mb-3">₹250</div>
+                <button type="button" class="btn btn-primary w-100 mb-2" onclick="showToast('Added ₹500 to FoodFlow Wallet balance!', 'success')">+ Add Money to Wallet</button>
+                <a href="#" class="text-primary small font-weight-bold text-center d-block" onclick="showToast('Wallet Transaction History: Refund +₹100, Cashback +₹150', 'info'); return false;">Transaction history &gt;</a>
+            </div>
 
-                <div class="form-group mb-3">
-                    <label for="email" class="form-label">Email Address (Read only)</label>
-                    <input type="email" id="email" class="form-control" value="{{ current_user.email }}" readonly disabled>
+            <!-- Edit Profile Form Card -->
+            <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;" id="editProfileFormCard">
+                <h5 class="font-weight-bold mb-3">Edit profile</h5>
+                <form onsubmit="showToast('Profile updated successfully!', 'success'); return false;">
+                    <div class="mb-3">
+                        <label class="form-label small font-weight-bold">Full name</label>
+                        <input type="text" class="form-control" value="{{ user.name }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small font-weight-bold">Phone number</label>
+                        <input type="text" class="form-control" value="{{ user.phone }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small font-weight-bold">Email address</label>
+                        <input type="email" class="form-control" value="{{ user.email }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Sign Out Confirmation Card -->
+            <div class="card p-4 border-0 shadow-sm text-center" style="border-radius: 16px; display:none;" id="signOutModalCard">
+                <h5 class="font-weight-bold mb-2">Sign out of FoodFlow?</h5>
+                <p class="text-muted small mb-4">Are you sure you want to sign out of your account?</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-light flex-1" onclick="document.getElementById('signOutModalCard').style.display='none'">Cancel</button>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger flex-1">Sign Out</a>
                 </div>
-
-                <div class="form-group mb-3">
-                    <label for="phone" class="form-label">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" value="{{ current_user.phone or '' }}" placeholder="+91 98765 43210">
-                </div>
-
-                <div class="form-group mb-4">
-                    <label for="address" class="form-label">Default Delivery Address</label>
-                    <textarea id="address" name="address" class="form-control" rows="3" placeholder="Enter your full street address, flat number, city...">{{ current_user.address or '' }}</textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>

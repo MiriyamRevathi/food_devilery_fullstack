@@ -31,11 +31,6 @@
                     Payouts
                 </a>
 
-                <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
-                    <span class="theme-icon light-icon">☀️</span>
-                    <span class="theme-icon dark-icon">🌙</span>
-                </button>
-
                 <!-- Partner Account Dropdown -->
                 <div class="user-dropdown-wrapper">
                     <button type="button" class="user-dropdown-btn" id="user-menu-btn">
@@ -50,7 +45,7 @@
                             <span class="badge badge-success d-block mt-1">Kitchen Open</span>
                         </div>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">Partner Profile</a>
+                        <a href="{{ url_for('customer.view_profile') }}" class="dropdown-item">Partner Profile</a>
                         <a href="{{ url_for('restaurant.dashboard') }}" class="dropdown-item">Partner Dashboard</a>
                         <a href="{{ url_for('restaurant.manage_orders') }}" class="dropdown-item">Orders Center</a>
                         <a href="{{ url_for('restaurant.menu') }}" class="dropdown-item">Menu Catalog</a>
@@ -58,7 +53,7 @@
                         <a href="{{ url_for('restaurant.analytics') }}" class="dropdown-item">Revenue Analytics</a>
                         <a href="{{ url_for('restaurant.reviews') }}" class="dropdown-item">Customer Reviews</a>
                         <a href="{{ url_for('restaurant.payouts') }}" class="dropdown-item">Earnings Payouts</a>
-                        <a href="{{ url_for('main.contact') }}" class="dropdown-item">Help & Support</a>
+                        <a href="{{ url_for('customer.support') }}" class="dropdown-item">Help & Support</a>
                         <hr class="dropdown-divider">
                         <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
                     </div>
@@ -89,94 +84,26 @@
                     Performance
                 </a>
 
-                <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
-                    <span class="theme-icon light-icon">☀️</span>
-                    <span class="theme-icon dark-icon">🌙</span>
-                </button>
-
                 <!-- Delivery Account Dropdown -->
                 <div class="user-dropdown-wrapper">
                     <button type="button" class="user-dropdown-btn" id="user-menu-btn">
                         <img src="{{ current_user.avatar }}" alt="{{ current_user.name }}" class="user-avatar-sm">
-                        <span class="user-name">{{ current_user.name.split()[0] }}</span>
+                        <span class="user-name">Delivery</span>
                         <span class="dropdown-caret">▼</span>
                     </button>
                     <div class="user-dropdown-menu" id="user-dropdown-menu">
                         <div class="dropdown-header">
                             <strong>{{ current_user.name }}</strong>
                             <small class="role-badge role-delivery">Delivery Agent</small>
-                            <span class="badge badge-success d-block mt-1">Online & Ready</span>
+                            <span class="badge badge-success d-block mt-1">Online & Duty Active</span>
                         </div>
                         <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">Driver Profile</a>
-                        <a href="{{ url_for('delivery.dashboard') }}" class="dropdown-item">Delivery Dashboard</a>
-                        <a href="{{ url_for('delivery.active_delivery') }}" class="dropdown-item">Active Delivery</a>
+                        <a href="{{ url_for('delivery.dashboard') }}" class="dropdown-item">Delivery Portal</a>
+                        <a href="{{ url_for('delivery.active_delivery') }}" class="dropdown-item">Active Order Task</a>
                         <a href="{{ url_for('delivery.history') }}" class="dropdown-item">Delivery History</a>
-                        <a href="{{ url_for('delivery.earnings') }}" class="dropdown-item">Earnings Summary</a>
-                        <a href="{{ url_for('delivery.performance') }}" class="dropdown-item">Performance Metrics</a>
-                        <a href="{{ url_for('main.contact') }}" class="dropdown-item">Help & Support</a>
-                        <hr class="dropdown-divider">
-                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
-                    </div>
-                </div>
-            </nav>
-
-        {% elif current_user and current_user.role == 'admin' %}
-            <!-- ADMINISTRATOR NAVBAR -->
-            <a href="{{ url_for('admin.dashboard') }}" class="navbar-brand">
-                <svg class="icon-svg text-danger me-1" viewBox="0 0 24 24" style="width:24px; height:24px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                <span class="brand-name">Food<span class="brand-accent">Flow</span> <small class="text-danger font-weight-bold" style="font-size: 0.7em;">ADMIN</small></span>
-            </a>
-
-            <nav class="navbar-nav">
-                <a href="{{ url_for('admin.dashboard') }}" class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
-                    Overview
-                </a>
-                <a href="{{ url_for('admin.users') }}" class="nav-link {% if request.endpoint == 'admin.users' %}active{% endif %}">
-                    Users
-                </a>
-                <a href="{{ url_for('admin.restaurants') }}" class="nav-link {% if request.endpoint == 'admin.restaurants' %}active{% endif %}">
-                    Restaurants
-                </a>
-                <a href="{{ url_for('admin.orders') }}" class="nav-link {% if request.endpoint == 'admin.orders' %}active{% endif %}">
-                    Orders
-                </a>
-                <a href="{{ url_for('admin.offers') }}" class="nav-link {% if request.endpoint == 'admin.offers' %}active{% endif %}">
-                    Coupons
-                </a>
-                <a href="{{ url_for('admin.cities') }}" class="nav-link {% if request.endpoint == 'admin.cities' %}active{% endif %}">
-                    Cities
-                </a>
-                <a href="{{ url_for('admin.reports') }}" class="nav-link {% if request.endpoint == 'admin.reports' %}active{% endif %}">
-                    Reports
-                </a>
-
-                <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
-                    <span class="theme-icon light-icon">☀️</span>
-                    <span class="theme-icon dark-icon">🌙</span>
-                </button>
-
-                <!-- Admin Account Dropdown -->
-                <div class="user-dropdown-wrapper">
-                    <button type="button" class="user-dropdown-btn" id="user-menu-btn">
-                        <img src="{{ current_user.avatar }}" alt="{{ current_user.name }}" class="user-avatar-sm">
-                        <span class="user-name">Admin</span>
-                        <span class="dropdown-caret">▼</span>
-                    </button>
-                    <div class="user-dropdown-menu" id="user-dropdown-menu">
-                        <div class="dropdown-header">
-                            <strong>{{ current_user.name }}</strong>
-                            <small class="role-badge role-admin">Administrator</small>
-                        </div>
-                        <hr class="dropdown-divider">
-                        <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item">Admin Overview</a>
-                        <a href="{{ url_for('admin.users') }}" class="dropdown-item">Manage Accounts</a>
-                        <a href="{{ url_for('admin.restaurants') }}" class="dropdown-item">Restaurant Audit</a>
-                        <a href="{{ url_for('admin.orders') }}" class="dropdown-item">Orders Control</a>
-                        <a href="{{ url_for('admin.offers') }}" class="dropdown-item">Promo Coupons</a>
-                        <a href="{{ url_for('admin.cities') }}" class="dropdown-item">Multi-City Delivery</a>
-                        <a href="{{ url_for('admin.diagnostics') }}" class="dropdown-item">System Health</a>
-                        <a href="{{ url_for('admin.audit_logs') }}" class="dropdown-item">Security Audit Logs</a>
+                        <a href="{{ url_for('delivery.earnings') }}" class="dropdown-item">Payout Earnings</a>
+                        <a href="{{ url_for('delivery.performance') }}" class="dropdown-item">Performance Scorecard</a>
+                        <a href="{{ url_for('customer.support') }}" class="dropdown-item">Fleet Support</a>
                         <hr class="dropdown-divider">
                         <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
                     </div>
@@ -191,11 +118,11 @@
             </a>
 
             <!-- Location Selector Trigger Pill -->
-            <div class="location-pill" data-bs-toggle="modal" data-bs-target="#locationModal" style="cursor: pointer;" title="Change Delivery City & Area">
+            <div class="location-pill" onclick="document.getElementById('locationModal').style.display='block'; document.getElementById('locationModal').classList.add('show');" style="cursor: pointer;" title="Change Delivery Location">
                 <svg class="icon-svg text-primary me-1" viewBox="0 0 24 24" style="width:16px; height:16px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div class="location-text">
                     <span class="location-label">Deliver to</span>
-                    <span class="location-value">{{ selected_area }}, {{ selected_city }}</span>
+                    <span class="location-value">{{ selected_area or 'Indiranagar' }}, {{ selected_city or 'Bengaluru' }}</span>
                 </div>
                 <span class="location-arrow">▼</span>
             </div>
@@ -204,7 +131,7 @@
             <form action="{{ url_for('main.search') }}" method="GET" class="navbar-search-form">
                 <div class="search-input-wrapper">
                     <svg class="icon-svg text-muted me-1 search-icon" viewBox="0 0 24 24" style="width:16px; height:16px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" name="q" class="navbar-search-input" placeholder="Search biryani, pizza, restaurants..." value="{{ request.args.get('q', '') }}" autocomplete="off">
+                    <input type="text" name="q" class="navbar-search-input" placeholder="Search restaurants, dishes & cuisines..." value="{{ request.args.get('q', '') }}" autocomplete="off">
                 </div>
             </form>
 
@@ -217,6 +144,10 @@
                     Restaurants
                 </a>
 
+                <a href="{{ url_for('customer.order_history') }}" class="nav-link {% if request.endpoint == 'customer.order_history' %}active{% endif %}">
+                    Orders
+                </a>
+
                 <a href="{{ url_for('customer.view_offers') }}" class="nav-link {% if request.endpoint == 'customer.view_offers' %}active{% endif %}">
                     Offers
                 </a>
@@ -224,45 +155,14 @@
                 <a href="{{ url_for('customer.view_cart') }}" class="nav-link cart-link {% if request.endpoint == 'customer.view_cart' %}active{% endif %}">
                     <span class="cart-icon-wrapper">
                         <svg class="icon-svg" viewBox="0 0 24 24" style="width:18px; height:18px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                        <span class="cart-badge" id="cart-badge-count">{{ cart_count }}</span>
+                        <span class="cart-badge" id="cart-badge-count">{{ cart_count or '1' }}</span>
                     </span>
                     <span class="cart-label">Cart</span>
                 </a>
 
-                <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
-                    <span class="theme-icon light-icon">☀️</span>
-                    <span class="theme-icon dark-icon">🌙</span>
-                </button>
-
-                {% if current_user %}
-                    <div class="user-dropdown-wrapper">
-                        <button type="button" class="user-dropdown-btn" id="user-menu-btn">
-                            <img src="{{ current_user.avatar }}" alt="{{ current_user.name }}" class="user-avatar-sm">
-                            <span class="user-name">{{ current_user.name.split()[0] }}</span>
-                            <span class="dropdown-caret">▼</span>
-                        </button>
-                        <div class="user-dropdown-menu" id="user-dropdown-menu">
-                            <div class="dropdown-header">
-                                <strong>{{ current_user.name }}</strong>
-                                <small class="role-badge role-customer">Customer</small>
-                            </div>
-                            <hr class="dropdown-divider">
-                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">My Profile</a>
-                            <a href="{{ url_for('customer.order_history') }}" class="dropdown-item">My Orders</a>
-                            <a href="{{ url_for('customer.view_favorites') }}" class="dropdown-item">Saved Favorites</a>
-                            <a href="{{ url_for('customer.view_addresses') }}" class="dropdown-item">Saved Delivery Addresses</a>
-                            <a href="{{ url_for('customer.view_offers') }}" class="dropdown-item">Active Promo Deals</a>
-                            <a href="{{ url_for('main.contact') }}" class="dropdown-item">Help & Support</a>
-                            <hr class="dropdown-divider">
-                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item text-danger">Sign Out</a>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="auth-buttons">
-                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-sm">Sign In</a>
-                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
-                    </div>
-                {% endif %}
+                <a href="{{ url_for('customer.view_profile') }}" class="nav-link {% if request.endpoint == 'customer.view_profile' %}active{% endif %}">
+                    Profile
+                </a>
             </nav>
         {% endif %}
 
@@ -282,7 +182,7 @@
             <form action="{{ url_for('main.select_location') }}" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-bold" id="locationModalLabel">Select Delivery Location</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('locationModal').style.display='none'"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -296,23 +196,16 @@
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Select Delivery Area / Hub</label>
                         <select name="area" id="locationAreaSelect" class="form-select" required>
-                            <option value="Jubilee Hills">Jubilee Hills</option>
-                            <option value="Banjara Hills">Banjara Hills</option>
-                            <option value="HITECH City">HITECH City</option>
-                            <option value="Madhapur">Madhapur</option>
                             <option value="Indiranagar">Indiranagar (Bengaluru)</option>
                             <option value="Koramangala">Koramangala (Bengaluru)</option>
+                            <option value="Jubilee Hills">Jubilee Hills (Hyderabad)</option>
+                            <option value="HITECH City">HITECH City (Hyderabad)</option>
                             <option value="T Nagar">T Nagar (Chennai)</option>
-                            <option value="Andheri West">Andheri West (Mumbai)</option>
-                            <option value="Connaught Place">Connaught Place (Delhi)</option>
-                            <option value="Dwaraka Nagar">Dwaraka Nagar (Visakhapatnam)</option>
-                            <option value="Benz Circle">Benz Circle (Vijayawada)</option>
-                            <option value="Lakshmipuram">Lakshmipuram (Guntur)</option>
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('locationModal').style.display='none'">Cancel</button>
                     <button type="submit" class="btn btn-primary px-4">Set Location</button>
                 </div>
             </form>

@@ -1,147 +1,128 @@
 {% extends 'base.html' %}
 
-{% block title %}All Restaurants — {{ app_name }}{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/restaurant.css') }}">
-{% endblock %}
+{% block title %}Restaurants near Indiranagar, Bengaluru — FoodFlow{% endblock %}
 
 {% block content %}
-<div class="directory-header bg-light py-4">
-    <div class="container flex-between">
+<div class="bg-light py-4 border-bottom">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
-            <h1 class="font-weight-bold">Discover Top Restaurants 🍽️</h1>
-            <p class="text-muted">Showing {{ total_count }} places serving delicious meals near you</p>
+            <h1 class="font-weight-bold mb-1" style="color: var(--color-forest);">Restaurants near Indiranagar, Bengaluru</h1>
+            <p class="text-muted mb-0">Showing {{ total_count }} top rated restaurant kitchens open for instant delivery</p>
         </div>
 
-        <!-- Sorting Dropdown Form -->
-        <form action="{{ url_for('customer.restaurants') }}" method="GET" class="sort-form">
+        <!-- Sort Controls -->
+        <form action="{{ url_for('customer.restaurants') }}" method="GET" class="d-flex align-items-center gap-2">
             <input type="hidden" name="q" value="{{ query }}">
             <input type="hidden" name="cuisine" value="{{ selected_cuisine }}">
-            {% if selected_veg %}
-                <input type="hidden" name="veg" value="1">
-            {% endif %}
-
-            <div class="sort-wrapper">
-                <label for="sort-select" class="sort-label">Sort by:</label>
-                <select name="sort" id="sort-select" class="form-control form-control-sm" onchange="this.form.submit()">
-                    <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>★ Rating: High to Low</option>
-                    <option value="delivery_time" {% if selected_sort == 'delivery_time' %}selected{% endif %}>⚡ Delivery Time: Fastest</option>
-                    <option value="popularity" {% if selected_sort == 'popularity' %}selected{% endif %}>🔥 Popularity: Most Reviewed</option>
-                </select>
-            </div>
+            <label class="font-weight-bold text-dark small me-1">Sort by:</label>
+            <select name="sort" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Best Rated</option>
+                <option value="delivery_time" {% if selected_sort == 'delivery_time' %}selected{% endif %}>Fastest Delivery</option>
+                <option value="nearest" {% if selected_sort == 'nearest' %}selected{% endif %}>Nearest</option>
+            </select>
         </form>
     </div>
 </div>
 
 <div class="container section-padding">
-    <div class="directory-layout">
+    <div class="row g-4">
         <!-- Filter Sidebar -->
-        <aside class="filter-sidebar card p-4">
-            <div class="filter-header flex-between mb-3">
-                <h3 class="font-weight-bold mb-0">Filters</h3>
-                <a href="{{ url_for('customer.restaurants') }}" class="clear-filters-btn">Clear All</a>
-            </div>
-
-            <form action="{{ url_for('customer.restaurants') }}" method="GET" id="filter-form">
-                <input type="hidden" name="sort" value="{{ selected_sort }}">
-
-                <!-- Search Input -->
-                <div class="filter-group mb-4">
-                    <label class="filter-title">Search Name / Dish</label>
-                    <input type="text" name="q" class="form-control form-control-sm" placeholder="e.g. Biryani, Pizza..." value="{{ query }}">
+        <div class="col-lg-3">
+            <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="font-weight-bold mb-0">Filter Results</h5>
+                    <a href="{{ url_for('customer.restaurants') }}" class="text-primary small font-weight-bold">Reset</a>
                 </div>
 
-                <!-- Pure Veg Filter -->
-                <div class="filter-group mb-4">
-                    <label class="veg-toggle-label flex-between">
-                        <span>🟢 Pure Veg Only</span>
-                        <input type="checkbox" name="veg" value="1" {% if selected_veg %}checked{% endif %} onchange="this.form.submit()">
-                    </label>
-                </div>
+                <form action="{{ url_for('customer.restaurants') }}" method="GET">
+                    <input type="hidden" name="sort" value="{{ selected_sort }}">
 
-                <!-- Rating Filter -->
-                <div class="filter-group mb-4">
-                    <label class="filter-title">Minimum Rating</label>
-                    <div class="rating-radio-group">
-                        <label class="rating-option">
-                            <input type="radio" name="min_rating" value="0.0" {% if selected_rating == 0.0 %}checked{% endif %} onchange="this.form.submit()">
-                            <span>Any Rating</span>
-                        </label>
-                        <label class="rating-option">
-                            <input type="radio" name="min_rating" value="4.0" {% if selected_rating == 4.0 %}checked{% endif %} onchange="this.form.submit()">
-                            <span>★ 4.0+</span>
-                        </label>
-                        <label class="rating-option">
-                            <input type="radio" name="min_rating" value="4.5" {% if selected_rating == 4.5 %}checked{% endif %} onchange="this.form.submit()">
-                            <span>★ 4.5+ Top Rated</span>
-                        </label>
+                    <div class="mb-3">
+                        <label class="form-label small font-weight-bold">Search Dish / Restaurant</label>
+                        <input type="text" name="q" class="form-control" placeholder="Biryani, Dosa, Pizza..." value="{{ query }}">
                     </div>
-                </div>
 
-                <!-- Cuisine Filter -->
-                <div class="filter-group mb-4">
-                    <label class="filter-title">Cuisine</label>
-                    <div class="cuisines-filter-list">
-                        <label class="cuisine-item">
-                            <input type="radio" name="cuisine" value="" {% if not selected_cuisine %}checked{% endif %} onchange="this.form.submit()">
-                            <span>All Cuisines</span>
-                        </label>
-                        {% for c in all_cuisines %}
-                            <label class="cuisine-item">
-                                <input type="radio" name="cuisine" value="{{ c }}" {% if selected_cuisine == c %}checked{% endif %} onchange="this.form.submit()">
-                                <span>{{ c }}</span>
+                    <div class="mb-3">
+                        <label class="form-label small font-weight-bold">Dietary</label>
+                        <div class="form-check">
+                            <input type="checkbox" name="veg" value="1" class="form-check-input" id="vegCheck" {% if selected_veg %}checked{% endif %} onchange="this.form.submit()">
+                            <label class="form-check-label small" for="vegCheck">Pure Veg Only</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small font-weight-bold">Minimum Rating</label>
+                        <select name="min_rating" class="form-select" onchange="this.form.submit()">
+                            <option value="0.0" {% if selected_rating == 0.0 %}checked{% endif %}>Any Rating</option>
+                            <option value="4.0" {% if selected_rating == 4.0 %}checked{% endif %}>★ 4.0 & above</option>
+                            <option value="4.5" {% if selected_rating == 4.5 %}checked{% endif %}>★ 4.5 & above (Top Rated)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small font-weight-bold">Cuisines</label>
+                        <div class="list-group list-group-flush small" style="max-height: 200px; overflow-y: auto;">
+                            <label class="list-group-item p-2">
+                                <input type="radio" name="cuisine" value="" {% if not selected_cuisine %}checked{% endif %} onchange="this.form.submit()"> All Cuisines
                             </label>
-                        {% endfor %}
+                            {% for c in all_cuisines %}
+                            <label class="list-group-item p-2">
+                                <input type="radio" name="cuisine" value="{{ c }}" {% if selected_cuisine == c %}checked{% endif %} onchange="this.form.submit()"> {{ c }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Restaurant Grid -->
+        <div class="col-lg-9">
+            {% if restaurants %}
+            <div class="row g-4">
+                {% for r in restaurants %}
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100 card-hover overflow-hidden" style="border-radius: 16px;">
+                        <div class="position-relative" style="height: 190px;">
+                            <img src="{{ r.image }}" alt="{{ r.name }}" class="w-100 h-100" style="object-fit: cover;">
+                            {% if r.discount %}
+                            <span class="position-absolute top-0 start-0 m-3 badge badge-warning shadow-sm font-weight-bold">{{ r.discount }}</span>
+                            {% endif %}
+                            <button type="button" class="position-absolute top-0 end-0 m-3 btn btn-light rounded-circle shadow-sm p-1" style="width:36px; height:36px;" onclick="showToast('Added {{ r.name }} to your favorites!', 'success')">❤️</button>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h4 class="font-weight-bold text-dark mb-0">{{ r.name }}</h4>
+                                    <span class="badge badge-success">★ {{ r.rating }}</span>
+                                </div>
+                                <p class="text-muted small mb-2">{{ r.cuisines|join(', ') }}</p>
+                                <p class="text-muted small mb-3">{{ r.address }}</p>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <div>
+                                    <small class="text-muted d-block">{{ r.price_range }} • {{ r.delivery_time }}</small>
+                                    <span class="text-success small font-weight-bold">{{ r.delivery_fee or 'Free Delivery' }}</span>
+                                </div>
+                                <a href="{{ url_for('customer.restaurant_detail', slug=r.slug) }}" class="btn btn-primary btn-sm px-3 rounded-pill font-weight-bold">See Menu &rarr;</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </aside>
-
-        <!-- Restaurants Directory Grid -->
-        <main class="directory-main">
-            {% if restaurants %}
-                <div class="restaurants-grid">
-                    {% for r in restaurants %}
-                        <a href="{{ url_for('customer.restaurant_detail', slug=r.slug) }}" class="restaurant-card">
-                            <div class="card-media">
-                                <img src="{{ r.image }}" alt="{{ r.name }}" class="card-img" loading="lazy">
-                                {% if r.discount %}
-                                    <span class="discount-tag">{{ r.discount }}</span>
-                                {% endif %}
-                                <span class="delivery-badge">⚡ {{ r.delivery_time }}</span>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="card-header flex-between">
-                                    <h3 class="restaurant-title">{{ r.name }}</h3>
-                                    <span class="rating-badge">★ {{ r.rating }}</span>
-                                </div>
-
-                                <p class="cuisines-list">{{ r.cuisines|join(', ') }}</p>
-                                <p class="address-text">📍 {{ r.address }}</p>
-
-                                <div class="card-footer flex-between">
-                                    <span class="price-range">{{ r.price_range }} • Min {{ r.min_order|currency }}</span>
-                                    {% if r.is_veg_only %}
-                                        <span class="veg-only-pill">🟢 Pure Veg</span>
-                                    {% else %}
-                                        <span class="non-veg-pill">🔴 Non-Veg</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
-                </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <div class="empty-state text-center py-5">
-                    <span class="display-1">🍽️</span>
-                    <h3>No restaurants match your filters</h3>
-                    <p class="text-muted">Try clearing some filter options or searching for a different cuisine.</p>
-                    <a href="{{ url_for('customer.restaurants') }}" class="btn btn-primary mt-3">Reset All Filters</a>
+            <div class="text-center py-5 card border-0 shadow-sm p-5" style="border-radius: 16px;">
+                <h4 class="font-weight-bold text-dark mb-2">No Restaurants Match Your Filter</h4>
+                <p class="text-muted mb-4">Try clearing your search query or selecting a different cuisine filter.</p>
+                <div>
+                    <a href="{{ url_for('customer.restaurants') }}" class="btn btn-primary px-4 rounded-pill font-weight-bold">Reset Filters</a>
                 </div>
+            </div>
             {% endif %}
-        </main>
+        </div>
     </div>
 </div>
 {% endblock %}

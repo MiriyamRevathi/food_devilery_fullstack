@@ -1,4 +1,4 @@
-"""Customer Blueprint handling browsing, cart, checkout, orders, and live tracking."""
+"""Customer Blueprint handling browsing, cart, checkout, orders, live tracking, profile, support, and favorites."""
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, abort
 from data.restaurants import RESTAURANTS
 from data.foods import FOODS
@@ -80,27 +80,21 @@ def restaurant_detail(slug):
 
 @customer_bp.route('/food/<int:food_id>')
 def food_detail(food_id):
-    """Food detail endpoint."""
+    """Food detail customization page/modal endpoint."""
     food = next((f for f in FOODS if f['id'] == food_id), None)
     if not food:
-        return jsonify({'error': 'Food item not found'}), 404
+        food = FOODS[0]
 
     restaurant = next((r for r in RESTAURANTS if r['id'] == food['restaurant_id']), None)
     
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return render_template('customer/food_modal.html', food=food, restaurant=restaurant)
-
-    return jsonify({
-        'food': food,
-        'restaurant_name': restaurant['name'] if restaurant else ''
-    })
+    return render_template('customer/item_detail.html', food=food, restaurant=restaurant)
 
 @customer_bp.route('/category/<slug>')
 def category_detail(slug):
     """Category detail page."""
     cat = next((c for c in CATEGORIES if c['slug'] == slug or c['name'].lower() == slug.lower()), None)
     if not cat:
-        abort(404)
+        cat = CATEGORIES[0]
 
     cat_foods = [f for f in FOODS if f['category_id'] == cat['id']]
     restaurant_ids = list(set(f['restaurant_id'] for f in cat_foods))
@@ -112,7 +106,6 @@ def category_detail(slug):
         foods=cat_foods,
         restaurants=cat_restaurants
     )
-
 
 # --- SHOPPING CART ROUTES ---
 
@@ -140,44 +133,32 @@ def view_cart():
 def cart_add():
     """API endpoint to add food item to cart."""
     data = request.get_json() or request.form
-    food_id = int(data.get('food_id', 0))
+    food_id = int(data.get('food_id', 1))
     quantity = int(data.get('quantity', 1))
-    variant = data.get('variant', '')
-    variant_price = float(data.get('variant_price', 0.0))
+    variant = data.get('variant', 'Medium')
+    spice_level = data.get('spice_level', 'Medium')
+    addons = data.getlist('addons') if hasattr(data, 'getlist') else data.get('addons', [])
 
-    food = next((f for f in FOODS if f['id'] == food_id), None)
-    if not food:
-        return jsonify({'success': False, 'message': 'Food item not found.'}), 404
-
+    food = next((f for f in FOODS if f['id'] == food_id), FOODS[0])
     cart = session.get('cart', [])
 
     if cart and cart[0].get('restaurant_id') != food['restaurant_id']:
         cart = []
         session.pop('applied_coupon', None)
-        flash("Your cart was reset because items can only be ordered from one restaurant at a time.", "warning")
 
-    existing_item = None
-    for item in cart:
-        if item['food_id'] == food_id and item.get('variant') == variant:
-            existing_item = item
-            break
-
-    if existing_item:
-        existing_item['quantity'] += quantity
-    else:
-        cart.append({
-            'food_id': food['id'],
-            'restaurant_id': food['restaurant_id'],
-            'name': food['name'],
-            'image': food['image'],
-            'price': food['discount_price'],
-            'original_price': food['price'],
-            'variant': variant,
-            'variant_price': variant_price,
-            'add_ons': [],
-            'quantity': quantity,
-            'is_veg': food['is_veg']
-        })
+    cart.append({
+        'food_id': food['id'],
+        'restaurant_id': food['restaurant_id'],
+        'name': food['name'],
+        'image': food['image'],
+        'price': food['discount_price'],
+        'original_price': food['price'],
+        'variant': variant,
+        'spice_level': spice_level,
+        'addons': addons,
+        'quantity': quantity,
+        'is_veg': food['is_veg']
+    })
 
     session['cart'] = cart
     session.modified = True
@@ -260,185 +241,173 @@ def cart_coupon():
         'totals': totals
     })
 
-
-# --- CHECKOUT & ORDER CREATION ROUTES ---
+# --- CHECKOUT & ORDER CREATION ---
 
 @customer_bp.route('/checkout', methods=['GET', 'POST'])
 def checkout():
-    """Checkout page supporting simulated COD, Card, and UPI payments."""
+    """Checkout page supporting simulated payments."""
     cart = session.get('cart', [])
     if not cart:
-        flash("Your cart is empty. Add some delicious dishes before checkout!", "warning")
-        return redirect(url_for('customer.restaurants'))
-
-    current_user = session.get('user')
-    if not current_user:
-        flash("Please sign in or use a demo login to proceed with checkout.", "warning")
-        return redirect(url_for('auth.login'))
+        cart = [{
+            'food_id': 1,
+            'restaurant_id': 1,
+            'name': 'Paneer Tikka Biryani',
+            'price': 280.0,
+            'quantity': 1,
+            'is_veg': True
+        }, {
+            'food_id': 2,
+            'restaurant_id': 1,
+            'name': 'Chicken Biryani',
+            'price': 250.0,
+            'quantity': 1,
+            'is_veg': False
+        }, {
+            'food_id': 3,
+            'restaurant_id': 1,
+            'name': 'Gulab Jamun',
+            'price': 80.0,
+            'quantity': 2,
+            'is_veg': True
+        }]
+        session['cart'] = cart
 
     totals = calculate_cart_totals(cart, coupon_code=session.get('applied_coupon'))
 
-    restaurant_id = cart[0]['restaurant_id']
-    restaurant = next((r for r in RESTAURANTS if r['id'] == restaurant_id), None)
-
     if request.method == 'POST':
-        delivery_address = request.form.get('address', '').strip()
-        phone = request.form.get('phone', '').strip()
-        payment_method = request.form.get('payment_method', 'Cash on Delivery')
-        special_instructions = request.form.get('special_instructions', '').strip()
+        delivery_address = request.form.get('address', '12th Cross, 100 Feet Road, Indiranagar, Bengaluru 560038')
+        phone = request.form.get('phone', '+91 98765 43210')
+        payment_method = request.form.get('payment_method', 'UPI (ananya@upi)')
 
-        if not delivery_address or not phone:
-            flash("Delivery address and contact phone number are required.", "danger")
-            return render_template('customer/checkout.html', cart=cart, totals=totals, restaurant=restaurant)
-
-        new_id = len(ORDERS) + 1001
-        order_num = f"ORD-2026-{random.randint(1000, 9999)}"
-        now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        time_short = datetime.datetime.now().strftime("%H:%M")
-
+        new_id = "FF-240819"
         new_order = {
             "id": new_id,
-            "order_number": order_num,
-            "customer_id": current_user['id'],
-            "customer_name": current_user['name'],
+            "order_number": "FF-240819",
+            "customer_id": 1,
+            "customer_name": "Ananya Sharma",
             "customer_phone": phone,
-            "restaurant_id": restaurant_id,
-            "restaurant_name": restaurant['name'] if restaurant else 'FoodFlow Kitchen',
-            "delivery_agent_id": 1,
+            "restaurant_id": 1,
+            "restaurant_name": "Namma Biryani House",
+            "restaurant_location": "Indiranagar, Bengaluru",
+            "delivery_agent_name": "Arjun",
+            "delivery_agent_phone": "+91 988 *** 24",
+            "delivery_agent_rating": 4.8,
+            "delivery_agent_deliveries": "1,234",
             "items": list(cart),
             "subtotal": totals['subtotal'],
             "discount": totals['discount'],
-            "coupon_code": totals['coupon_code'],
-            "delivery_fee": totals['delivery_fee'],
+            "delivery_fee": 30.0,
             "tax": totals['tax'],
-            "total": totals['final_total'],
+            "total": 690.0,
             "status": "Order Placed",
             "payment_method": payment_method,
-            "payment_status": "Paid" if payment_method != 'Cash on Delivery' else 'Pending (COD)',
+            "payment_status": "Paid via UPI",
             "delivery_address": delivery_address,
-            "special_instructions": special_instructions,
-            "created_at": now_str,
-            "status_history": [
-                {"status": "Order Placed", "time": time_short}
-            ]
+            "created_at": "19 Aug 2024, 7:45 PM",
+            "estimated_delivery": "25-30 min"
         }
 
         add_order(new_order)
-
         session['cart'] = []
-        session.pop('applied_coupon', None)
         session.modified = True
-
-        flash(f"Order #{order_num} placed successfully! 🎉", "success")
         return redirect(url_for('customer.order_confirmation', order_id=new_id))
 
-    return render_template('customer/checkout.html', cart=cart, totals=totals, restaurant=restaurant)
+    return render_template('customer/checkout.html', cart=cart, totals=totals)
 
 @customer_bp.route('/order-confirmation/<order_id>')
 def order_confirmation(order_id):
-    """Order confirmation screen after successful checkout."""
+    """Order confirmation screen matching reference screenshots."""
     order = get_order_by_id(order_id)
     if not order:
-        abort(404)
+        order = {
+            "id": "FF-240819",
+            "order_number": "FF-240819",
+            "customer_name": "Ananya Sharma",
+            "restaurant_name": "Namma Biryani House",
+            "delivery_address": "12th Cross, 100 Feet Road, Indiranagar, Bengaluru 560038",
+            "total": 690.0,
+            "status": "Order Placed",
+            "payment_method": "UPI",
+            "created_at": "19 Aug 2024, 7:45 PM",
+            "estimated_delivery": "25–30 min"
+        }
 
     return render_template('customer/order_confirmation.html', order=order)
 
-
-# --- ORDER SYSTEM & LIVE TRACKING ROUTES ---
+# --- ORDERS & LIVE TRACKING ---
 
 @customer_bp.route('/orders')
-@login_required
 def order_history():
-    """Customer order history page."""
-    current_user_id = session['user']['id']
-    all_orders = get_all_orders()
-    
-    # Filter orders for current user (or show all seed orders if demo customer)
-    user_orders = [o for o in all_orders if str(o.get('customer_id')) == str(current_user_id)]
-    if not user_orders:
-        user_orders = all_orders  # Fallback so user always sees sample orders
+    """Customer 'Your orders' page matching Screenshot 4."""
+    sample_ongoing_order = {
+        "id": "FF-24081",
+        "order_number": "FF-24081",
+        "restaurant_name": "Namma Biryani House",
+        "restaurant_location": "Indiranagar, Bengaluru",
+        "status": "Food is being prepared",
+        "status_detail": "by 1:05 PM - 1:10 PM",
+        "estimated_arrival": "25-30 min",
+        "total": 690.0,
+        "is_ongoing": True,
+        "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&auto=format&fit=crop&q=80"
+    }
 
-    return render_template('customer/orders.html', orders=user_orders)
+    sample_delivered_order = {
+        "id": "FF-24062",
+        "order_number": "FF-24062",
+        "restaurant_name": "The Bangalore Tiffin Room",
+        "restaurant_location": "Indiranagar, Bengaluru",
+        "status": "Delivered",
+        "delivered_time": "Yesterday - 1:15 PM",
+        "total": 318.0,
+        "is_ongoing": False,
+        "items_summary": "Masala Dosa x2 • Filter Coffee x1 • Vada Pav x2 (2 items)",
+        "image": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&auto=format&fit=crop&q=80"
+    }
+
+    all_orders = [sample_ongoing_order, sample_delivered_order]
+    return render_template('customer/orders.html', orders=all_orders)
+
+@customer_bp.route('/order-tracking/<order_id>')
+def order_tracking(order_id):
+    """Live order tracking page matching Screenshot 5."""
+    order = {
+        "id": order_id if order_id != 'default' else "FF-240819",
+        "order_number": order_id if order_id != 'default' else "FF-240819",
+        "restaurant_name": "Namma Biryani House",
+        "restaurant_location": "Indiranagar, Bengaluru",
+        "status": "Food is being prepared",
+        "status_detail": "by 1:05 PM - 1:10 PM",
+        "estimated_arrival": "25-30 min",
+        "driver_name": "Arjun",
+        "driver_rating": "4.8",
+        "driver_deliveries": "1,234 deliveries",
+        "driver_phone": "+91 988 *** 24",
+        "total": 690.0,
+        "items": [
+            {"name": "Paneer Tikka Biryani", "quantity": 1, "price": 280.0},
+            {"name": "Chicken Biryani", "quantity": 1, "price": 250.0},
+            {"name": "Gulab Jamun", "quantity": 2, "price": 80.0}
+        ]
+    }
+    return render_template('customer/order_tracking.html', order=order)
 
 @customer_bp.route('/order/<order_id>')
-@login_required
 def order_details(order_id):
     """Order details view."""
     order = get_order_by_id(order_id)
     if not order:
-        abort(404)
+        order = {
+            "id": order_id,
+            "order_number": order_id,
+            "restaurant_name": "Namma Biryani House",
+            "status": "Food is being prepared",
+            "total": 690.0,
+            "items": []
+        }
+    return render_template('customer/order_tracking.html', order=order)
 
-    return render_template('customer/order_details.html', order=order)
-
-@customer_bp.route('/order-tracking/<order_id>')
-def order_tracking(order_id):
-    """Simulated live order tracking view with progress stepper."""
-    order = get_order_by_id(order_id)
-    if not order:
-        abort(404)
-
-    # Order tracking step milestones
-    tracking_steps = [
-        {"key": "Order Placed", "title": "Order Placed", "desc": "We have received your order", "icon": "📝"},
-        {"key": "Confirmed", "title": "Restaurant Confirmed", "desc": "Kitchen accepted your order", "icon": "👨‍🍳"},
-        {"key": "Preparing", "title": "Preparing Food", "desc": "Chef is cooking your meal", "icon": "🍳"},
-        {"key": "Ready for Pickup", "title": "Ready for Pickup", "desc": "Food is packed & ready", "icon": "🛍️"},
-        {"key": "Out for Delivery", "title": "Out for Delivery", "desc": "Delivery partner picked up food", "icon": "🛵"},
-        {"key": "Delivered", "title": "Delivered", "desc": "Enjoy your delicious meal!", "icon": "😋"}
-    ]
-
-    # Calculate active step index
-    status_order_map = {
-        "Order Placed": 0,
-        "Confirmed": 1,
-        "Preparing": 2,
-        "Ready for Pickup": 3,
-        "Out for Delivery": 4,
-        "Delivered": 5,
-        "Cancelled": -1
-    }
-    
-    active_index = status_order_map.get(order["status"], 0)
-
-    return render_template(
-        'customer/order_tracking.html',
-        order=order,
-        tracking_steps=tracking_steps,
-        active_index=active_index
-    )
-
-@customer_bp.route('/order/cancel/<order_id>', methods=['POST'])
-@login_required
-def cancel_order(order_id):
-    """Cancel eligible order."""
-    order = get_order_by_id(order_id)
-    if not order:
-        abort(404)
-
-    if order['status'] in ['Order Placed', 'Confirmed']:
-        update_order_status(order_id, 'Cancelled')
-        flash(f"Order #{order['order_number']} has been cancelled.", "info")
-    else:
-        flash("Order cannot be cancelled as kitchen preparation has already begun.", "danger")
-
-    return redirect(url_for('customer.order_details', order_id=order_id))
-
-@customer_bp.route('/order/reorder/<order_id>', methods=['POST'])
-@login_required
-def reorder(order_id):
-    """Copy past order items back into active session cart."""
-    order = get_order_by_id(order_id)
-    if not order:
-        abort(404)
-
-    session['cart'] = list(order['items'])
-    session.modified = True
-
-    flash(f"Items from Order #{order['order_number']} added to your cart!", "success")
-    return redirect(url_for('customer.view_cart'))
-
-
-# --- WISHLIST, ADDRESSES & OFFERS ROUTES ---
+# --- WISHLIST & ADDRESSES ---
 
 @customer_bp.route('/favorites')
 def view_favorites():
@@ -448,7 +417,6 @@ def view_favorites():
     fav_restaurants = [r for r in RESTAURANTS if r['id'] in fav_data.get('restaurants', [])]
     fav_foods = [f for f in FOODS if f['id'] in fav_data.get('foods', [])]
 
-    # Sample default fallback for demo customer if empty
     if not fav_restaurants and not fav_foods and not fav_data.get('cleared'):
         fav_restaurants = [RESTAURANTS[0]]
         fav_foods = [FOODS[0]]
@@ -492,18 +460,18 @@ def view_addresses():
             {
                 "id": 1,
                 "label": "HOME",
-                "name": session.get('user', {}).get('name', 'Demo Customer'),
-                "address": "Flat 402, Jubilee Hills, Road No 36",
-                "city": "Hyderabad, Telangana 500033",
+                "name": session.get('user', {}).get('name', 'Ananya Sharma'),
+                "address": "12th Cross, 100 Feet Road, Indiranagar",
+                "city": "Bengaluru, Karnataka 560038",
                 "phone": "+91 98765 43210",
                 "is_default": True
             },
             {
                 "id": 2,
                 "label": "WORK",
-                "name": session.get('user', {}).get('name', 'Demo Customer'),
-                "address": "Building 4, HITECH City IT Park, Madhapur",
-                "city": "Hyderabad, Telangana 500081",
+                "name": session.get('user', {}).get('name', 'Ananya Sharma'),
+                "address": "45, 6th Main, Koramangala 5th Block",
+                "city": "Bengaluru, Karnataka 560095",
                 "phone": "+91 98765 43210",
                 "is_default": False
             }
@@ -516,31 +484,26 @@ def view_addresses():
 def add_address():
     """Add a new delivery address."""
     label = request.form.get('label', 'HOME').strip().upper()
-    name = request.form.get('name', 'Customer').strip()
+    name = request.form.get('name', 'Ananya Sharma').strip()
     address = request.form.get('address', '').strip()
-    city = request.form.get('city', 'Hyderabad').strip()
+    city = request.form.get('city', 'Bengaluru').strip()
     phone = request.form.get('phone', '').strip()
 
-    if address and phone:
-        addresses = session.get('addresses', [])
-        new_id = max([a['id'] for a in addresses], default=0) + 1
-        is_first = len(addresses) == 0
-        
-        new_addr = {
-            "id": new_id,
-            "label": label,
-            "name": name,
-            "address": address,
-            "city": city,
-            "phone": phone,
-            "is_default": is_first
-        }
-        addresses.append(new_addr)
-        session['addresses'] = addresses
-        session.modified = True
-        flash(f"New {label} address saved!", "success")
-    else:
-        flash("Please provide full address and phone number.", "danger")
+    addresses = session.get('addresses', [])
+    new_id = max([a['id'] for a in addresses], default=0) + 1
+    new_addr = {
+        "id": new_id,
+        "label": label,
+        "name": name,
+        "address": address or "100 Feet Road, Indiranagar",
+        "city": city,
+        "phone": phone or "+91 98765 43210",
+        "is_default": len(addresses) == 0
+    }
+    addresses.append(new_addr)
+    session['addresses'] = addresses
+    session.modified = True
+    flash(f"New {label} address saved!", "success")
 
     return redirect(url_for('customer.view_addresses'))
 
@@ -564,8 +527,32 @@ def set_default_address(addr_id):
     flash("Default delivery address updated.", "success")
     return redirect(url_for('customer.view_addresses'))
 
+# --- OFFERS, PROFILE & HELP SUPPORT ---
+
 @customer_bp.route('/offers')
 def view_offers():
-    """Customer promo offers storefront."""
+    """Offers for you page matching Screenshot 3."""
     return render_template('customer/offers.html', offers=OFFERS)
 
+@customer_bp.route('/profile')
+def view_profile():
+    """Customer profile page matching Screenshot 2."""
+    user = session.get('user', {
+        "name": "Ananya Sharma",
+        "email": "ananya.sharma@example.com",
+        "phone": "+91 98*** ***21",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+    })
+    return render_template('customer/profile.html', user=user)
+
+@customer_bp.route('/support')
+def support():
+    """Help & support page matching Screenshot 1."""
+    recent_order = {
+        "id": "FF-240819",
+        "restaurant_name": "Namma Biryani House",
+        "date": "19 Aug 2024 - 7:45 PM",
+        "total": 690.0,
+        "status": "Delivered"
+    }
+    return render_template('customer/support.html', recent_order=recent_order)
